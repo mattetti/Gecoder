@@ -19,6 +19,20 @@ class SampleProblem < Gecode::Model
   end
 end
 
+class SampleOptimizationProblem < Gecode::Model
+  attr :x
+  attr :y
+  attr :z
+  
+  def initialize
+    @x,@y = lhs_vars = int_var_array(2, 0..5)
+    @z = int_var(0..25)
+    (@x + @y).must == @z 
+    
+    branch_on lhs_vars, :variable => :smallest_size, :value => :min
+  end
+end
+
 describe Gecode::Model, ' (with multiple solutions)' do
   before do
     @domain = 0..3
@@ -153,5 +167,20 @@ describe Gecode::Model, ' (without constraints)' do
   
   it 'should produce a solution' do
     @model.solve!.should_not be_nil
+  end
+end
+
+describe Gecode::Model, '(optimization search)' do
+  before do
+    @model = SampleOptimizationProblem.new
+  end
+  
+  it 'should optimize the solution' do
+    @model.optimize! do |solution|
+      solution.z.must > solution.z.val
+    end
+    @model.x.val.should == 5
+    @model.y.val.should == 5
+    @model.z.val.should == 25
   end
 end

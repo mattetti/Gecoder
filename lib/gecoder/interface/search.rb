@@ -36,20 +36,68 @@ module Gecode
       self.reset!
     end
     
+    # Finds the optimal solution. Optimality is defined by the provided block
+    # which is given one parameter, a solution to the problem. The block should
+    # constrain the solution so that that only "better" solutions can be new 
+    # solutions. For instance if one wants to optimize a variable named price
+    # (accessible from the model) to be as low as possible then one should write
+    # the following.
+    #
+    # model.optimize! do |solution|
+    #   solution.price.must < solution.price.val
+    # end
+    #
+    # Return nil if there is no solution.
+    def optimize!(&block)
+      # A method named constrain has to be defined: http://www.gecode.org/gecode-doc-latest/bab_8icc-source.html
+      space = nil
+      solution_found = false
+      while not (space = bab_engine.next).nil?
+        @active_space = space
+        solution_found = true
+      end
+      if solution_found
+        return self
+      else
+        return nil
+      end
+    end
+    
     private
     
-    # Creates an DFS engine for the search, executing any unexecuted 
-    # constraints first.
+    # Creates a depth first search engine for search, executing any 
+    # unexecuted constraints first.
     def dfs_engine
       # Execute constraints.
-      constraints.each{ |con| con.post }
-      constraints.clear # Empty the queue.
-    
+      execute_constraints
+      
+      # Construct the engine.
       stop = Gecode::Raw::Search::Stop.new
       Gecode::Raw::DFS.new(active_space, 
         Gecode::Raw::Search::Config::MINIMAL_DISTANCE,
         Gecode::Raw::Search::Config::ADAPTIVE_DISTANCE, 
         stop)
+    end
+    
+    # Creates a branch and bound engine for optimization search, executing any 
+    # unexecuted constraints first.
+    def bab_engine
+      # Execute constraints.
+      execute_constraints
+      
+      # Construct the engine.
+      stop = Gecode::Raw::Search::Stop.new
+      Gecode::Raw::BAB.new(active_space, 
+        Gecode::Raw::Search::Config::MINIMAL_DISTANCE,
+        Gecode::Raw::Search::Config::ADAPTIVE_DISTANCE, 
+        stop)
+    end
+    
+    # Executes any unexecuted constraints waiting in the queue (emptying the
+    # queue).
+    def execute_constraints
+      constraints.each{ |con| con.post }
+      constraints.clear # Empty the queue.
     end
   end
 end

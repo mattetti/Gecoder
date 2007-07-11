@@ -193,6 +193,11 @@ void MSpace::own(Gecode::MSetVarArray *sva, const char *name)
 	d->setArrays[name] = sva;
 }
 
+// For BAB.
+void MSpace::constrain(MSpace* s)
+{
+}
+
 Gecode::MIntVarArray *MSpace::intVarArray(const char *name) const
 {
 	if ( d->intArrays.find(name) == d->intArrays.end() ) return 0;
@@ -236,6 +241,15 @@ MDFS::~MDFS()
 {
 }
 
+
+// BAB
+MBAB::MBAB(MSpace *space, unsigned int c_d, unsigned int a_d, Search::Stop* st) : Gecode::BAB<MSpace>(space, c_d, a_d, st)
+{
+}
+
+MBAB::~MBAB()
+{
+}
 
 namespace Search {
 
