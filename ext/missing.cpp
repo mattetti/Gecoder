@@ -18,6 +18,7 @@
 **/
 
 #include "missing.h"
+#include "gecode.hh"
 
 #include <iostream>
 #include <map>
@@ -196,6 +197,11 @@ void MSpace::own(Gecode::MSetVarArray *sva, const char *name)
 // For BAB.
 void MSpace::constrain(MSpace* s)
 {
+  std::cout << "Running constrain" << std::endl; // Temporary debug output.
+
+  // Call Ruby's constrain.
+  rb_funcall(Rust_gecode::cxx2ruby(this), rb_intern("constrain"), 1,
+    Rust_gecode::cxx2ruby(s)); 
 }
 
 Gecode::MIntVarArray *MSpace::intVarArray(const char *name) const
