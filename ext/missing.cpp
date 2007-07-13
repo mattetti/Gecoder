@@ -194,16 +194,6 @@ void MSpace::own(Gecode::MSetVarArray *sva, const char *name)
 	d->setArrays[name] = sva;
 }
 
-// For BAB.
-void MSpace::constrain(MSpace* s)
-{
-  std::cout << "Running constrain" << std::endl; // Temporary debug output.
-
-  // Call Ruby's constrain.
-  rb_funcall(Rust_gecode::cxx2ruby(this), rb_intern("constrain"), 1,
-    Rust_gecode::cxx2ruby(s)); 
-}
-
 Gecode::MIntVarArray *MSpace::intVarArray(const char *name) const
 {
 	if ( d->intArrays.find(name) == d->intArrays.end() ) return 0;
@@ -221,7 +211,6 @@ Gecode::MSetVarArray *MSpace::setVarArray(const char *name ) const
 	if ( d->setArrays.find(name) == d->setArrays.end() ) return 0;
 	return d->setArrays[name];
 }
-
 
 Gecode::MBranchingDesc *MSpace::mdescription()
 {

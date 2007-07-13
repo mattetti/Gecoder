@@ -52,11 +52,14 @@ module Gecode
       # A method named constrain has to be defined: http://www.gecode.org/gecode-doc-latest/bab_8icc-source.html
       space = nil
       solution_found = false
-      while not (space = bab_engine.next).nil?
-        @active_space = space
+      while !(space = bab_engine.next).nil?
         solution_found = true
+        @active_space = space
+        block.call(self)
+        @active_space = @base_space
       end
       if solution_found
+        @active_space = space
         return self
       else
         return nil

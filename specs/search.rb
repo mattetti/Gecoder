@@ -20,16 +20,37 @@ class SampleProblem < Gecode::Model
 end
 
 class SampleOptimizationProblem < Gecode::Model
-  attr :x
-  attr :y
-  attr :z
+  attr :letters
   
   def initialize
-    @x,@y = lhs_vars = int_var_array(2, 0..5)
-    @z = int_var(0..25)
-    (@x + @y).must == @z 
-    
-    branch_on lhs_vars, :variable => :smallest_size, :value => :min
+    s,e,n,d,m,o,s,t,y = @letters = int_var_array(9, 0..9)
+
+    (equation_row(s, e, n, d) + equation_row(m, o, s, t)).must == 
+      equation_row(m, o, n, e, y) 
+    s.must_not == 0
+    m.must_not == 0
+    @letters.must_be.distinct
+
+    branch_on @letters, :variable => :smallest_size, :value => :min
+  end
+
+  def to_s
+    %w{s e n d m o s t y}.zip(@letters).map do |text, letter|
+      "#{text}: #{letter.val}" 
+    end.join(', ')
+  end
+
+  def money
+    s,e,n,d,m,o,s,t,y = @letters
+    equation_row(m.val, o.val, n.val, e.val, y.val) 
+  end
+
+  # A helper to make the linear equation a bit tidier. Takes a number of
+  # variables and computes the linear combination as if the variable
+  # were digits in a base 10 number. E.g. x,y,z becomes
+  # 100*x + 10*y + z .
+  def equation_row(*variables)
+    variables.inject{ |result, variable| variable + result*10 }
   end
 end
 
@@ -176,11 +197,10 @@ describe Gecode::Model, '(optimization search)' do
   end
   
   it 'should optimize the solution' do
-    @model.optimize! do |solution|
-      solution.z.must > solution.z.val
+    solution = @model.optimize! do |solution|
+      s,e,n,d,m,o,s,t,y = solution.letters
+      solution.equation_row(m,o,n,e,y).must > solution.money
     end
-    @model.x.val.should == 5
-    @model.y.val.should == 5
-    @model.z.val.should == 25
+    solution.money.should == 10876
   end
 end
