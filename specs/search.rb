@@ -20,37 +20,16 @@ class SampleProblem < Gecode::Model
 end
 
 class SampleOptimizationProblem < Gecode::Model
-  attr :letters
+  attr :x
+  attr :y
+  attr :z
   
   def initialize
-    s,e,n,d,m,o,s,t,y = @letters = int_var_array(9, 0..9)
-
-    (equation_row(s, e, n, d) + equation_row(m, o, s, t)).must == 
-      equation_row(m, o, n, e, y) 
-    s.must_not == 0
-    m.must_not == 0
-    @letters.must_be.distinct
-
-    branch_on @letters, :variable => :smallest_size, :value => :min
-  end
-
-  def to_s
-    %w{s e n d m o s t y}.zip(@letters).map do |text, letter|
-      "#{text}: #{letter.val}" 
-    end.join(', ')
-  end
-
-  def money
-    s,e,n,d,m,o,s,t,y = @letters
-    equation_row(m.val, o.val, n.val, e.val, y.val) 
-  end
-
-  # A helper to make the linear equation a bit tidier. Takes a number of
-  # variables and computes the linear combination as if the variable
-  # were digits in a base 10 number. E.g. x,y,z becomes
-  # 100*x + 10*y + z .
-  def equation_row(*variables)
-    variables.inject{ |result, variable| variable + result*10 }
+    @x,@y = int_var_array(2, 0..5)
+    @z = int_var(0..25)
+    (@x * @y).must == @z 
+    
+    branch_on wrap_enum([@z]), :variable => :smallest_size, :value => :min
   end
 end
 
@@ -198,9 +177,11 @@ describe Gecode::Model, '(optimization search)' do
   
   it 'should optimize the solution' do
     solution = @model.optimize! do |solution|
-      s,e,n,d,m,o,s,t,y = solution.letters
-      solution.equation_row(m,o,n,e,y).must > solution.money
+      solution.z.must  > solution.z.val
     end
-    solution.money.should == 10876
+    solution.should_not be_nil
+    solution.x.val.should == 5
+    solution.y.val.should == 5
+    solution.z.val.should == 25
   end
 end

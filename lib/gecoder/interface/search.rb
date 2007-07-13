@@ -49,20 +49,42 @@ module Gecode
     #
     # Return nil if there is no solution.
     def optimize!(&block)
-      # A method named constrain has to be defined: http://www.gecode.org/gecode-doc-latest/bab_8icc-source.html
-      space = nil
-      solution_found = false
-      while !(space = bab_engine.next).nil?
-        solution_found = true
-        @active_space = space
-        block.call(self)
-        @active_space = @base_space
+      next_space = nil
+      best_space = nil
+      bab = bab_engine
+      
+      Model.constrain_proc = lambda do |home_space, best_space|
+#Gecode::Raw::rel(home_space, @z.bind, Gecode::Raw::IRT_GR, 10, Gecode::Raw::ICL_DEF)
+        # TODO: The spaces are involved in the binding, and constraints depend
+        # on which space the variables are bound to. Hence no binding and no
+        # posting of constraints should ever be done outside a constraint's post
+        # method. This is currently not followed by all constraints, that has to
+        # be fixed.
+        @active_space = best_space
+        yield(self)
+        @active_space = home_space
+        execute_constraints
       end
-      if solution_found
-        @active_space = space
-        return self
-      else
-        return nil
+      
+      while !(next_space = bab.next).nil?
+        best_space = next_space
+      end
+      return nil if best_space.nil?
+      @active_space = best_space
+      return self
+    end
+    
+    class <<self
+      def constrain_proc=(proc)
+        @constrain_proc = proc
+      end
+    
+      def constrain(home, best)
+        if @constrain_proc.nil?
+          raise NotImplementedError, 'Constrain method not implemented.' 
+        else
+          @constrain_proc.call(home, best)
+        end
       end
     end
     

@@ -45,12 +45,12 @@ module Gecode
       def set_var(index)
         set_var_store[index]
       end
-=begin
+
       # Used by BAB search.
       def constrain(space)
-        raise NoMethodError, 'Constrain method has not been implemented.' 
+        Model.constrain(self, space) 
       end
-=end
+
       private
       
       # Retrieves the store used for integer variables. Creates one if none
