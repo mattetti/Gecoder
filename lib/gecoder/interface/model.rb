@@ -8,7 +8,7 @@ module Gecode
     # either be a range or a number of elements. 
     def int_var(*domain_args)
       range = domain_range(*domain_args)
-      index = active_space.new_int_vars(range.begin, range.end).first
+      index = selected_space.new_int_vars(range.begin, range.end).first
       construct_int_var(index, *domain_args)
     end
     
@@ -20,7 +20,7 @@ module Gecode
       
       range = domain_range(*domain_args)
       variables = []
-      active_space.new_int_vars(range.begin, range.end, count).each do |index|
+      selected_space.new_int_vars(range.begin, range.end, count).each do |index|
         variables << construct_int_var(index, *domain_args)
       end
       return wrap_enum(variables)
@@ -33,7 +33,7 @@ module Gecode
       # TODO: Maybe the custom domain should be specified as an array instead? 
       
       range = domain_range(*domain_args)
-      indices = active_space.new_int_vars(range.begin, range.end, 
+      indices = selected_space.new_int_vars(range.begin, range.end, 
         row_count*col_count)
       rows = []
       row_count.times do |i|
@@ -46,14 +46,14 @@ module Gecode
     
     # Creates a new boolean variable.
     def bool_var(*domain_args)
-      index = active_space.new_bool_vars.first
+      index = selected_space.new_bool_vars.first
       FreeBoolVar.new(self, index)
     end
     
     # Creates an array containing the specified number of boolean variables.
     def bool_var_array(count)
       variables = []
-      active_space.new_bool_vars(count).each do |index|
+      selected_space.new_bool_vars(count).each do |index|
         variables << FreeBoolVar.new(self, index)
       end
       return wrap_enum(variables)
@@ -62,7 +62,7 @@ module Gecode
     # Creates a matrix containing the specified number rows and columns of 
     # boolean variables.
     def bool_var_matrix(row_count, col_count)
-      indices = active_space.new_bool_vars(row_count*col_count)
+      indices = selected_space.new_bool_vars(row_count*col_count)
       rows = []
       row_count.times do |i|
         rows << indices[(i*col_count)...(i.succ*col_count)].map! do |index|
@@ -81,7 +81,7 @@ module Gecode
     def set_var(glb_domain, lub_domain, cardinality_range = nil)
       check_set_bounds(glb_domain, lub_domain)
       
-      index = active_space.new_set_vars(glb_domain, lub_domain, 
+      index = selected_space.new_set_vars(glb_domain, lub_domain, 
         to_set_cardinality_range(cardinality_range)).first
       FreeSetVar.new(self, index)
     end
@@ -92,7 +92,7 @@ module Gecode
       check_set_bounds(glb_domain, lub_domain)
       
       variables = []
-      active_space.new_set_vars(glb_domain, lub_domain, 
+      selected_space.new_set_vars(glb_domain, lub_domain, 
           to_set_cardinality_range(cardinality_range), count).each do |index|
         variables << FreeSetVar.new(self, index)
       end
@@ -106,7 +106,7 @@ module Gecode
         cardinality_range = nil)
       check_set_bounds(glb_domain, lub_domain)
       
-      indices = active_space.new_set_vars(glb_domain, lub_domain, 
+      indices = selected_space.new_set_vars(glb_domain, lub_domain, 
         to_set_cardinality_range(cardinality_range), row_count*col_count)
       rows = []
       row_count.times do |i|
@@ -117,14 +117,17 @@ module Gecode
       return wrap_enum(Util::EnumMatrix.rows(rows, false))
     end
     
-    # Retrieves the currently active space (the one which variables refer to).
+    # Retrieves the currently used space. Calling this method is only allowed 
+    # when sanctioned by the model beforehand, e.g. when the model asks a 
+    # constraint to post itself. Otherwise an RuntimeError is raised.
+    #
+    # The space returned by this method should never be stored, it should be
+    # rerequested from the model every time that it's needed.
     def active_space
-      @active_space ||= base_space
-    end
-    
-    # Retrieves the base from which searches are made. 
-    def base_space
-      @base_space ||= Gecode::Raw::Space.new
+      unless @allow_space_access
+        raise 'Space access is not allowed.'
+      end
+      selected_space
     end
     
     # Adds the specified constraint to the model. Returns the newly added 
@@ -132,6 +135,19 @@ module Gecode
     def add_constraint(constraint)
       constraints << constraint
       return constraint
+    end
+    
+    # Allows the model's active space to be accessed while the block is 
+    # executed. Don't use this unless you know what you're doing. Anything that
+    # the space is used for (such as bound variables) must be released before
+    # the block ends.
+    #
+    # Returns the result of the block.
+    def allow_space_access(&block)
+      @allow_space_access = true
+      res = yield
+      @allow_space_access = false
+      return res
     end
     
     protected
@@ -210,6 +226,17 @@ module Gecode
         @constraints.delete(constraint).post
       end
       return var
+    end
+    
+    # Retrieves the base from which searches are made. 
+    def base_space
+      @base_space ||= Gecode::Raw::Space.new
+    end
+    
+    # Retrieves the currently selected space, the one which constraints and 
+    # variables should be bound to.
+    def selected_space
+      @active_space ||= base_space
     end
   end
 end

@@ -121,8 +121,10 @@ module Gecode
     # Executes any unexecuted constraints waiting in the queue (emptying the
     # queue).
     def execute_constraints
-      constraints.each{ |con| con.post }
-      constraints.clear # Empty the queue.
+      allow_space_access do
+        constraints.each{ |con| con.post }
+        constraints.clear # Empty the queue.
+      end
     end
   end
 end
