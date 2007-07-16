@@ -1,9 +1,6 @@
 module Gecode
   # Model is the base class that all models must inherit from.
   class Model
-    attr :gecode_interaction_queue
-    protected :gecode_interaction_queue
-  
     # Creates a new integer variable with the specified domain. The domain can
     # either be a range or a number of elements. 
     def int_var(*domain_args)
@@ -152,9 +149,13 @@ module Gecode
     #
     # Returns the result of the block.
     def allow_space_access(&block)
+      # We store the old value so that nested calls don't become a problem, i.e.
+      # access is allowed as long as one call to this method is still on the 
+      # stack.
+      old = @allow_space_access
       @allow_space_access = true
       res = yield
-      @allow_space_access = false
+      @allow_space_access = old
       return res
     end
     
