@@ -63,7 +63,7 @@ module Gecode
         @active_space = best_space
         yield(self)
         @active_space = home_space
-        execute_constraints
+        post_all_postables
       end
       
       while !(next_space = bab.next).nil?
@@ -94,7 +94,7 @@ module Gecode
     # unexecuted constraints first.
     def dfs_engine
       # Execute constraints.
-      execute_constraints
+      post_all_postables
       
       # Construct the engine.
       stop = Gecode::Raw::Search::Stop.new
@@ -108,7 +108,7 @@ module Gecode
     # unexecuted constraints first.
     def bab_engine
       # Execute constraints.
-      execute_constraints
+      post_all_postables
       
       # Construct the engine.
       stop = Gecode::Raw::Search::Stop.new

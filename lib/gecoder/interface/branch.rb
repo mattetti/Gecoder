@@ -113,7 +113,7 @@ module Gecode
     # Posts the branching.
     def post
       lhs, var, val = @params.values_at(:lhs, :var, :val)
-      Gecode::Raw.branch(active_space, var.to_var_array, :var, :val)
+      Gecode::Raw.branch(@model.active_space, lhs.to_var_array, var, val)
     end
   end
 end
