@@ -218,6 +218,8 @@ module Gecode
           @params.update Gecode::Constraints::Util.decode_options(options.clone)
           @params[:lhs] = @proc.call(nil, @params)
           @expression_class.new(@model, @params).send(name, *args)
+        else
+          super
         end
       end
       
@@ -337,3 +339,4 @@ require 'gecoder/interface/constraints/int_enum_constraints'
 require 'gecoder/interface/constraints/bool_var_constraints'
 require 'gecoder/interface/constraints/bool_enum_constraints'
 require 'gecoder/interface/constraints/set_var_constraints'
+require 'gecoder/interface/constraints/set_enum_constraints'

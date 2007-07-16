@@ -75,7 +75,7 @@ describe Gecode::Constraints::Set::Domain do
     end
   end
   
-  it_should_behave_like 'constraint with options'
+  it_should_behave_like 'reifiable set constraint'
 end
 
 describe Gecode::Constraints::Set::Domain, ' (equality)' do
@@ -153,7 +153,7 @@ describe Gecode::Constraints::Set::Domain, ' (equality)' do
     @model.solve!
     @set.should be_assigned
     @set.should include(@singleton)
-    @set.size.should == 1
+    @set.val_size.should == 1
   end
   
   it 'should constrain the domain with inequality' do
@@ -161,5 +161,5 @@ describe Gecode::Constraints::Set::Domain, ' (equality)' do
     @model.solve!.should be_nil
   end
   
-  it_should_behave_like 'constraint with options'
+  it_should_behave_like 'reifiable set constraint'
 end

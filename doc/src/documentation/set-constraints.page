@@ -51,3 +51,109 @@ set.elements.must <= upper_bound
 
 Constant integers instead of the integer variable are also supported. Note that
 this constraint is not reifiable.
+
+h3. Cardinality
+
+Cardinality constraints constrain the size of the set. Constraining the size of 
+@set@ to be within the range @1..2@ can be expressed as follows.
+
+<ruby>
+set.size.must_be.in 1..2
+</ruby>
+
+Similarly one can constrain the cardinality to be less than an integer variable
+as follows.
+
+<ruby>
+set.size.must <= number
+</ruby>
+
+Everything that's normally supported by single integer variables followed by 
+@must*@ is supported after @set.size.must*@ too.
+
+h3. Channel
+
+This is similar to the channel constraint for integer variable enumeration, but
+instead of having two integer enums we have one integer and one set enumeration.
+If we revisit the integer constraint's channel example we can replace the 
+position variables with several sets that are constructed so that set i contains
+a position iff element i is located at that position.
+
+<ruby>
+position_sets.must.channel elements
+</ruby>
+or
+<ruby>
+elements.must.channel position_sets
+</ruby>
+
+This allows us to post constraints on @position_sets@ and have them affect
+@elements@ (gaining another viewpoint). Neither negation nor reification is 
+supported by the constraint.
+
+h3. Min and max
+
+The min and max constraints constrain the minimum and maximum of a set. The 
+following constraints connects the integer variables @min@ and @max@ to the 
+min and max of @set@.
+
+<ruby>
+set.min.must == min
+set.max.must == max
+</ruby>
+
+Constants can also be used (instead of e.g. @min@ in the example). Everything
+that's normally supported by single integer variables followed by @must*@ is 
+supported after @set.min.must*@ too (e.g. comparison methods).
+
+h3. Sum
+
+The following constrains the sum of @set@ to be in the range @-10..-1@.
+
+<ruby>
+set.sum.must_be.in?(-10..-1)
+</ruby>
+
+The weighted sum can also be constrained. The weights are given as a hash that
+maps elements in the set to their respective weight. If the hash maps a value 
+to nil then it's removed from the set's upper bound. The following constrains
+@odd_sum@ to be the sum of all odd numbers in @set@.
+
+<ruby>
+weights = Hash.new{ |hash, key| hash[key] = key % 2 }
+set.sum(weights).must == odd_sum
+</ruby>
+
+Everything that's normally supported by single integer variables followed by 
+@must*@ is supported after a set sum.
+
+h3. Include
+
+The following can be used to constrain @set@ to include a number of integer 
+variables located in the integer variable enum @numbers@.
+
+<ruby>
+set.must.include numbers
+</ruby>
+
+It has the side effect of sorting the integer variables in a non-descending 
+order. The constraint does not support reification nor negation.
+
+h3. Distinct
+
+There exists a distinct constraint for set variables, it's similar to the one 
+for integer variables.
+
+<ruby>
+sets.must_be.distinct(:size => 17)
+</ruby>
+
+The "option" @:size@ above is not optional, it has to be specified when using
+the distinct constraint with sets. There's a similar constraint that constrains
+the sets to at most share one element.
+
+<ruby>
+sets.must.at_most_share_one_element(:size => 17)
+</ruby>
+
+Neither of the constraints support reification nor negation.

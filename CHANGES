@@ -1,16 +1,26 @@
-== Version 0.4.1 (in SVN)
+== Version 0.5.1 (in SVN)
+
+* Added channel constraints involving set variables.
+* Added set min and max constraints.
+* Added set sum constraints (optionally weighted).
+* Added include (match) constraint for sets.
+* Added distinct constraints (distinct and at most one) for sets.
+
+== Version 0.5.0
+This release adds set variables and some of their constraints, along with the 
+last of the boolean constraints.
 
 * Added exclusive or and implication.
 * Added conjunction and disjunction for boolean enumerations.
 * Added set variables. They are created using Model{#set_var, #set_var_array, #set_var_matrix}.
 * Added domain constraints for set variables.
 * Added relation constraints for set variables.
+* Added set cardinality constraints.
 
 == Version 0.4.0
-This release adds most of the constraints supported by Gecode for integer
-variables.
+This release adds most of the integer variable constraints supported by Gecode.
 
-* [#11861] Fixed a bug stopping the creating of int variables with non-range domains.
+* [#11861] Fixed a bug stopping the creation of int variables with non-range domains.
 * Added domain constraints for int variables.
 * Added equality constraint for int enums.
 * Matrices of integer and boolean variables can now be created using Model#int_var_matrix Model#bool_var_matrix.
