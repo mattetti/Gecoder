@@ -15,15 +15,17 @@ describe Gecode::Constraints::Int::Domain do
       @model.solve!
     end
     @expect_options = lambda do |strength, reif_var|
-      if reif_var.nil?
-        Gecode::Raw.should_receive(:dom).once.with(
-          an_instance_of(Gecode::Raw::Space), 
-          @x.bind, an_instance_of(Gecode::Raw::IntSet), strength)
-      else
-        Gecode::Raw.should_receive(:dom).once.with(
-          an_instance_of(Gecode::Raw::Space), 
-          @x.bind, an_instance_of(Gecode::Raw::IntSet), 
-          an_instance_of(Gecode::Raw::BoolVar), strength)
+      @model.allow_space_access do
+        if reif_var.nil?
+          Gecode::Raw.should_receive(:dom).once.with(
+            an_instance_of(Gecode::Raw::Space), 
+            @x.bind, an_instance_of(Gecode::Raw::IntSet), strength)
+        else
+          Gecode::Raw.should_receive(:dom).once.with(
+            an_instance_of(Gecode::Raw::Space), 
+            @x.bind, an_instance_of(Gecode::Raw::IntSet), 
+            an_instance_of(Gecode::Raw::BoolVar), strength)
+        end
       end
     end
   end
@@ -31,7 +33,8 @@ describe Gecode::Constraints::Int::Domain do
   it 'should translate domain constraints with range domains' do
     Gecode::Raw.should_receive(:dom).once.with(
       an_instance_of(Gecode::Raw::Space), 
-      @x.bind, @range_domain.first, @range_domain.last, Gecode::Raw::ICL_DEF)
+      an_instance_of(Gecode::Raw::IntVar), @range_domain.first, 
+      @range_domain.last, Gecode::Raw::ICL_DEF)
     @x.must_be.in @range_domain
     @model.solve!
   end
@@ -39,8 +42,8 @@ describe Gecode::Constraints::Int::Domain do
   it 'should translate domain constraints with three dot range domains' do
     Gecode::Raw.should_receive(:dom).once.with(
       an_instance_of(Gecode::Raw::Space), 
-      @x.bind, @three_dot_range_domain.first, @three_dot_range_domain.last, 
-      Gecode::Raw::ICL_DEF)
+      an_instance_of(Gecode::Raw::IntVar), @three_dot_range_domain.first, 
+      @three_dot_range_domain.last, Gecode::Raw::ICL_DEF)
     @x.must_be.in @three_dot_range_domain
     @model.solve!
   end

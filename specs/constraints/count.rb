@@ -23,23 +23,25 @@ describe Gecode::Constraints::IntEnum::Count do
     
     # Creates an expectation corresponding to the specified input.
     @expect = lambda do |element, relation, target, strength, reif_var|
-      target = target.bind if target.respond_to? :bind
-      element = element.bind if element.respond_to? :bind
-      if reif_var.nil?
-        Gecode::Raw.should_receive(:count).once.with(
-          an_instance_of(Gecode::Raw::Space), 
-          an_instance_of(Gecode::Raw::IntVarArray), 
-          element, relation, target, strength)
-      else
-        Gecode::Raw.should_receive(:count).once.with(
-          an_instance_of(Gecode::Raw::Space), 
-          an_instance_of(Gecode::Raw::IntVarArray), 
-          element, Gecode::Raw::IRT_EQ,
-          an_instance_of(Gecode::Raw::IntVar), strength)
-        Gecode::Raw.should_receive(:rel).once.with(
-          an_instance_of(Gecode::Raw::Space), 
-          an_instance_of(Gecode::Raw::IntVar), relation,
-          target, reif_var.bind, strength)
+      @model.allow_space_access do
+        target = target.bind if target.respond_to? :bind
+        element = element.bind if element.respond_to? :bind
+        if reif_var.nil?
+          Gecode::Raw.should_receive(:count).once.with(
+            an_instance_of(Gecode::Raw::Space), 
+            an_instance_of(Gecode::Raw::IntVarArray), 
+            element, relation, target, strength)
+        else
+          Gecode::Raw.should_receive(:count).once.with(
+            an_instance_of(Gecode::Raw::Space), 
+            an_instance_of(Gecode::Raw::IntVarArray), 
+            element, Gecode::Raw::IRT_EQ,
+            an_instance_of(Gecode::Raw::IntVar), strength)
+          Gecode::Raw.should_receive(:rel).once.with(
+            an_instance_of(Gecode::Raw::Space), 
+            an_instance_of(Gecode::Raw::IntVar), relation,
+            target, reif_var.bind, strength)
+        end
       end
     end
     
