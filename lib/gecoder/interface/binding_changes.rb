@@ -190,9 +190,11 @@ module Gecode
         count.times do |i|
           if domain.kind_of? Range
             domain_params = [domain.first, domain.last] 
-          else
+          elsif domain.kind_of? Enumerable
             arr = domain.to_a
             domain_params = [Gecode::Raw::IntSet.new(arr, arr.size)]
+          else
+            raise TypeError, "Expected Enumerable, got #{domain.class}."
           end
 
           @var_array[@next_index] = Gecode::Raw::IntVar.new(@space, 
