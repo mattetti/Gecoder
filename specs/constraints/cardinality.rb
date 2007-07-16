@@ -50,8 +50,9 @@ describe Gecode::Constraints::Set::Cardinality, ' (range)' do
     Gecode::Raw.should_receive(:dom).once.with(
       an_instance_of(Gecode::Raw::Space), 
       an_instance_of(Gecode::Raw::IntVar), an_instance_of(Gecode::Raw::IntSet), 
-      Gecode::Raw::ICL_DEF)
+      an_instance_of(Gecode::Raw::BoolVar), Gecode::Raw::ICL_DEF)
     @set.size.must_not_be.in [1,3]
+    @model.solve!
   end
   
   it_should_behave_like 'non-reifiable set constraint'
