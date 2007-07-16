@@ -18,7 +18,8 @@ describe Gecode::Constraints::Set::Cardinality, ' (range)' do
       @model.solve!
     end
     @expect = lambda do |rhs|
-      Gecode::Raw.should_receive(:cardinality).once.with(@model.active_space, 
+      Gecode::Raw.should_receive(:cardinality).once.with(
+        an_instance_of(Gecode::Raw::Space), 
         @set.bind, rhs.first, rhs.last)
     end
   end
@@ -44,7 +45,8 @@ describe Gecode::Constraints::Set::Cardinality, ' (range)' do
   end
   
   it 'should not shadow the integer variable domain constrain' do
-    Gecode::Raw.should_receive(:dom).once.with(@model.active_space, 
+    Gecode::Raw.should_receive(:dom).once.with(
+      an_instance_of(Gecode::Raw::Space), 
       an_instance_of(Gecode::Raw::IntVar), an_instance_of(Gecode::Raw::IntSet), 
       Gecode::Raw::ICL_DEF)
     @set.size.must_not_be.in [1,3]
@@ -70,20 +72,24 @@ describe Gecode::Constraints::Set::Cardinality, ' (composite)' do
       if reif_var.nil?
         if !negated and relation == Gecode::Raw::IRT_EQ and 
             rhs.kind_of? Gecode::Raw::IntVar 
-          Gecode::Raw.should_receive(:cardinality).once.with(
-            @model.active_space, @set.bind, rhs)
+          Gecode::Raw.should_receive(:cardinality).once.with( 
+            an_instance_of(Gecode::Raw::Space), @set.bind, rhs)
           Gecode::Raw.should_receive(:rel).exactly(0).times
         else
           Gecode::Raw.should_receive(:cardinality).once.with(
-            @model.active_space, @set.bind, an_instance_of(Gecode::Raw::IntVar))
-          Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+            an_instance_of(Gecode::Raw::Space), @set.bind, 
+            an_instance_of(Gecode::Raw::IntVar))
+          Gecode::Raw.should_receive(:rel).once.with(
+            an_instance_of(Gecode::Raw::Space), 
             an_instance_of(Gecode::Raw::IntVar), relation, rhs, 
             strength)
         end
       else
-        Gecode::Raw.should_receive(:cardinality).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:cardinality).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           @set.bind, an_instance_of(Gecode::Raw::IntVar))
-        Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:rel).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           an_instance_of(Gecode::Raw::IntVar), relation, rhs, reif_var.bind,
           strength)
       end

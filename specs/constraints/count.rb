@@ -26,15 +26,18 @@ describe Gecode::Constraints::IntEnum::Count do
       target = target.bind if target.respond_to? :bind
       element = element.bind if element.respond_to? :bind
       if reif_var.nil?
-        Gecode::Raw.should_receive(:count).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:count).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           an_instance_of(Gecode::Raw::IntVarArray), 
           element, relation, target, strength)
       else
-        Gecode::Raw.should_receive(:count).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:count).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           an_instance_of(Gecode::Raw::IntVarArray), 
           element, Gecode::Raw::IRT_EQ,
           an_instance_of(Gecode::Raw::IntVar), strength)
-        Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:rel).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           an_instance_of(Gecode::Raw::IntVar), relation,
           target, reif_var.bind, strength)
       end

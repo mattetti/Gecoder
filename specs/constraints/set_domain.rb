@@ -15,7 +15,8 @@ describe Gecode::Constraints::Set::Domain do
     
     @expect = lambda do |relation_type, rhs, reif_var, negated|
       if reif_var.nil? and !negated
-        Gecode::Raw.should_receive(:dom).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:dom).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           @set.bind, relation_type, *expect_constant_set(rhs))
       else
         params = [@model.active_space, @set.bind, relation_type]
@@ -92,7 +93,8 @@ describe Gecode::Constraints::Set::Domain, ' (equality)' do
     
     @expect = lambda do |relation_type, rhs, reif_var|
       if reif_var.nil?
-        Gecode::Raw.should_receive(:dom).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:dom).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           @set.bind, relation_type, *expect_constant_set(rhs))
       else
         params = [@model.active_space, @set.bind, relation_type]

@@ -49,20 +49,23 @@ describe Gecode::Constraints::Set::Connection, ' (min)' do
       if reif_var.nil?
         if !negated and relation == Gecode::Raw::IRT_EQ and 
             rhs.kind_of? Gecode::Raw::IntVar 
-          Gecode::Raw.should_receive(:min).once.with(
-            @model.active_space, @set.bind, rhs)
+          Gecode::Raw.should_receive(:min).once.with( 
+            an_instance_of(Gecode::Raw::Space), @set.bind, rhs)
           Gecode::Raw.should_receive(:rel).exactly(0).times
         else
           Gecode::Raw.should_receive(:min).once.with(
-            @model.active_space, @set.bind, an_instance_of(Gecode::Raw::IntVar))
-          Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+            an_instance_of(Gecode::Raw::Space), @set.bind, an_instance_of(Gecode::Raw::IntVar))
+          Gecode::Raw.should_receive(:rel).once.with(
+            an_instance_of(Gecode::Raw::Space), 
             an_instance_of(Gecode::Raw::IntVar), relation, rhs, 
             strength)
         end
       else
-        Gecode::Raw.should_receive(:min).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:min).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           @set.bind, an_instance_of(Gecode::Raw::IntVar))
-        Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:rel).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           an_instance_of(Gecode::Raw::IntVar), relation, rhs, reif_var.bind,
           strength)
       end
@@ -91,20 +94,23 @@ describe Gecode::Constraints::Set::Connection, ' (max)' do
       if reif_var.nil?
         if !negated and relation == Gecode::Raw::IRT_EQ and 
             rhs.kind_of? Gecode::Raw::IntVar 
-          Gecode::Raw.should_receive(:max).once.with(
-            @model.active_space, @set.bind, rhs)
+          Gecode::Raw.should_receive(:max).once.with( 
+            an_instance_of(Gecode::Raw::Space), @set.bind, rhs)
           Gecode::Raw.should_receive(:rel).exactly(0).times
         else
           Gecode::Raw.should_receive(:max).once.with(
-            @model.active_space, @set.bind, an_instance_of(Gecode::Raw::IntVar))
-          Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+            an_instance_of(Gecode::Raw::Space), @set.bind, an_instance_of(Gecode::Raw::IntVar))
+          Gecode::Raw.should_receive(:rel).once.with(
+            an_instance_of(Gecode::Raw::Space), 
             an_instance_of(Gecode::Raw::IntVar), relation, rhs, 
             strength)
         end
       else
-        Gecode::Raw.should_receive(:max).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:max).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           @set.bind, an_instance_of(Gecode::Raw::IntVar))
-        Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:rel).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           an_instance_of(Gecode::Raw::IntVar), relation, rhs, reif_var.bind,
           strength)
       end
@@ -133,21 +139,24 @@ describe Gecode::Constraints::Set::Connection, ' (sum)' do
       if reif_var.nil?
         if !negated and relation == Gecode::Raw::IRT_EQ and 
             rhs.kind_of? Gecode::Raw::IntVar 
-          Gecode::Raw.should_receive(:weights).once.with(
-            @model.active_space, anything, anything, @set.bind, rhs)
+          Gecode::Raw.should_receive(:weights).once.with( 
+            an_instance_of(Gecode::Raw::Space), anything, anything, @set.bind, rhs)
           Gecode::Raw.should_receive(:rel).exactly(0).times
         else
           Gecode::Raw.should_receive(:weights).once.with(
-            @model.active_space, anything, anything, @set.bind, 
+            an_instance_of(Gecode::Raw::Space), anything, anything, @set.bind, 
             an_instance_of(Gecode::Raw::IntVar))
-          Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+          Gecode::Raw.should_receive(:rel).once.with(
+            an_instance_of(Gecode::Raw::Space), 
             an_instance_of(Gecode::Raw::IntVar), relation, rhs, 
             strength)
         end
       else
-        Gecode::Raw.should_receive(:weights).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:weights).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           anything, anything, @set.bind, an_instance_of(Gecode::Raw::IntVar))
-        Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:rel).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           an_instance_of(Gecode::Raw::IntVar), relation, rhs, reif_var.bind,
           strength)
       end
@@ -177,21 +186,24 @@ describe Gecode::Constraints::Set::Connection, ' (sum with weights)' do
       if reif_var.nil?
         if !negated and relation == Gecode::Raw::IRT_EQ and 
             rhs.kind_of? Gecode::Raw::IntVar 
-          Gecode::Raw.should_receive(:weights).once.with(
-            @model.active_space, anything, anything, @set.bind, rhs)
+          Gecode::Raw.should_receive(:weights).once.with( 
+            an_instance_of(Gecode::Raw::Space), anything, anything, @set.bind, rhs)
           Gecode::Raw.should_receive(:rel).exactly(0).times
         else
           Gecode::Raw.should_receive(:weights).once.with(
-            @model.active_space, anything, anything, @set.bind, 
+            an_instance_of(Gecode::Raw::Space), anything, anything, @set.bind, 
             an_instance_of(Gecode::Raw::IntVar))
-          Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+          Gecode::Raw.should_receive(:rel).once.with(
+            an_instance_of(Gecode::Raw::Space), 
             an_instance_of(Gecode::Raw::IntVar), relation, rhs, 
             strength)
         end
       else
-        Gecode::Raw.should_receive(:weights).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:weights).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           anything, anything, @set.bind, an_instance_of(Gecode::Raw::IntVar))
-        Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:rel).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           an_instance_of(Gecode::Raw::IntVar), relation, rhs, reif_var.bind,
           strength)
       end
@@ -219,7 +231,8 @@ describe Gecode::Constraints::Set::Connection, ' (include)' do
     #@model.branch_on @model.wrap_enum([@set])
     
     @expect = lambda do |rhs, strength, reif_var|
-      Gecode::Raw.should_receive(:match).once.with(@model.active_space, 
+      Gecode::Raw.should_receive(:match).once.with(
+        an_instance_of(Gecode::Raw::Space), 
         @set.bind, an_instance_of(Gecode::Raw::IntVarArray))
     end
     
@@ -233,7 +246,8 @@ describe Gecode::Constraints::Set::Connection, ' (include)' do
   end
   
   it 'should translate to a match constraint' do
-    Gecode::Raw.should_receive(:match).once.with(@model.active_space, 
+    Gecode::Raw.should_receive(:match).once.with(
+      an_instance_of(Gecode::Raw::Space), 
       @set.bind, an_instance_of(Gecode::Raw::IntVarArray))
     @set.must.include @array
     @model.solve!

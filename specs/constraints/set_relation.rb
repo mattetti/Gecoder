@@ -11,10 +11,12 @@ describe Gecode::Constraints::Set::Relation do
     
     @expect = lambda do |relation_type, rhs, reif_var, negated|
       if reif_var.nil? and !negated
-        Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:rel).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           @set.bind, relation_type, @set2.bind)
       else
-        Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:rel).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           @set.bind, relation_type, @set2.bind, 
           an_instance_of(Gecode::Raw::BoolVar))
       end
@@ -58,10 +60,12 @@ describe Gecode::Constraints::Set::Relation, ' (equality)' do
     
     @expect = lambda do |relation_type, rhs, reif_var|
       if reif_var.nil?
-        Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:rel).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           @set.bind, relation_type, @set2.bind)
       else
-        Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+        Gecode::Raw.should_receive(:rel).once.with(
+          an_instance_of(Gecode::Raw::Space), 
           @set.bind, relation_type, @set2.bind, 
           an_instance_of(Gecode::Raw::BoolVar))
       end
@@ -123,7 +127,8 @@ describe Gecode::Constraints::Set::Relation, ' (elements)' do
         rhs = an_instance_of(Gecode::Raw::IntVar)
       end
       rhs = rhs.bind if rhs.respond_to? :bind
-      Gecode::Raw.should_receive(:rel).once.with(@model.active_space, 
+      Gecode::Raw.should_receive(:rel).once.with(
+        an_instance_of(Gecode::Raw::Space), 
         @set.bind, relation_type, rhs)
     end
     
