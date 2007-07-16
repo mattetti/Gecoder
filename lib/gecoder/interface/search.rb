@@ -63,7 +63,7 @@ module Gecode
         @active_space = best_space
         yield(self)
         @active_space = home_space
-        post_all_postables
+        perform_queued_gecode_interactions
       end
       
       while !(next_space = bab.next).nil?
@@ -94,7 +94,7 @@ module Gecode
     # unexecuted constraints first.
     def dfs_engine
       # Execute constraints.
-      post_all_postables
+      perform_queued_gecode_interactions
       
       # Construct the engine.
       stop = Gecode::Raw::Search::Stop.new
@@ -108,7 +108,7 @@ module Gecode
     # unexecuted constraints first.
     def bab_engine
       # Execute constraints.
-      post_all_postables
+      perform_queued_gecode_interactions
       
       # Construct the engine.
       stop = Gecode::Raw::Search::Stop.new
@@ -118,11 +118,12 @@ module Gecode
         stop)
     end
     
-    # Posts any postables still waiting in the queue (emptying the queue).
-    def post_all_postables
+    # Executes any interactions with Gecode still waiting in the queue 
+    # (emptying the queue) in the process.
+    def perform_queued_gecode_interactions
       allow_space_access do
-        space_postables.each{ |con| con.post }
-        space_postables.clear # Empty the queue.
+        gecode_interaction_queue.each{ |con| con.call }
+        gecode_interaction_queue.clear # Empty the queue.
       end
     end
   end

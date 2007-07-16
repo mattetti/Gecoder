@@ -1,8 +1,8 @@
 module Gecode
   # Model is the base class that all models must inherit from.
   class Model
-    attr :space_postables
-    protected :space_postables
+    attr :gecode_interaction_queue
+    protected :gecode_interaction_queue
   
     # Creates a new integer variable with the specified domain. The domain can
     # either be a range or a number of elements. 
@@ -133,8 +133,16 @@ module Gecode
     # Adds the specified constraint to the model. Returns the newly added 
     # constraint.
     def add_constraint(constraint)
-      space_postables << constraint
+      add_interaction do
+        constraint.post
+      end
       return constraint
+    end
+    
+    # Adds a block containing something that interacts with Gecode to a queue
+    # where it is potentially executed.
+    def add_interaction(&block)
+      gecode_interaction_queue << block
     end
     
     # Allows the model's active space to be accessed while the block is 
@@ -154,8 +162,8 @@ module Gecode
     
     # Gets a queue of objects that can be posted to the model's active_space 
     # (by calling their post method).
-    def space_postables
-      @space_postables ||= []
+    def gecode_interaction_queue
+      @gecode_interaction_queue ||= []
     end
     
     private
