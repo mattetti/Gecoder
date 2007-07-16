@@ -80,14 +80,16 @@ describe Gecode::Constraints::BoolEnum, ' (conjunction)' do
       @model.solve!
     end
     @expect_options = lambda do |strength, reif_var|
-      Gecode::Raw.should_receive(:bool_and).once.with(
-        an_instance_of(Gecode::Raw::Space), 
-        an_instance_of(Gecode::Raw::BoolVarArray), 
-        an_instance_of(Gecode::Raw::BoolVar), strength)
-      unless reif_var.nil?
-        Gecode::Raw.should_receive(:bool_eqv).once.with(
+      @model.allow_space_access do
+        Gecode::Raw.should_receive(:bool_and).once.with(
           an_instance_of(Gecode::Raw::Space), 
-          an_instance_of(Gecode::Raw::BoolVar), reif_var.bind, true, strength)
+          an_instance_of(Gecode::Raw::BoolVarArray), 
+          an_instance_of(Gecode::Raw::BoolVar), strength)
+        unless reif_var.nil?
+          Gecode::Raw.should_receive(:bool_eqv).once.with(
+            an_instance_of(Gecode::Raw::Space), 
+            an_instance_of(Gecode::Raw::BoolVar), reif_var.bind, true, strength)
+        end
       end
     end
     
@@ -113,14 +115,16 @@ describe Gecode::Constraints::BoolEnum, ' (disjunction)' do
       @model.solve!
     end
     @expect_options = lambda do |strength, reif_var|
-      Gecode::Raw.should_receive(:bool_or).once.with(
-        an_instance_of(Gecode::Raw::Space), 
-        an_instance_of(Gecode::Raw::BoolVarArray), 
-        an_instance_of(Gecode::Raw::BoolVar), strength)
-      unless reif_var.nil?
-        Gecode::Raw.should_receive(:bool_eqv).once.with(
+      @model.allow_space_access do
+        Gecode::Raw.should_receive(:bool_or).once.with(
           an_instance_of(Gecode::Raw::Space), 
-          an_instance_of(Gecode::Raw::BoolVar), reif_var.bind, true, strength)
+          an_instance_of(Gecode::Raw::BoolVarArray), 
+          an_instance_of(Gecode::Raw::BoolVar), strength)
+        unless reif_var.nil?
+          Gecode::Raw.should_receive(:bool_eqv).once.with(
+            an_instance_of(Gecode::Raw::Space), 
+            an_instance_of(Gecode::Raw::BoolVar), reif_var.bind, true, strength)
+        end
       end
     end
     
