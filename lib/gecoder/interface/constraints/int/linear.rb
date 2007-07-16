@@ -102,12 +102,6 @@ module Gecode
       # relation type (as specified by Gecode) in relation to the specifed 
       # element.
       def add_relation_constraint(relation_type, element)
-        # Bind parameters.
-        @params[:lhs] = @params[:lhs].bind
-        if element.kind_of? FreeIntVar
-          element = element.bind
-        end
-      
         @model.add_constraint Linear::SimpleRelationConstraint.new(@model, 
           @params.update(:relation_type => relation_type, :element => element))
       end
@@ -136,11 +130,17 @@ module Gecode
     class SimpleRelationConstraint < Gecode::Constraints::ReifiableConstraint
       def post        
         # Fetch the parameters to Gecode.
-        params = @params.values_at(:lhs, :relation_type, :element, :reif, 
-          :strength)
-        params[3] = params[3].bind unless params[3].nil? # Bind reification var.
-        params.delete_if{ |x| x.nil? }
-        Gecode::Raw::rel(@model.active_space, *params)
+        lhs, relation, rhs, reif_var, strength = @params.values_at(:lhs, 
+          :relation_type, :element, :reif, :strength)
+          
+        rhs = rhs.bind if rhs.respond_to? :bind
+        if reif_var.nil?
+          Gecode::Raw::rel(@model.active_space, lhs.bind, relation, rhs, 
+            strength)
+        else
+          Gecode::Raw::rel(@model.active_space, lhs.bind, relation, rhs, 
+            reif_var.bind, strength)
+        end
       end
     end
   
