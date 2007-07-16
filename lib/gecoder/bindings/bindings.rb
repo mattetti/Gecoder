@@ -394,6 +394,11 @@ Rust::Bindings::create_bindings Rust::Bindings::LangCxx, "gecode" do |b|
         method.add_parameter "int", "max"
       end
       
+      klass.add_constructor do |method|
+        method.add_parameter "Gecode::MSpace*", "home"
+        method.add_parameter "Gecode::IntSet", "s"
+      end
+      
       klass.add_method "max", "int"
       
       klass.add_method "min", "int"

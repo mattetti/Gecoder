@@ -7,9 +7,9 @@ module Gecode
     # Creates a new integer variable with the specified domain. The domain can
     # either be a range or a number of elements. 
     def int_var(*domain_args)
-      range = domain_range(*domain_args)
-      index = selected_space.new_int_vars(range.begin, range.end).first
-      construct_int_var(index, *domain_args)
+      enum = domain_enum(*domain_args)
+      index = selected_space.new_int_vars(enum).first
+      FreeIntVar.new(self, index)
     end
     
     # Creates an array containing the specified number of integer variables 
@@ -18,10 +18,10 @@ module Gecode
     def int_var_array(count, *domain_args)
       # TODO: Maybe the custom domain should be specified as an array instead? 
       
-      range = domain_range(*domain_args)
+      enum = domain_enum(*domain_args)
       variables = []
-      selected_space.new_int_vars(range.begin, range.end, count).each do |index|
-        variables << construct_int_var(index, *domain_args)
+      selected_space.new_int_vars(enum, count).each do |index|
+        variables << FreeIntVar.new(self, index)
       end
       return wrap_enum(variables)
     end
@@ -32,13 +32,12 @@ module Gecode
     def int_var_matrix(row_count, col_count, *domain_args)
       # TODO: Maybe the custom domain should be specified as an array instead? 
       
-      range = domain_range(*domain_args)
-      indices = selected_space.new_int_vars(range.begin, range.end, 
-        row_count*col_count)
+      enum = domain_enum(*domain_args)
+      indices = selected_space.new_int_vars(enum, row_count*col_count)
       rows = []
       row_count.times do |i|
         rows << indices[(i*col_count)...(i.succ*col_count)].map! do |index|
-          construct_int_var(index, *domain_args)
+          FreeIntVar.new(self, index)
         end
       end
       return wrap_enum(Util::EnumMatrix.rows(rows, false))
@@ -158,28 +157,27 @@ module Gecode
     
     private
     
-    # Returns the range of the specified domain arguments, which can either be
-    # given as a range or a number of elements. Raises ArgumentError if no 
-    # arguments have been specified. 
-    def domain_range(*domain_args)
-      min = max = nil
+    # Returns an enumeration of the specified domain arguments, which can 
+    # either be given as a range or a number of elements. Raises ArgumentError 
+    # if no arguments have been specified. 
+    def domain_enum(*domain_args)
       if domain_args.empty?
         raise ArgumentError, 'A domain has to be specified.'
       elsif domain_args.size > 1
-        min = domain_args.min
-        max = domain_args.max
+        return domain_args
       else
         element = domain_args.first
-        if element.respond_to?(:begin) and element.respond_to?(:end) and
+        if element.respond_to?(:first) and element.respond_to?(:last) and
             element.respond_to?(:exclude_end?)
-          min = element.begin
-          max = element.end
-          max -= 1 if element.exclude_end?
+          if element.exclude_end?
+            return element.first..(element.last - 1)
+          else
+            return element
+          end
         else
-          min = max = element
+          return element..element
         end
       end
-      return min..max
     end
     
     # Transforms the argument to a set cardinality range, returns nil if the
@@ -210,22 +208,6 @@ module Gecode
       else
         (glb.to_a - lub.to_a).empty?
       end
-    end
-    
-    # Creates an integer variable from the specified index and domain. The 
-    # domain can either be given as a range or as a number of elements.
-    def construct_int_var(index, *domain_args)
-      var = FreeIntVar.new(self, index)
-      
-      if domain_args.size > 1
-        # Place an additional domain constraint on the variable with the 
-        # arguments as domain. We post it directly since there's no reason not
-        # to and the user might otherwise get unexpected domains when inspecting
-        # the variable before solving.
-        constraint = var.must_be.in domain_args
-        @constraints.delete(constraint).post
-      end
-      return var
     end
     
     # Retrieves the base from which searches are made. 
