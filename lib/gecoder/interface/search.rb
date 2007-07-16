@@ -118,12 +118,11 @@ module Gecode
         stop)
     end
     
-    # Executes any unexecuted constraints waiting in the queue (emptying the
-    # queue).
-    def execute_constraints
+    # Posts any postables still waiting in the queue (emptying the queue).
+    def post_all_postables
       allow_space_access do
-        constraints.each{ |con| con.post }
-        constraints.clear # Empty the queue.
+        space_postables.each{ |con| con.post }
+        space_postables.clear # Empty the queue.
       end
     end
   end

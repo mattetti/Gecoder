@@ -1,8 +1,8 @@
 module Gecode
   # Model is the base class that all models must inherit from.
   class Model
-    attr :constraints
-    protected :constraints
+    attr :space_postables
+    protected :space_postables
   
     # Creates a new integer variable with the specified domain. The domain can
     # either be a range or a number of elements. 
@@ -124,7 +124,7 @@ module Gecode
     # rerequested from the model every time that it's needed.
     def active_space
       unless @allow_space_access
-        raise 'Space access is not allowed.'
+        raise 'Space access not permitted.'
       end
       selected_space
     end
@@ -132,7 +132,7 @@ module Gecode
     # Adds the specified constraint to the model. Returns the newly added 
     # constraint.
     def add_constraint(constraint)
-      constraints << constraint
+      space_postables << constraint
       return constraint
     end
     
@@ -151,8 +151,10 @@ module Gecode
     
     protected
     
-    def constraints
-      @constraints ||= []
+    # Gets a queue of objects that can be posted to the model's active_space 
+    # (by calling their post method).
+    def space_postables
+      @space_postables ||= []
     end
     
     private

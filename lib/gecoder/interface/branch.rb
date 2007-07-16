@@ -94,9 +94,26 @@ module Gecode
         raise ArgumentError, "Unknown value selection strategy: #{val_strat}"
       end
 
-      # Add the branching.
-      Gecode::Raw.branch(active_space, variables.to_var_array, 
-        BRANCH_VAR_CONSTANTS[var_strat], BRANCH_VALUE_CONSTANTS[val_strat])
+      # Add the branching as a postable expression.
+      space_postables << BranchSelector.new(self, :lhs => variables, 
+        :var => BRANCH_VAR_CONSTANTS[var_strat], 
+        :val =>  BRANCH_VALUE_CONSTANTS[val_strat])
+    end
+  end
+  
+  # Describes a branch selector. A postable expression that selects a branching.
+  class BranchSelector
+    # Creates a selector with the specified model. The params should contain the
+    # keys :lhs, :var and :val.
+    def initialize(model, params)
+      @model = model
+      @params = params
+    end
+    
+    # Posts the branching.
+    def post
+      lhs, var, val = @params.values_at(:lhs, :var, :val)
+      Gecode::Raw.branch(active_space, var.to_var_array, :var, :val)
     end
   end
 end
