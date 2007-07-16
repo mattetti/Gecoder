@@ -85,11 +85,9 @@ module Gecode
         if lhs.kind_of? Gecode::FreeIntVar
           lhs = lhs * 1 # Convert to Gecode::Raw::LinExp
         end
-        if right_hand_side.respond_to? :to_minimodel_lin_exp
-          right_hand_side = right_hand_side.to_minimodel_lin_exp
-        elsif right_hand_side.kind_of? Gecode::FreeIntVar
-          right_hand_side = right_hand_side.bind * 1
-        elsif not right_hand_side.kind_of? Fixnum
+        if not (right_hand_side.respond_to? :to_minimodel_lin_exp or
+            right_hand_side.kind_of? Gecode::FreeIntVar or 
+            right_hand_side.kind_of? Fixnum)
           raise TypeError, 'Invalid right hand side of linear equation.'
         end
         
@@ -116,6 +114,11 @@ module Gecode
         lhs, rhs, relation_type, reif_var, strength = @params.values_at(:lhs, 
           :rhs, :relation_type, :reif, :strength)
         reif_var = reif_var.bind if reif_var.respond_to? :bind
+        if rhs.respond_to? :to_minimodel_lin_exp
+          rhs = rhs.to_minimodel_lin_exp
+        elsif rhs.kind_of? Gecode::FreeIntVar
+          rhs = rhs.bind * 1
+        end
 
         final_exp = (lhs.to_minimodel_lin_exp - rhs)
         if reif_var.nil?
