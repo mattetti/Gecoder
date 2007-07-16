@@ -98,7 +98,7 @@ module Gecode
       
       # Construct the engine.
       stop = Gecode::Raw::Search::Stop.new
-      Gecode::Raw::DFS.new(active_space, 
+      Gecode::Raw::DFS.new(selected_space, 
         Gecode::Raw::Search::Config::MINIMAL_DISTANCE,
         Gecode::Raw::Search::Config::ADAPTIVE_DISTANCE, 
         stop)
@@ -112,7 +112,7 @@ module Gecode
       
       # Construct the engine.
       stop = Gecode::Raw::Search::Stop.new
-      Gecode::Raw::BAB.new(active_space, 
+      Gecode::Raw::BAB.new(selected_space, 
         Gecode::Raw::Search::Config::MINIMAL_DISTANCE,
         Gecode::Raw::Search::Config::ADAPTIVE_DISTANCE, 
         stop)
