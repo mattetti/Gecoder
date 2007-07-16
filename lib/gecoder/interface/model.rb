@@ -124,7 +124,8 @@ module Gecode
     # rerequested from the model every time that it's needed.
     def active_space
       unless @allow_space_access
-        raise 'Space access not permitted.'
+        raise 'Space access is restricted and the permission to access the ' + 
+          'space has not been given.'
       end
       selected_space
     end
