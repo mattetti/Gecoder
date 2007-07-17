@@ -43,34 +43,28 @@ module Gecode
     # (accessible from the model) to be as low as possible then one should write
     # the following.
     #
-    # model.optimize! do |solution|
-    #   solution.price.must < solution.price.val
+    # model.optimize! do |model, best_so_far|
+    #   model.price.must < best_so_far.price.val
     # end
     #
-    # Return nil if there is no solution.
+    # Returns nil if there is no solution.
     def optimize!(&block)
       next_space = nil
       best_space = nil
       bab = bab_engine
       
       Model.constrain_proc = lambda do |home_space, best_space|
-#Gecode::Raw::rel(home_space, @z.bind, Gecode::Raw::IRT_GR, 10, Gecode::Raw::ICL_DEF)
-        # TODO: The spaces are involved in the binding, and constraints depend
-        # on which space the variables are bound to. Hence no binding and no
-        # posting of constraints should ever be done outside a constraint's post
-        # method. This is currently not followed by all constraints, that has to
-        # be fixed.
         @active_space = best_space
-        yield(self)
+        yield(self, self)
         @active_space = home_space
         perform_queued_gecode_interactions
       end
       
-      while !(next_space = bab.next).nil?
+      while not (next_space = bab.next).nil?
         best_space = next_space
       end
+      Model.constrain_proc = nil
       return nil if best_space.nil?
-      @active_space = best_space
       return self
     end
     

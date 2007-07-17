@@ -47,6 +47,11 @@ module GecodeRaw
       set_var_store[index]
     end
     
+    # Used by Gecode during BAB-search.
+    def constrain(best_so_far_space)
+      Gecode::Model.constrain(self, best_so_far_space)
+    end
+    
     private
     
     # Retrieves the store used for integer variables. Creates one if none
