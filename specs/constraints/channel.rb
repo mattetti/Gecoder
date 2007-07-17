@@ -43,8 +43,8 @@ describe Gecode::Constraints::IntEnum::Channel, ' (two int enums)' do
   it 'should constrain variables to be channelled' do
     @elements.must.channel @positions
     @model.solve!
-    elements = @model.elements.map{ |e| e.val }
-    positions = @model.elements.map{ |p| p.val }
+    elements = @model.elements.values
+    positions = @model.elements.values
     elements.each_with_index do |element, i|
       element.should equal(positions.index(i))
     end
@@ -82,9 +82,9 @@ describe Gecode::Constraints::IntEnum::Channel, ' (one int enum and one set enum
     @positions.must.channel @sets
     @model.solve!
     sets = @model.sets
-    positions = @model.positions.map{ |p| p.val }
+    positions = @model.positions.values
     positions.each_with_index do |position, i|
-      sets[position].should include(i)
+      sets[position].value.should include(i)
     end
   end
 end

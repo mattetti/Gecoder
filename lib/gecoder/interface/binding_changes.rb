@@ -80,50 +80,6 @@ module GecodeRaw
       return @set_var_store
     end
   end
-  
-  class IntVar
-    # Aliases to make method-names more ruby-like.
-    alias_method :assigned?, :assigned
-    alias_method :in?, :in
-    alias_method :include?, :in
-    alias_method :range?, :range
-  end
-  
-  class BoolVar
-    # Aliases to make method-names more ruby-like.
-    alias_method :assigned?, :assigned
-    
-    def true?
-      val == 1
-    end
-    
-    def false?
-      val == 0
-    end
-  end
-  
-  class SetVar
-    # Aliases to make method-names more ruby-like.
-    alias_method :assigned?, :assigned
-    
-    alias_method :include_glb?, :contains
-    alias_method :include?, :contains
-    def include_lub?(element)
-      !notContains(element)
-    end
-    
-    alias_method :glb_min, :glbMin
-    alias_method :glb_max, :glbMax
-    alias_method :lub_min, :lubMin
-    alias_method :lub_max, :lubMax
-    
-    alias_method :glb_size, :glbSize
-    alias_method :val_size, :glbSize
-    alias_method :lub_size, :lubSize
-    
-    alias_method :card_min, :cardMin
-    alias_method :card_max, :cardMax
-  end
 end
 
 module Gecode
@@ -187,9 +143,9 @@ module Gecode
       end
       
       # Creates the specified number of integer variables in the space with the
-    # specified domain. Returns the indices with which they can then be 
-    # accessed using int_var. The domain can be given as a Range (trated 
-    # specially) or as another enum.
+      # specified domain. Returns the indices with which they can then be 
+      # accessed using int_var. The domain can be given as a Range (trated 
+      # specially) or as another enum.
       def new_vars(domain, count = 1)
         grow(@next_index + count) # See the design note for more information.
         count.times do |i|

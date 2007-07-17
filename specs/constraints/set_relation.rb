@@ -141,6 +141,10 @@ describe Gecode::Constraints::Set::Relation, ' (elements)' do
     @invoke_options = lambda do |hash|
       @set.elements.must_be.equal_to(@int_var, hash)
     end
+    
+    @invoke_options = lambda do |hash|
+      @set.elements.must_be.equal_to(@int_var, hash)
+    end
   end
   
   Gecode::Constraints::Util::RELATION_TYPES.each_pair do |relation, type|
@@ -176,16 +180,16 @@ describe Gecode::Constraints::Set::Relation, ' (elements)' do
     @int_var.must == 0
     @model.solve!
     @set.should be_assigned
-    @set.should include(0)
-    @set.should_not include(1,2)
+    @set.value.should include(0)
+    @set.value.should_not include(1,2)
   end
   
   it 'should constrain the elements of the set (constant parameter)' do
     @set.elements.must <= 0
     @model.solve!
     @set.should be_assigned
-    @set.should include(0)
-    @set.should_not include(1,2)
+    @set.value.should include(0)
+    @set.value.should_not include(1,2)
   end
   
   it_should_behave_like 'non-reifiable set constraint'

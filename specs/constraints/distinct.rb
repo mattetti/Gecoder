@@ -80,8 +80,8 @@ describe Gecode::Constraints::IntEnum::Distinct, ' (with offsets)' do
   it 'should consider offsets when making variables distinct' do
     @model.vars.with_offsets(-1,0).must_be.distinct
     x,y = @model.solve!.vars
-    x.val.should equal(1)
-    y.val.should equal(1)
+    x.value.should equal(1)
+    y.value.should equal(1)
   end
   
   # This tests two distinct in conjunction. It's here because of a bug found.
@@ -94,8 +94,8 @@ describe Gecode::Constraints::IntEnum::Distinct, ' (with offsets)' do
   it 'should accept an array as offsets' do
     @model.vars.with_offsets([-1,0]).must_be.distinct
     x,y = @model.solve!.vars
-    x.val.should equal(1)
-    y.val.should equal(1)
+    x.value.should equal(1)
+    y.value.should equal(1)
   end
   
   it 'should not allow negation' do
@@ -137,9 +137,9 @@ describe Gecode::Constraints::SetEnum::Distinct do
     solution = @model.solve!
     solution.should_not be_nil
     set1, set2 = solution.sets
-    set1.glb.size.should == @size
-    set2.glb.size.should == @size
-    set1.glb.should_not == set2.glb
+    set1.value.size.should == @size
+    set2.value.size.should == @size
+    set1.value.should_not == set2.value
   end
   
   it 'should not allow negation' do
@@ -191,9 +191,9 @@ describe Gecode::Constraints::SetEnum::Distinct, ' (at most one)' do
     solution = @model.solve!
     solution.should_not be_nil
     set1, set2 = solution.sets
-    set1.glb.size.should == @size
-    set2.glb.size.should == @size
-    (set1.glb & set2.glb).size.should <= 1
+    set1.value.size.should == @size
+    set2.value.size.should == @size
+    (set1.value.to_a & set2.value.to_a).size.should <= 1
   end
 
   it 'should not allow negation' do
