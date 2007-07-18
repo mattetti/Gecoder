@@ -208,9 +208,8 @@ describe Gecode::Model, '(optimization search)' do
     solution.z.value.should == 25
   end
   
-  it 'should optimize the solution (2)' do
+  it 'should not be bothered by garbage collecting' do
     solution = SampleOptimizationProblem2.new.optimize! do |model, best_so_far|
-      p best_so_far.money.values.to_number
       model.money.to_number.must > best_so_far.money.values.to_number
     end
     solution.should_not be_nil

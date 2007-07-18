@@ -62,10 +62,12 @@ module Gecode
 
       # Perform the search.
       stop = Gecode::Raw::Search::Stop.new
+      GC.disable
       result = Gecode::Raw::bab(selected_space, 
         Gecode::Raw::Search::Config::MINIMAL_DISTANCE, 
         Gecode::Raw::Search::Config::ADAPTIVE_DISTANCE, 
         stop)
+      GC.enable
       
       # Reset the method used constrain calls and return the result.
       Model.constrain_proc = nil
