@@ -37,6 +37,6 @@ end
 
 array = [2,4,-5,2]
 solution = MaxSlice.new(array).optimize! do |model, best_so_far|
-  model.indices.sum(:substitutes => model.substitutions).must > best_so_far.sum
+  model.indices.sum(:substitutions => model.substitutions).must > best_so_far.sum
 end
 puts solution.value
