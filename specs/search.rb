@@ -33,6 +33,25 @@ class SampleOptimizationProblem < Gecode::Model
   end
 end
 
+class SampleOptimizationProblem2 < Gecode::Model
+  attr :money
+  
+  def initialize
+    @money = int_var_array(3, 0..9)
+    @money.must_be.distinct
+    
+    branch_on @money, :variable => :smallest_size, :value => :min
+  end
+end
+
+class Array
+  # Computes a number of the specified base using the array's elements as 
+  # digits.
+  def to_number(base = 10)
+    inject{ |result, variable| variable + result * base }
+  end
+end
+
 describe Gecode::Model, ' (with multiple solutions)' do
   before do
     @domain = 0..3
@@ -187,6 +206,15 @@ describe Gecode::Model, '(optimization search)' do
     solution.x.value.should == 5
     solution.y.value.should == 5
     solution.z.value.should == 25
+  end
+  
+  it 'should optimize the solution (2)' do
+    solution = SampleOptimizationProblem2.new.optimize! do |model, best_so_far|
+      p best_so_far.money.values.to_number
+      model.money.to_number.must > best_so_far.money.values.to_number
+    end
+    solution.should_not be_nil
+    solution.money.values.to_number.should == 987
   end
   
   it 'should raise error if no constrain proc has been defined' do
