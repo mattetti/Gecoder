@@ -69,10 +69,12 @@ module Gecode
     end
     
     class <<self
+      # Sets the proc that should be used to handle constrain requests.
       def constrain_proc=(proc)
         @constrain_proc = proc
       end
     
+      # Called by spaces when they want to constrain as part of BAB-search.
       def constrain(home, best)
         if @constrain_proc.nil?
           raise NotImplementedError, 'Constrain method not implemented.' 
