@@ -1429,6 +1429,13 @@ Rust::Bindings::create_bindings Rust::Bindings::LangCxx, "gecode" do |b|
 # 			func.add_parameter "Gecode::IntConLevel", "icl", true
 # 		end
     
+    ns.add_function "bab", "Gecode::MSpace*" do |func|
+      func.add_parameter "Gecode::MSpace*", "home"
+      func.add_parameter "int", "c_d"
+      func.add_parameter "int", "a_d"
+      func.add_parameter "Gecode::Search::MStop *", "st"
+    end
+    
     ns.add_function "rel" do |func|
       func.add_parameter "Gecode::MSpace*", "home"
       func.add_parameter "Gecode::IntVar", "x0"

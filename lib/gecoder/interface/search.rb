@@ -49,22 +49,28 @@ module Gecode
     #
     # Returns nil if there is no solution.
     def optimize!(&block)
-      next_space = nil
-      best_space = nil
-      bab = bab_engine
-      
+      # Execute constraints.
+      perform_queued_gecode_interactions
+
+      # Set the method used for constrain calls by the BAB-search.
       Model.constrain_proc = lambda do |home_space, best_space|
         @active_space = best_space
         yield(self, self)
         @active_space = home_space
         perform_queued_gecode_interactions
       end
+
+      # Perform the search.
+      stop = Gecode::Raw::Search::Stop.new
+      result = Gecode::Raw::bab(selected_space, 
+        Gecode::Raw::Search::Config::MINIMAL_DISTANCE, 
+        Gecode::Raw::Search::Config::ADAPTIVE_DISTANCE, 
+        stop)
       
-      while not (next_space = bab.next).nil?
-        best_space = next_space
-      end
+      # Reset the method used constrain calls and return the result.
       Model.constrain_proc = nil
-      return nil if best_space.nil?
+      return nil if result.nil?
+      @active_space = result
       return self
     end
     
@@ -95,20 +101,6 @@ module Gecode
       # Construct the engine.
       stop = Gecode::Raw::Search::Stop.new
       Gecode::Raw::DFS.new(selected_space, 
-        Gecode::Raw::Search::Config::MINIMAL_DISTANCE,
-        Gecode::Raw::Search::Config::ADAPTIVE_DISTANCE, 
-        stop)
-    end
-    
-    # Creates a branch and bound engine for optimization search, executing any 
-    # unexecuted constraints first.
-    def bab_engine
-      # Execute constraints.
-      perform_queued_gecode_interactions
-      
-      # Construct the engine.
-      stop = Gecode::Raw::Search::Stop.new
-      Gecode::Raw::BAB.new(selected_space, 
         Gecode::Raw::Search::Config::MINIMAL_DISTANCE,
         Gecode::Raw::Search::Config::ADAPTIVE_DISTANCE, 
         stop)
