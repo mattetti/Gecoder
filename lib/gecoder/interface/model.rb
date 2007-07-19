@@ -159,6 +159,12 @@ module Gecode
       return res
     end
     
+    # Starts tracking a variable that depends on the space. All variables 
+    # created should call this method for their respective models.
+    def track_variable(variable)
+      (@variables ||= []) << variable
+    end
+    
     protected
     
     # Gets a queue of objects that can be posted to the model's active_space 
@@ -231,6 +237,14 @@ module Gecode
     # variables should be bound to.
     def selected_space
       @active_space ||= base_space
+    end
+    
+    # Refreshes all cached variables. This should be called if the variables
+    # in an existing space were changed.
+    def refresh_variables
+      @variables.each do |variable|
+        variable.refresh if variable.cached?
+      end
     end
   end
 end

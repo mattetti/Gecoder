@@ -52,6 +52,13 @@ module GecodeRaw
       Gecode::Model.constrain(self, best_so_far_space)
     end
     
+    # Refreshes the underlying stores used by the space.
+    def refresh
+      @int_var_store = nil
+      @bool_var_store = nil
+      @set_var_store = nil
+    end
+    
     private
     
     # Retrieves the store used for integer variables. Creates one if none

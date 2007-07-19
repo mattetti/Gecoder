@@ -8,6 +8,26 @@ module Gecode
       @model = model
       @index = index
       @bound_space = @bound_var = nil
+      model.track_variable(self)
+    end
+    
+    # Checks whether the variable is cached, i.e. whether it needs to be 
+    # rebound after changes to a space.
+    def cached?
+      not @bound_space.nil?
+    end
+    
+    # Forces the variable to refresh itself.
+    def refresh
+      @bound_space = nil
+    end
+    
+    def inspect
+      if assigned?
+        "#<#{self.class} #{domain}>"
+      else
+        "#<#{self.class} #{domain}>"
+      end
     end
     
     private
@@ -15,6 +35,13 @@ module Gecode
     # Returns the space that the int variable should bind to when needed.
     def active_space
       @model.active_space
+    end
+    
+    # Sends the specified method name and arguments to the bound variable.
+    def send_bound(method_name, *args)
+      @model.allow_space_access do
+        bind.send(method_name, *args)
+      end
     end
   end
   
@@ -35,14 +62,6 @@ module Gecode
         return @bound
       end
       
-      def inspect
-        if assigned?
-          "#<\#{self.class} \#{domain}>"
-        else
-          "#<\#{self.class} \#{domain}>"
-        end
-      end
-      
       private
       
       # Delegates the method with the specified name to a method with the 
@@ -57,13 +76,6 @@ module Gecode
             end
           end
         end_code
-      end
-      
-      # Sends the specified method name and arguments to the bound variable.
-      def send_bound(method_name, *args)
-        @model.allow_space_access do
-          bind.send(method_name, *args)
-        end
       end
     end_method_definitions
     return clazz

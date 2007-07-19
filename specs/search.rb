@@ -39,6 +39,7 @@ class SampleOptimizationProblem2 < Gecode::Model
   def initialize
     @money = int_var_array(3, 0..9)
     @money.must_be.distinct
+    @money.to_number.must < 500 # Otherwise it takes some time.
     
     branch_on @money, :variable => :smallest_size, :value => :min
   end
@@ -194,12 +195,8 @@ describe Gecode::Model, ' (without constraints)' do
 end
 
 describe Gecode::Model, '(optimization search)' do
-  before do
-    @model = SampleOptimizationProblem.new
-  end
-  
   it 'should optimize the solution' do
-    solution = @model.optimize! do |model, best_so_far|
+    solution = SampleOptimizationProblem.new.optimize! do |model, best_so_far|
       model.z.must > best_so_far.z.value
     end
     solution.should_not be_nil
@@ -209,11 +206,12 @@ describe Gecode::Model, '(optimization search)' do
   end
   
   it 'should not be bothered by garbage collecting' do
+    # This goes through 400+ spaces.
     solution = SampleOptimizationProblem2.new.optimize! do |model, best_so_far|
       model.money.to_number.must > best_so_far.money.values.to_number
     end
     solution.should_not be_nil
-    solution.money.values.to_number.should == 987
+    solution.money.values.to_number.should == 498
   end
   
   it 'should raise error if no constrain proc has been defined' do

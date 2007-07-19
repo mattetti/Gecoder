@@ -72,6 +72,10 @@ module Gecode
       # Reset the method used constrain calls and return the result.
       Model.constrain_proc = nil
       return nil if result.nil?
+      
+      # Refresh the solution.
+      result.refresh
+      refresh_variables
       @active_space = result
       return self
     end
