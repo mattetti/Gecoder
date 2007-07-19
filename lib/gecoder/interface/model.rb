@@ -5,7 +5,7 @@ module Gecode
     # either be a range or a number of elements. 
     def int_var(*domain_args)
       enum = domain_enum(*domain_args)
-      index = selected_space.new_int_vars(enum).first
+      index = variable_creation_space.new_int_vars(enum).first
       FreeIntVar.new(self, index)
     end
     
@@ -17,7 +17,7 @@ module Gecode
       
       enum = domain_enum(*domain_args)
       variables = []
-      selected_space.new_int_vars(enum, count).each do |index|
+      variable_creation_space.new_int_vars(enum, count).each do |index|
         variables << FreeIntVar.new(self, index)
       end
       return wrap_enum(variables)
@@ -30,7 +30,7 @@ module Gecode
       # TODO: Maybe the custom domain should be specified as an array instead? 
       
       enum = domain_enum(*domain_args)
-      indices = selected_space.new_int_vars(enum, row_count*col_count)
+      indices = variable_creation_space.new_int_vars(enum, row_count*col_count)
       rows = []
       row_count.times do |i|
         rows << indices[(i*col_count)...(i.succ*col_count)].map! do |index|
@@ -42,14 +42,14 @@ module Gecode
     
     # Creates a new boolean variable.
     def bool_var(*domain_args)
-      index = selected_space.new_bool_vars.first
+      index = variable_creation_space.new_bool_vars.first
       FreeBoolVar.new(self, index)
     end
     
     # Creates an array containing the specified number of boolean variables.
     def bool_var_array(count)
       variables = []
-      selected_space.new_bool_vars(count).each do |index|
+      variable_creation_space.new_bool_vars(count).each do |index|
         variables << FreeBoolVar.new(self, index)
       end
       return wrap_enum(variables)
@@ -58,7 +58,7 @@ module Gecode
     # Creates a matrix containing the specified number rows and columns of 
     # boolean variables.
     def bool_var_matrix(row_count, col_count)
-      indices = selected_space.new_bool_vars(row_count*col_count)
+      indices = variable_creation_space.new_bool_vars(row_count*col_count)
       rows = []
       row_count.times do |i|
         rows << indices[(i*col_count)...(i.succ*col_count)].map! do |index|
@@ -77,7 +77,7 @@ module Gecode
     def set_var(glb_domain, lub_domain, cardinality_range = nil)
       check_set_bounds(glb_domain, lub_domain)
       
-      index = selected_space.new_set_vars(glb_domain, lub_domain, 
+      index = variable_creation_space.new_set_vars(glb_domain, lub_domain, 
         to_set_cardinality_range(cardinality_range)).first
       FreeSetVar.new(self, index)
     end
@@ -88,7 +88,7 @@ module Gecode
       check_set_bounds(glb_domain, lub_domain)
       
       variables = []
-      selected_space.new_set_vars(glb_domain, lub_domain, 
+      variable_creation_space.new_set_vars(glb_domain, lub_domain, 
           to_set_cardinality_range(cardinality_range), count).each do |index|
         variables << FreeSetVar.new(self, index)
       end
@@ -102,7 +102,7 @@ module Gecode
         cardinality_range = nil)
       check_set_bounds(glb_domain, lub_domain)
       
-      indices = selected_space.new_set_vars(glb_domain, lub_domain, 
+      indices = variable_creation_space.new_set_vars(glb_domain, lub_domain, 
         to_set_cardinality_range(cardinality_range), row_count*col_count)
       rows = []
       row_count.times do |i|
@@ -237,6 +237,11 @@ module Gecode
     # variables should be bound to.
     def selected_space
       @active_space ||= base_space
+    end
+    
+    # Retrieves the space that should be used for variable creation.
+    def variable_creation_space
+      @variable_creation_space || selected_space
     end
     
     # Refreshes all cached variables. This should be called if the variables

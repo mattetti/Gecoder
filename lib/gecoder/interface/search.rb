@@ -55,8 +55,11 @@ module Gecode
       # Set the method used for constrain calls by the BAB-search.
       Model.constrain_proc = lambda do |home_space, best_space|
         @active_space = best_space
+        @variable_creation_space = home_space
         yield(self, self)
         @active_space = home_space
+        @variable_creation_space = nil
+        
         perform_queued_gecode_interactions
       end
 

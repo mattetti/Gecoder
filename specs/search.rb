@@ -219,4 +219,16 @@ describe Gecode::Model, '(optimization search)' do
       Gecode::Model.constrain(nil, nil) 
     end.should raise_error(NotImplementedError)
   end
+  
+  it 'should not have problems with variables being created in the optimization block' do
+    solution = SampleOptimizationProblem.new.optimize! do |model, best_so_far|
+      tmp = model.int_var(0..25)
+      tmp.must == model.z
+      tmp.must > best_so_far.z.value
+    end
+    solution.should_not be_nil
+    solution.x.value.should == 5
+    solution.y.value.should == 5
+    solution.z.value.should == 25
+  end
 end
