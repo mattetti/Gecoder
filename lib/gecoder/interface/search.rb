@@ -64,12 +64,11 @@ module Gecode
       end
 
       # Perform the search.
-      stop = Gecode::Raw::Search::Stop.new
       GC.disable
       result = Gecode::Raw::bab(selected_space, 
         Gecode::Raw::Search::Config::MINIMAL_DISTANCE, 
         Gecode::Raw::Search::Config::ADAPTIVE_DISTANCE, 
-        stop)
+        nil)
       GC.enable
       
       # Reset the method used constrain calls and return the result.
@@ -108,11 +107,10 @@ module Gecode
       perform_queued_gecode_interactions
       
       # Construct the engine.
-      stop = Gecode::Raw::Search::Stop.new
       Gecode::Raw::DFS.new(selected_space, 
         Gecode::Raw::Search::Config::MINIMAL_DISTANCE,
         Gecode::Raw::Search::Config::ADAPTIVE_DISTANCE, 
-        stop)
+        nil)
     end
     
     # Executes any interactions with Gecode still waiting in the queue 
