@@ -11,21 +11,21 @@ class MaxSlice < Gecode::Model
   
   def initialize(array)
     @array = array
-    @start, @length = int_var_array(2, 0...array.size)
-    (@start + @length).must < array.size
+    @start, @length = int_var_array(2, 0..array.size)
+    (@start + @length).must <= array.size
     
     # Sumation substitutions.
     @substitutions = Hash[*(0...array.size).zip(array).flatten]
 
-    # Set up a set of indices.
+    # Set up a set of indices, we constrain it to be a range starting at @start
+    # with length @length.
     @indices = set_var([], 0...array.size)
     @indices.min.must == @start
     @indices.max.must == @start + @length - 1
-
     @indices.size.must == @length
 
     # Implied constraints.
-    @indices.sum(:substitutions => @substitutions).must >= 0
+    #@indices.sum(:substitutions => @substitutions).must >= 0
     
     branch_on wrap_enum([@start, @length])
   end
@@ -35,20 +35,14 @@ class MaxSlice < Gecode::Model
   end
   
   def value
-    @array.slice(@start.value..@stop.value)
+    @array.slice(@start.value, @length.value)
   end
 end
 
-array = [2,4,-5,2]
+array = Array.new(4) { rand(11) - 5 }
+p array
 solution = MaxSlice.new(array).optimize! do |model, best_so_far|
-p best_so_far.sum
-p best_so_far.start.value
-p best_so_far.length.value
   model.indices.sum(:substitutions => model.substitutions).must > best_so_far.sum
 end
-p solution.sum
-solution = MaxSlice.new(array).each_solution do |solution|
-p "one solution: #{solution.sum}"
-end
-#p solution.indices.value.to_a
-#p solution.value
+p solution.value
+
