@@ -2,8 +2,10 @@ module Gecode
   # Model is the base class that all models must inherit from.
   class Model
     # Creates a new integer variable with the specified domain. The domain can
-    # either be a range, a single element, or an enumeration of elements. 
-    def int_var(domain)
+    # either be a range, a single element, or an enumeration of elements. If no
+    # domain is specified then the largest possible domain is used.
+    def int_var(domain = 
+        Gecode::Raw::Limits::Int::INT_MIN..Gecode::Raw::Limits::Int::INT_MAX)
       enum = domain_enum(domain)
       index = variable_creation_space.new_int_vars(enum).first
       FreeIntVar.new(self, index)
