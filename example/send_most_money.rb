@@ -51,7 +51,8 @@ class Array
   end
 end
 
-solution = SendMoreMoney.new.optimize! do |model, best_so_far| 
+solution = SendMoreMoney.new.optimize! do |model, best_so_far|
   model.money.to_number.must > best_so_far.money.values.to_number
 end
 puts solution.to_s
+puts "money: #{solution.money.values.to_number}"
