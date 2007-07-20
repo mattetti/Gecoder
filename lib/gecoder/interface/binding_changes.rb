@@ -107,12 +107,8 @@ module Gecode
       
       # Grows the store to the new size.
       def grow(new_size)
-        new_array = new_storage_array(new_size)
-        @var_array.size.times do |i|
-          new_array[i] = @var_array[i]
-        end
-        @var_array = new_array
-        @size = new_size
+        @var_array.enlargeArray(@space, new_size - @size)
+        @size = @var_array.size
       end
     end
   
