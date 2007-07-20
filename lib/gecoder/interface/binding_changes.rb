@@ -64,26 +64,28 @@ module GecodeRaw
     # Retrieves the store used for integer variables. Creates one if none
     # exists.
     def int_var_store
-      if @int_var_store.nil?
+      # TODO: caching interferes with the variable creation during BAB-search,
+      # find out why.
+      #if @int_var_store.nil?
         @int_var_store = Gecode::Util::IntVarStore.new(self) 
-      end
+      #end
       return @int_var_store
     end
     
     # Retrieves the store used for boolean variables. Creates one if none
     # exists.
     def bool_var_store
-      if @bool_var_store.nil?
+      #if @bool_var_store.nil?
         @bool_var_store = Gecode::Util::BoolVarStore.new(self) 
-      end
+      #end
       return @bool_var_store
     end
     
     # Retrieves the store used for set variables. Creates one if none exists.
     def set_var_store
-      if @set_var_store.nil?
+      #if @set_var_store.nil?
         @set_var_store = Gecode::Util::SetVarStore.new(self) 
-      end
+      #end
       return @set_var_store
     end
   end
@@ -108,7 +110,7 @@ module Gecode
       # Grows the store to the new size.
       def grow(new_size)
         @var_array.enlargeArray(@space, new_size - @size)
-        @size = @var_array.size
+        @size = new_size
       end
     end
   
