@@ -220,7 +220,7 @@ module Rust
         super
 
         @varname =
-        "f#{@parent.namespace.name.gsub("::","_")}_#{@parent.name}_#{@name}"
+        "f#{@parent.namespace.name.gsub("::","_")}_#{@parent.varname}_#{@name}"
 
         @definition_template = Templates["CxxMethodStub"]
         @initialization_template = Templates["MethodInitBinding"]
