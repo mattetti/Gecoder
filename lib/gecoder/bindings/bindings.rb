@@ -403,19 +403,19 @@ Rust::Bindings::create_bindings Rust::Bindings::LangCxx, "gecode" do |b|
       end
     end
     
-    ns.add_namespace "Int::Limits" do |limitsns|
-      #intns.add_namespace "Limits" do |limitsns|
-        limitsns.add_constant "INT_MAX", "Gecode::Int::Limits::max"
-        limitsns.add_constant "INT_MIN", "Gecode::Int::Limits::min"
-      #end
+    # The namespace structure doesn't completely mimic Gecode's namespace 
+    # structure. This is because there's apparently some limitation that 
+    # prevents two namespaces from having the same name (Limits), regardless
+    # of if they have the same parent or not. 
+    ns.add_namespace "IntLimits" do |limitsns|
+      limitsns.add_constant "MAX", "Gecode::Int::Limits::max"
+      limitsns.add_constant "MIN", "Gecode::Int::Limits::min"
     end
 
-    ns.add_namespace "Set" do |setns|
-      setns.add_namespace "Limits" do |limitsns|
-        limitsns.add_constant "INT_MAX", "Gecode::Set::Limits::max"
-        limitsns.add_constant "INT_MIN", "Gecode::Set::Limits::min"
-        limitsns.add_constant "CARD_MAX", "Gecode::Set::Limits::card"
-      end
+    ns.add_namespace "SetLimits" do |limitsns|
+      limitsns.add_constant "MAX", "Gecode::Set::Limits::max"
+      limitsns.add_constant "MIN", "Gecode::Set::Limits::min"
+      limitsns.add_constant "CARD", "Gecode::Set::Limits::card"
     end
     
     ns.add_cxx_class "IntSet" do |klass|
