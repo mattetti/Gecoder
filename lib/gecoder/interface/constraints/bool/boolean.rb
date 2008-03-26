@@ -126,8 +126,8 @@ module Gecode
     #   (b1 & b2).must_not.imply b3
     class BooleanConstraint < Gecode::Constraints::ReifiableConstraint
       def post
-        lhs, rhs, negate, strength, reif_var = @params.values_at(:lhs, :rhs, 
-          :negate, :strength, :reif)
+        lhs, rhs, negate, strength, kind, reif_var = 
+          @params.values_at(:lhs, :rhs, :negate, :strength, :kind, :reif)
         space = (lhs.model || rhs.model).active_space
         
         # TODO: It should be possible to reduce the number of necessary 
@@ -150,7 +150,7 @@ module Gecode
           should_hold = !negate & rhs
           if reif_var.nil?
             Gecode::Raw::MiniModel::BoolExpr.new(lhs.bind).post(space, 
-              should_hold)
+              should_hold, strength, kind)
           else
             Gecode::Raw::bool_eqv(space, lhs.bind, reif_var.bind, should_hold, 
               strength)

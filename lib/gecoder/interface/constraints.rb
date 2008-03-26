@@ -44,6 +44,14 @@ module Gecode
         :domain   => Gecode::Raw::ICL_DOM
       }
       
+      # Maps the name used in options to the value used in Gecode for 
+      # propagation kinds.
+      PROPAGATION_KINDS = {
+        :default  => Gecode::Raw::PK_DEF,
+        :speed    => Gecode::Raw::PK_SPEED,
+        :memory   => Gecode::Raw::PK_MEMORY,
+      } 
+      
       # Maps the names of the methods to the corresponding integer relation 
       # type in Gecode.
       RELATION_TYPES = { 
@@ -120,6 +128,12 @@ module Gecode
           raise ArgumentError, "Unrecognized propagation strength #{strength}."
         end
         
+        # Propagation kind.
+        kind = options.delete(:kind) || :default
+        unless PROPAGATION_KINDS.include? kind
+          raise ArgumentError, "Unrecognized propagation kind #{kind}."
+        end  
+                      
         # Reification.
         reif_var = options.delete(:reify)
         unless reif_var.nil? or reif_var.kind_of? FreeBoolVar
@@ -131,7 +145,11 @@ module Gecode
           raise ArgumentError, 'Unrecognized constraint option: ' + 
             options.keys.first.to_s
         end
-        return {:strength => PROPAGATION_STRENGTHS[strength], :reif => reif_var}
+        return {
+          :strength => PROPAGATION_STRENGTHS[strength], 
+          :kind => PROPAGATION_KINDS[kind],
+          :reif => reif_var
+        }
       end
       
       # Converts the different ways to specify constant sets in the interface
