@@ -85,9 +85,9 @@ problem.
 The different strengths are:
 <dl>
   <dt>@:value@</dt><dd>Value consistency (naive).</dd>
-	<dt>@:bounds@</dt><dd>Bounds consistency.</dd>
-	<dt>@:domain@</dt><dd>Domain consistency.</dd>
-	<dt>@:default@</dt><dd>Yses the default consistency of the constraint.</dd>
+  <dt>@:bounds@</dt><dd>Bounds consistency.</dd>
+  <dt>@:domain@</dt><dd>Domain consistency.</dd>
+  <dt>@:default@</dt><dd>Uses the default consistency of the constraint.</dd>
 </dl>
 
 They are specified with the key @:strength@. The following places a domain 
