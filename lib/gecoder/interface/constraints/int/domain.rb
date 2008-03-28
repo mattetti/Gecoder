@@ -34,14 +34,12 @@ module Gecode::Constraints::Int
     #   x.must_not_be.in(-5...5, :reify => bool, :strength => :value)
     class RangeDomainConstraint < Gecode::Constraints::ReifiableConstraint
       def post
-        var, domain, reif_var, strength, kind = 
-          @params.values_at(:lhs, :domain, :reif, :strength, :kind)
+        var, domain, reif_var = @params.values_at(:lhs, :domain, :reif)
           
         (params = []) << var.bind
         params << domain.first << domain.last
         params << reif_var.bind if reif_var.respond_to? :bind
-        params << strength
-        params << kind
+        params.concat propagation_options
         
         Gecode::Raw::dom(@model.active_space, *params)
       end
@@ -64,14 +62,12 @@ module Gecode::Constraints::Int
     #   x.must_not_be.in(-[5,6,7,17], :reify => bool, :strength => :value)
     class EnumDomainConstraint < Gecode::Constraints::ReifiableConstraint
       def post
-        var, domain, reif_var, strength, kind = 
-          @params.values_at(:lhs, :domain, :reif, :strength, :kind)
+        var, domain, reif_var = @params.values_at(:lhs, :domain, :reif)
         
         (params = []) << var.bind
         params << Gecode::Constraints::Util.constant_set_to_int_set(domain)
         params << reif_var.bind if reif_var.respond_to? :bind
-        params << strength
-        params << kind
+        params.concat propagation_options
         
         Gecode::Raw::dom(@model.active_space, *params)
       end

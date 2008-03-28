@@ -402,6 +402,13 @@ module Gecode
       def post
         raise NoMethodError, 'Abstract method has not been implemented.'
       end
+      
+      # Gives an array of the values selected for the standard propagation 
+      # options (propagation strength and propagation kind) in the order that
+      # they are given when posting constraints to Gecode.
+      def propagation_options
+        @params.values_at(:strength, :kind)
+      end
     end
   end
 end
