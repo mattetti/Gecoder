@@ -199,16 +199,16 @@ module Gecode
     class SimpleRelationConstraint < Gecode::Constraints::ReifiableConstraint
       def post
         # Fetch the parameters to Gecode.
-        lhs, relation, rhs, reif_var, strength = @params.values_at(:lhs, 
-          :relation_type, :element, :reif, :strength)
+        lhs, relation, rhs, reif_var, strength, kind = @params.values_at(:lhs, 
+          :relation_type, :element, :reif, :strength, :kind)
           
         rhs = rhs.bind if rhs.respond_to? :bind
         if reif_var.nil?
           Gecode::Raw::rel(@model.active_space, lhs.bind, relation, rhs, 
-            strength)
+            strength, kind)
         else
           Gecode::Raw::rel(@model.active_space, lhs.bind, relation, rhs, 
-            reif_var.bind, strength)
+            reif_var.bind, strength, kind)
         end
       end
     end
