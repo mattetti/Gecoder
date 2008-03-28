@@ -393,7 +393,10 @@ Rust::Bindings::create_bindings Rust::Bindings::LangCxx, "gecode" do |b|
       klass.add_method "branchings", "int"
       klass.add_method "failed", "bool"
       
-      klass.add_method "mdescription", "Gecode::MBranchingDesc *", "description"
+      # The description method is commented out because it overlaps with the 
+      # description method used by rspec, and isn't used directly in the 
+      # interface.
+      #klass.add_method "mdescription", "Gecode::MBranchingDesc *", "description"
       
       klass.add_method "commit" do |method|
         method.add_parameter "Gecode::MBranchingDesc", "desc" do |param|
