@@ -111,9 +111,10 @@ module Gecode
       
       module_function
       
-      # Decodes the common options to constraints: strength and reification. 
-      # Returns a hash with up to two values. :strength is the strength that 
-      # should be used for the constraint and :reif is the (bound) boolean 
+      # Decodes the common options to constraints: strength, kind and 
+      # reification. Returns a hash with up to three values. :strength is the 
+      # strength that should be used for the constraint, :kind is the 
+      # propagation kind that should be used, and :reif is the (bound) boolean 
       # variable that should be used for reification. The decoded options are 
       # removed from the hash (so in general the hash will be consumed in the 
       # process).
@@ -205,6 +206,14 @@ module Gecode
           expression.kind_of?(Fixnum) ||        # It's a single fixnum.
           (expression.kind_of?(Enumerable) &&   # It's an enum of fixnums.
            expression.all?{ |e| e.kind_of? Fixnum })
+      end
+      
+      # Extracts an array of the values selected for the standard propagation 
+      # options (propagation strength and propagation kind) from the hash of
+      # parameters given. The options are returned in the order that they are 
+      # given when posting constraints to Gecode.      
+      def extract_propagation_options(params)
+        params.values_at(:strength, :kind)
       end
     end
     
@@ -386,6 +395,13 @@ module Gecode
           constrain_equal(var, params, constrain)
         end
       end
+      
+      # Gives an array of the values selected for the standard propagation 
+      # options (propagation strength and propagation kind) in the order that
+      # they are given when posting constraints to Gecode.
+      def propagation_options
+        Gecode::Constraints::Util::extract_propagation_options(@params)
+      end      
     end
     
     # Base class for all constraints.
@@ -403,11 +419,13 @@ module Gecode
         raise NoMethodError, 'Abstract method has not been implemented.'
       end
       
+      private
+      
       # Gives an array of the values selected for the standard propagation 
       # options (propagation strength and propagation kind) in the order that
       # they are given when posting constraints to Gecode.
       def propagation_options
-        @params.values_at(:strength, :kind)
+        Gecode::Constraints::Util::extract_propagation_options(@params)
       end
     end
   end
