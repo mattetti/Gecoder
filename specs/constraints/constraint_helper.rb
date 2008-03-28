@@ -5,7 +5,9 @@ require File.dirname(__FILE__) + '/../spec_helper'
 # [@expect_options]  A method that creates an expectation on the aspect to be 
 #                    tested, using the provided hash of Gecode values. The hash 
 #                    can have values for the keys :icl (ICL_*), :pk (PK_*), and 
-#                    :bool (reification variable).
+#                    :bool (bound reification variable). Any values not 
+#                    provided are assumed to be default values (nil in the case 
+#                    of :bool).
 # [@invoke_options]  A method that invokes the aspect to be tested, with the 
 #                    provided hash of options (with at most the keys :strength, 
 #                    :kind and :reify).
@@ -28,14 +30,13 @@ describe 'constraint with strength option', :shared => true do
     :domain   => Gecode::Raw::ICL_DOM
   }.each_pair do |name, gecode_value|
     it "should translate propagation strength #{name}" do
-      @expect_options.call(:icl => gecode_value, :pk => Gecode::Raw::PK_DEF)
+      @expect_options.call(:icl => gecode_value)
       @invoke_options.call(:strength => name)
     end
   end
   
   it 'should default to using default as propagation strength' do
-    @expect_options.call(:icl => Gecode::Raw::ICL_DEF, 
-      :pk => Gecode::Raw::PK_DEF)
+    @expect_options.call({})
     @invoke_options.call({})
   end
   
@@ -53,14 +54,13 @@ describe 'constraint with kind option', :shared => true do
     :memory   => Gecode::Raw::PK_MEMORY
   }.each_pair do |name, gecode_value|
     it "should translate propagation kind #{name}" do
-      @expect_options.call(:icl => Gecode::Raw::ICL_DEF, :pk => gecode_value)
+      @expect_options.call(:pk => gecode_value)
       @invoke_options.call(:kind => name)
     end
   end
   
   it 'should default to using default as propagation kind' do
-    @expect_options.call(:icl => Gecode::Raw::ICL_DEF, 
-      :pk => Gecode::Raw::PK_DEF)
+    @expect_options.call({})
     @invoke_options.call({})
   end
   
@@ -76,8 +76,7 @@ end
 describe 'constraint with reification option', :shared => true do
   it 'should translate reification' do
     var = @model.bool_var
-    @expect_options.call(:icl => Gecode::Raw::ICL_DEF, 
-      :pk => Gecode::Raw::PK_DEF, :bool => var)
+    @expect_options.call(:bool => var)
     @invoke_options.call(:reify => var)
   end
   
@@ -238,5 +237,22 @@ module GecodeR::Specs
         an_instance_of(Gecode::Raw::IntSet)
       end
     end
+  end
+end
+
+# Helper for creating @expect_option. Creates a method which takes a hash that
+# may have values for the keys :icl (ICL_*), :pk (PK_*), and :bool (reification 
+# variable). Expectations corresponding to the hash values are given to the 
+# specified block in the order of icl, pk and bool. Default values are provided 
+# if the hash doesn't specify anything else.
+def option_expectation(&block)
+  lambda do |hash|
+    bool = hash[:bool]
+    # We loosen the expectation some to avoid practical problems with expecting
+    # specific variables not under our control.
+    bool = an_instance_of(Gecode::Raw::BoolVar) unless bool.nil?
+    yield(hash[:icl] || Gecode::Raw::ICL_DEF,
+      hash[:pk]  || Gecode::Raw::PK_DEF,
+      bool)
   end
 end
