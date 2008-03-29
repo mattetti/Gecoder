@@ -41,7 +41,7 @@ module Rust
     # and a few other needed information.
     #
     # Don't call this function directly, use Namespace.add_cxx_class
-    def initialize(name, namespace, bindname = name.split("::").last ) # :notnew:
+    def initialize(name, namespace, bindname = name.gsub(/::([^<>]+)$/,'\1') ) # :notnew:
       super()
       
       @name = name
