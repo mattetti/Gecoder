@@ -998,7 +998,7 @@ Rust::Bindings::create_bindings Rust::Bindings::LangCxx, "gecode" do |b|
       func.add_parameter "Gecode::MIntVarArray *", "iva" do |param|
         param.custom_conversion = "*ruby2Gecode_MIntVarArrayPtr(argv[1], 2)->ptr()"
       end
-      func.add_parameter "Gecode::IntConLevel", ""
+      func.add_parameter "Gecode::IntConLevel", "icl"
       func.add_parameter "Gecode::PropKind", "pk"
     end
     

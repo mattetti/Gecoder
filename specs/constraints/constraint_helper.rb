@@ -111,8 +111,8 @@ describe 'constraint with default options', :shared => true do
       raise_error(ArgumentError))
   end
   
-  it_should_behave_like 'constraint with reification option'
   it_should_behave_like 'constraint with strength option'
+  it_should_behave_like 'constraint with kind option'
 end
 
 # Requires @expect_relation, @invoke_relation and @target.
