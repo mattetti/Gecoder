@@ -201,6 +201,12 @@ describe 'set constraint', :shared => true do
       @invoke_options.call(:kind => :default)
     end.should raise_error(ArgumentError)
   end
+  
+  it 'should raise errors for unrecognized options' do
+    lambda do 
+      @invoke_options.call(:does_not_exist => :foo) 
+    end.should raise_error(ArgumentError)
+  end
 end
 
 # Requires @invoke_options and @model.
