@@ -26,7 +26,7 @@ module Gecode::Constraints::IntEnum
           'implemented.'
       end
       unless options[:reify].nil?
-        raise ArgumentError, 'Reification is not supported by the distinc ' + 
+        raise ArgumentError, 'Reification is not supported by the distinct ' + 
           'constraint.'
       end
       
