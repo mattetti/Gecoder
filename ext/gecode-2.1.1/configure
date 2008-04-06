@@ -1356,7 +1356,7 @@ Optional Features:
   --enable-gist           build Gecode Interactive Search Tool [default=no]
   --enable-qt             build with Qt support [default=no]
   --enable-examples       build examples for the enabled variable types
-                          [default=yes]
+                          [default=no]
   --enable-minimodel      build modeling support library for the enabled
                           variable types [default=yes]
   --enable-serialization  build serialization library [default=yes]
@@ -10087,7 +10087,7 @@ fi
 	 { echo "$as_me:$LINENO: checking whether to build examples" >&5
 echo $ECHO_N "checking whether to build examples... $ECHO_C" >&6; }
 	 if test "${enable_examples:-yes}" = "yes"; then
-	    enable_examples="yes";
+	    enable_examples="no";
 	    { echo "$as_me:$LINENO: result: yes" >&5
 echo "${ECHO_T}yes" >&6; }
 	    enable_search="yes";
