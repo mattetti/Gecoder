@@ -72,7 +72,6 @@ h2. Set enumeration constraints
 
 |_. name |_. template |_. notes |
 | channel | {quickrefTemplate: set_enum.must.channel(int_enum) } | no negation nor reification, set and int enum can be swapped |
-| distinct | {quickrefTemplate: set_enum.must_be.distinct(:size => constant_int) } | no negation nor reification |
 | at most one | {quickrefTemplate: set_enum.must.at_most_share_one_element(:size => constant_int) } | no negation nor reification |
 | operation | {quickrefTemplate: set_enum.set_operation.must... } | set composite |
 | select | {quickrefTemplate: set_enum[int_var].must... } | set composite |
