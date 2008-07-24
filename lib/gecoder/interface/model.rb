@@ -257,15 +257,6 @@ module Gecode
       @variable_creation_space || selected_space
     end
     
-    # Refreshes all cached variables. This should be called if the variables
-    # in an existing space were changed.
-    def refresh_variables
-      return if @variables.nil?
-      @variables.each do |variable|
-        variable.refresh if variable.cached?
-      end
-    end
-    
     # Executes any interactions with Gecode still waiting in the queue 
     # (emptying the queue) in the process.
     def perform_queued_gecode_interactions
@@ -280,8 +271,6 @@ module Gecode
     # assigned directly.
     def active_space=(new_space)
       @active_space = new_space
-      new_space.refresh
-      refresh_variables
     end    
   end
 end
