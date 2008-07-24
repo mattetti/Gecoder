@@ -1,0 +1,85 @@
+index.page:
+  directoryName: Home
+  orderInfo: 1
+features.page:
+  orderInfo: 2
+installation.page:
+  orderInfo: 3
+examples:
+  orderInfo: 4
+documentation:
+  orderInfo: 5
+details:
+  orderInfo: 6
+details/index.page:
+  directoryName: Project details
+  
+documentation/index.page:
+  orderInfo: 10
+documentation/faq.page:
+  orderInfo: 11
+documentation/modelling:
+  orderInfo: 12
+documentation/constraints:
+  orderInfo: 13
+
+documentation/constraints/index.page:
+  orderInfo: 20
+documentation/constraints/quick-reference.page:
+  orderInfo: 21
+documentation/constraints/integer-constraints.page:
+  orderInfo: 22
+documentation/constraints/boolean-constraints.page:
+  orderInfo: 23
+documentation/constraints/set-constraints.page:
+  orderInfo: 24
+
+documentation/modelling/index.page:
+  orderInfo: 20
+documentation/modelling/sudoku.page:
+  orderInfo: 21
+documentation/modelling/square-tiling.page:
+  orderInfo: 22
+  
+examples/index.page:
+  orderInfo: 10
+examples/send-more-money.page:
+  orderInfo: 11
+examples/send-most-money.page:
+  orderInfo: 12
+examples/sudoku.page:
+  orderInfo: 13
+examples/sudoku-set.page:
+  orderInfo: 14
+examples/n-queens.page:
+  orderInfo: 15
+examples/magic-sequence.page:
+  orderInfo: 16
+examples/square-tiling.page:
+  orderInfo: 17
+---
+details/rubyforge.html:
+  title: RubyForge
+  url: http://rubyforge.org/projects/gecoder
+  orderInfo: 21
+  inMenu: true
+documentation/rdoc.html:
+  title: RDoc (users)
+  url: ../rdoc/index.html
+  orderInfo: 22
+  inMenu: true
+documentation/rdoc-devel.html:
+  title: RDoc (developers)
+  url: ../rdoc_dev/index.html
+  orderInfo: 23
+  inMenu: true
+documentation/rcov.html:
+  title: rcov Report
+  url: ../coverage/index.html
+  orderInfo: 24
+  inMenu: true
+documentation/rspec.html:
+  title: RSpec Report
+  url: ../rspec.html
+  orderInfo: 25
+  inMenu: true

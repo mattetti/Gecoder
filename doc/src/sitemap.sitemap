@@ -1,0 +1,16 @@
+---
+baseUrl:
+  http://gecoder.rubyforge.org
+defaultFrequency:
+  weekly
+staticPriority: 0.2
+defaultPriority: 0.5
+gzip:
+  false
+staticTrees:
+  .:
+  - output//rspec.html
+  rdoc:
+  - output/rdoc//**/*
+  coverage:
+  - output/coverage//**/*

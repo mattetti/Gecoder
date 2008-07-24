@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{lang:}">
+<head>
+  <title>{longTitle: }</title>
+  <link rel="stylesheet" type="text/css" href="{relocatable: styles.css}" media="screen" />
+  <link rel="stylesheet" type="text/css" href="{resource: webgen-css}" media="screen" />
+  <meta name="description" content="{description:}" />
+  {additionalHeadContents:}
+</head>
+<body>
+<div id="header">
+  <a class="logoLink" href="{relocatable: index.page}" title="Gecode/R - constraint programming in Ruby">
+  <span>Gecode/R - constraint programming in Ruby</span>
+  </a>
+  <a name="top"></a>
+</div>
+<div id="contents">
+  {menu: {menuStyle: breadcrumbs}}
+  <div id="sidebarWrapper">
+    <div id="sidebar">
+      {menu: {menuStyle: sidebar}}
+
+      <form id="searchbox_000699377096513254569:zhhnzsrbzfu" action="http://www.google.com/cse" 
+        onsubmit="pageTracker._trackPageview('/search/' + document.getElementById('q').value);">
+        <fieldset>
+          <legend>Search the site</legend>
+          <input type="hidden" name="cx" value="000699377096513254569:zhhnzsrbzfu" />
+          <input type="hidden" name="cof" value="FORID:0" />
+          <input id="q" name="q" type="text" size="15" />
+          <input type="submit" name="sa" value="Search" />
+        </fieldset>
+      </form>
+    </div>
+  </div>
+  <div id="body">
+    {block:}
+  </div>
+  {menu: {menuStyle: tabs}}
+</div>
+<div id="footerWrapper">
+  {menu: {menuStyle: footer}}
+</div>
+<script type="text/javascript">
+  var gaJsHost = (("https:" == document.location.protocol) ?
+  "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost +
+  "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+   var pageTracker = _gat._getTracker("UA-546645-2");
+   pageTracker._initData();
+   pageTracker._trackPageview();
+</script>
+</body>
+</html>

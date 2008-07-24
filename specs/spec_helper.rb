@@ -1,0 +1,65 @@
+require 'rubygems'
+require 'spec'
+require File.dirname(__FILE__) + '/../lib/gecoder'
+
+module CustomVarMatchers
+  class HaveDomain
+    def initialize(expected)
+      @expected = expected.to_a
+    end
+    
+    def matches?(target)
+      @target = target
+      return false unless @target.size == @expected.size
+      @expected.each do |element|
+        return false unless @target.include? element
+      end
+      return true
+    end
+    
+    def failure_message
+      "expected #{@target.inspect} to have domain #{@expected.inspect}"
+    end
+    
+    def negative_failure_message
+      "expected #{@target.inspect} not to have domain #{@expected.inspect}"
+    end
+  end
+
+  # Tests whether a variable has the expected domain.
+  def have_domain(expected)
+    HaveDomain.new(expected)
+  end
+  
+  class HaveBounds
+    def initialize(expected_glb, expected_lub)
+      @expected_glb = expected_glb.to_a
+      @expected_lub = expected_lub.to_a
+    end
+    
+    def matches?(target)
+      @target = target
+      return @target.lower_bound.to_a == @expected_glb &&
+        @target.upper_bound.to_a == @expected_lub
+    end
+    
+    def failure_message
+      "expected #{@target.inspect} to have greatest lower bound " + 
+        "#{@expected_glb.inspect} and least upper bound #{@expected_lub.inspect}"
+    end
+    
+    def negative_failure_message
+      "expected #{@target.inspect} to not have greatest lower bound " + 
+        "#{@expected_glb.inspect} and least upper bound #{@expected_lub.inspect}"
+    end
+  end
+
+  # Tests whether a set variable has the expected bounds.
+  def have_bounds(expected_glb, expected_lub)
+    HaveBounds.new(expected_glb, expected_lub)
+  end
+end
+
+Spec::Runner.configure do |config|
+  config.include(CustomVarMatchers)
+end

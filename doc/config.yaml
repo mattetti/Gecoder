@@ -1,0 +1,9 @@
+# Configuration file for webgen
+File/PageHandler:
+  defaultMetaInfo:
+    blocks: [[content, rspec]]
+    additionalHeadContents: ''
+# See http://rubyforge.org/pipermail/webgen-users/2007-November/000086.html to
+# alter webgen so that the .htaccess file is copied.
+File/CopyHandler:
+  paths: ['**/*.css', '**/*.png', '**/.htaccess', 'favicon.ico']

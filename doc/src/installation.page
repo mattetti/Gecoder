@@ -1,0 +1,94 @@
+---
+title: Installation
+longTitle: How to install Gecode/R, Ruby library for constraint programming
+inMenu: true
+description: How to install Gecode/R to gain access to constraint programming in Ruby.
+---
+
+h1. Downloading and installing
+
+h2. Warning
+
+Gecode/R is still in a development stage, the syntax is by no means final
+and *backwards compatibility will be broken* time and time again. Don't use 
+Gecode/R in production-code yet, it's merely available at this point to allow 
+people to play with it and give feedback.
+
+h2. Quick install
+
+The following works on Windows, Linux and OS X (and probably some more).
+
+  gem install gecoder-with-gecode
+
+h3. Troubleshooting
+
+If you encounter an error that is not listed here then please let us know via 
+the "gecode-users mailing list":http://rubyforge.org/mailman/listinfo/gecoder-users.
+
+h5. Windows
+
+  ERROR: error installing gem [...]: buffer error
+
+The above error message means that you need to upgrade RubyGems (it works with
+1.0.1). Run the following command.
+
+  gem update --system
+
+h5. Linux
+
+  libgecodeset.so.8: cannot open shared object file: No such file or directory
+
+If you get the above error message when requiring the Gecode/R gem then you 
+need to add @/usr/local/lib@ (where the Gecode libraries are stored) to 
+@ld.so.conf@ by doing the following as root.
+
+  echo "/usr/local/lib" >> /etc/ld.so.conf
+  /sbin/ldconfig
+
+h2. Detailed information
+
+h3. Dependencies
+
+Gecode/R requires Gecode 2.1.1. You can either manually install it or use the 
+gem that includes Gecode.
+* "Gecode download link":http://www.gecode.org/download.html
+* "Gecode installation instructions":http://www.gecode.org/gecode-doc-latest/PageComp.html
+
+h3. RubyGems
+
+Use the following gem if you don't have Gecode installed, or are using Windows. 
+It includes both Gecode/R and Gecode 2.1.1.
+
+ gem install gecoder-with-gecode 
+
+Use the following gem if you want to install Gecode/R without Gecode.
+
+ gem install gecoder
+ 
+h3. Direct download
+
+Downloads (both gems and source archives) are available at "RubyForge":http://rubyforge.org/frs/?group_id=3553
+
+h3. Building from source
+
+There are two ways to get a hold of the source code.
+
+* Download the source of a release from "RubyForge":http://rubyforge.org/frs/?group_id=3553
+* Check out the most recent code from subversion using <pre>svn checkout svn://rubyforge.org/var/svn/gecoder/trunk gecoder</pre>
+
+The interface is installed as follows once the source is obtained. This is not
+tested under Windows (where it will probably differ a bit).
+
+# Enter the ext directory.
+# Run @ruby extconf.rb@ 
+# Run @make@ (builds the extension)
+# Move the created library named @gecode.so@ to the lib directory.
+
+h2. Running the tests
+
+To make sure that the installation was successful you can run the included 
+specs. They require "RSpec":http://rspec.rubyforge.org/download.html 1.0.5 or
+something similar. Run the specs by issuing the following command from the 
+directory where Gecode/R was installed.
+
+  rake specs

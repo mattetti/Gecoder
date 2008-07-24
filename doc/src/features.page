@@ -1,0 +1,70 @@
+---
+title: Features
+longTitle: Constraints and features of Gecode/R
+inMenu: true
+description: Constraints and various features of Gecode supported by the Ruby interface Gecode/R.
+---
+
+h1. Features
+
+<div class="summary">
+<p>Gecode/R provides access to many, but not all, of "Gecode's 
+features":http://www.gecode.org/gecode-doc-search-2.1.1/modules.html.</p>
+</div>
+
+h2. Supported platforms
+
+Ruby 1.8.6 on
+* Windows (tested with the "one-click Ruby installer":http://rubyinstaller.rubyforge.org/wiki/wiki.pl)
+* Linux
+* OS X
+
+h2. Supported Gecode features 
+
+The following things are supported by Gecode/R.
+
+* Boolean variables with the following constraints
+** "Simple relation":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelIntRelBool.html
+** "Linear":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelIntLinearBool.html
+* Finite domain integer variables with the following constraints
+** "Arithmetic":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelIntArith.html
+** "Cardinality":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelIntCard.html except for the ones involving more than one variable array
+** "Channel":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelIntChannel.html 
+** "Distinct":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelIntDistinct.html
+** "Domain":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelIntDomain.html
+** "Element":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelIntElement.html
+** "Linear":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelIntLinearInt.html
+** "Simple relation":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelIntRelInt.html
+** "Sorted":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelIntSorted.html
+** "Extensional":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelIntExt.html except for DFA versions
+* Finite integer sets with the following constraints
+** "Distinct":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelSetDistinct.html
+** "Domain":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelSetDom.html
+** "Connection constraints to finite domain variables":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelSetConnect.html except for channeling with boolean variables
+** "Relation":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelSetRel.html
+** "Set selection":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelSetSelection.html
+** "Set operation":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelSetRelOp.html
+* Branching selection
+* Branch and bound, and depth first search
+* Reification, propagation strength and propagation kind
+
+
+h2. Features not supported
+
+The following are some notable features that are included in Gecode but _not_
+in Gecode/R (but might be in the future).
+
+* Finite integer sets with complete domain representation and all their constraints
+* Unsupported integer constraints
+** The exceptions noted in the list of supported constraints
+** "Scheduling":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelIntScheduling.html
+** "Graph":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelIntGraph.html
+* Unsupported set constraints
+** The exceptions noted in the list of supported constraints
+** "Convexity":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelSetConvex.html
+** "Sequence":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelSetSequence.html
+** "Projector":http://www.gecode.org/gecode-doc-search-2.1.1/group__TaskModelSetProjector.html
+* Limited discrepancy search
+* Custom propagators and branching strategies
+* Reflection
+
