@@ -62,6 +62,13 @@ describe Gecode::Model, ' (integer creation)' do
     vars.column_size.should equal(columns)
     vars.each{ |var| var.should have_domain(domain) }
   end
+  
+  it 'should gracefully GC a variable that was never accessed' do
+    lambda do
+      @model.int_var 0
+      GC.start
+    end.should_not raise_error
+  end
 end
 
 describe Gecode::Model, ' (bool creation)' do
@@ -81,6 +88,13 @@ describe Gecode::Model, ' (bool creation)' do
     matrix = @model.bool_var_matrix(3, 4)
     matrix.row_size.should equal(3)
     matrix.column_size.should equal(4)
+  end
+  
+  it 'should gracefully GC a variable that was never accessed' do
+    lambda do
+      @model.bool_var
+      GC.start
+    end.should_not raise_error
   end
 end
 
@@ -168,6 +182,13 @@ describe Gecode::Model, ' (set creation)' do
   it 'should raise error if glb and lub are not valid when both are given as enums' do
     lambda{ @model.set_var(@lub_enum, @glb_enum).should }.should raise_error(
       ArgumentError)  
+  end
+  
+  it 'should gracefully GC a variable that was never accessed' do
+    lambda do
+      @model.set_var(@glb_range, @lub_range)
+      GC.start
+    end.should_not raise_error
   end
 end
 

@@ -29,6 +29,8 @@ namespace Gecode {
 
   MSpace::MSpace(bool share, MSpace& s) : Gecode::Space(share, s) {
     int_variables.update(this, share, s.int_variables);
+    bool_variables.update(this, share, s.bool_variables);
+    set_variables.update(this, share, s.set_variables);
   }
 
   MSpace::~MSpace() {
@@ -42,11 +44,8 @@ namespace Gecode {
   }
 
   /*
-   * Creates a number of new integer variables with the specified
-   * domain and returns their identifiers (which can then be
-   * used to access the integer variables themselves via int_var()).
-   * It's the caller's responsibility to free the memory allocated 
-   * for the returned array.
+   * Creates a new integer variable with the specified domain and 
+   * returns its identifier.
    */
   int MSpace::new_int_var(int min, int max) {
     int id = int_variables.size();
@@ -62,15 +61,56 @@ namespace Gecode {
   }
 
   /*
+   * Creates a new boolean variable and returns its identifier.
+   */
+  int MSpace::new_bool_var() {
+    int id = bool_variables.size();
+    Gecode::BoolVar* var = new BoolVar(this, 0, 1);
+    bool_variables.add(this, *var);
+    return id;
+  }
+
+  /*
+   * Creates a new set variable with the specified domain and returns 
+   * its identifier.
+   */
+  int MSpace::new_set_var(const IntSet& glb, const IntSet& lub, unsigned int card_min, unsigned int card_max) {
+    int id = set_variables.size();
+    Gecode::SetVar* var = new SetVar(this, glb, lub, card_min, card_max);
+    set_variables.add(this, *var);
+    return id;
+  }
+
+  /*
    * Fetches the integer variable with the specified identifier.
    */
   Gecode::IntVar* MSpace::int_var(int id) {
     return &int_variables[id];
   }
 
+  /*
+   * Fetches the integer variable with the specified identifier.
+   */
+  Gecode::BoolVar* MSpace::bool_var(int id) {
+    return &bool_variables[id];
+  }
+
+  /*
+   * Fetches the integer variable with the specified identifier.
+   */
+  Gecode::SetVar* MSpace::set_var(int id) {
+    return &set_variables[id];
+  }
+
   void MSpace::gc_mark() {
     for(int i = 0; i < int_variables.size(); i++) {
       rb_gc_mark(Rust_gecode::cxx2ruby(&int_variables[i], false, false));
+    }
+    for(int i = 0; i < bool_variables.size(); i++) {
+      rb_gc_mark(Rust_gecode::cxx2ruby(&bool_variables[i], false, false));
+    }
+    for(int i = 0; i < set_variables.size(); i++) {
+      rb_gc_mark(Rust_gecode::cxx2ruby(&set_variables[i], false, false));
     }
   }
 

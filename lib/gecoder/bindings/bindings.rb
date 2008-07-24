@@ -370,7 +370,25 @@ Rust::Bindings::create_bindings Rust::Bindings::LangCxx, "gecode" do |b|
         method.add_parameter "Gecode::IntSet", "domain"
       end
 
+      klass.add_method "new_bool_var", "int" do |method|
+      end
+
+      klass.add_method "new_set_var", "int" do |method|
+        method.add_parameter "Gecode::IntSet", "glb"
+        method.add_parameter "Gecode::IntSet", "lub"
+        method.add_parameter "int", "cardMin"
+        method.add_parameter "int", "cardMax"
+      end
+
       klass.add_method "int_var", "Gecode::IntVar*" do |method|
+        method.add_parameter "int", "id"
+      end
+
+      klass.add_method "bool_var", "Gecode::BoolVar*" do |method|
+        method.add_parameter "int", "id"
+      end
+      
+      klass.add_method "set_var", "Gecode::SetVar*" do |method|
         method.add_parameter "int", "id"
       end
 

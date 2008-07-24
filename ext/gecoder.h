@@ -42,12 +42,20 @@ namespace Gecode {
       int new_int_var(IntSet domain);
       Gecode::IntVar* int_var(int id);
 
+      int new_bool_var();
+      Gecode::BoolVar* bool_var(int id);
+
+      int new_set_var(const IntSet& glb, const IntSet& lub, unsigned int card_min, unsigned int card_max);
+      Gecode::SetVar* set_var(int id);
+
       void gc_mark();
 
       void constrain(MSpace* s);
 
     private:
       Gecode::IntVarArray int_variables;
+      Gecode::BoolVarArray bool_variables;
+      Gecode::SetVarArray set_variables;
   };
   
   class MDFS : public Gecode::Search::DFS {
