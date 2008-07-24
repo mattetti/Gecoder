@@ -31,26 +31,10 @@
 #include "vararray.h"
 
 namespace Gecode {
-  class MPointerArray {
-    public:
-      MPointerArray(int initial_capacity = 10);
-      ~MPointerArray();
-
-      void* at(int i);
-      void add(void* pointer);
-      int size();
-      int capacity();
-
-    private:
-      void** arr;
-      int allocated_size;
-      int next_index;
-  };
-
   class MSpace : public Space {
     public:
       MSpace();
-      explicit MSpace(MSpace& s, bool share=true);
+      MSpace(bool share, MSpace& s);
       ~MSpace();
       Gecode::Space *copy(bool share);
 
@@ -63,7 +47,7 @@ namespace Gecode {
       void constrain(MSpace* s);
 
     private:
-      MPointerArray* int_variables;
+      Gecode::IntVarArray int_variables;
   };
   
   class MDFS : public Gecode::Search::DFS {

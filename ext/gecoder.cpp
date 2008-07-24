@@ -23,33 +23,22 @@
 #include <iostream>
 #include <map>
 
-#define DEBUG 1
-
 namespace Gecode {
   MSpace::MSpace() {
-    int_variables = new MPointerArray();
   }
 
-  MSpace::MSpace(MSpace& s, bool share) : Gecode::Space(share, s) {
-    MPointerArray* array = s.int_variables;
-    int_variables = new MPointerArray(array->capacity());
-    for(int i = 0; i < array->size(); i++) {
-      Gecode::IntVar& var_to_copy = *(Gecode::IntVar*)array->at(i);
-      Gecode::IntVar* copied_var = new Gecode::IntVar();
-      copied_var->update(&s, share, var_to_copy);
-      int_variables->add(copied_var);
-    }
+  MSpace::MSpace(bool share, MSpace& s) : Gecode::Space(share, s) {
+    int_variables.update(this, share, s.int_variables);
   }
 
   MSpace::~MSpace() {
 #ifdef DEBUG
     fprintf(stderr, "gecoder: destructing MSpace %p\n", this);
 #endif
-    delete int_variables;
   }
 
   Gecode::Space* MSpace::copy(bool share) {
-    return new MSpace(*this, share);
+    return new MSpace(share, *this);
   }
 
   /*
@@ -60,26 +49,15 @@ namespace Gecode {
    * for the returned array.
    */
   int MSpace::new_int_var(int min, int max) {
-    int id = int_variables->size();
-
-    // Create the variables.
-    IntVar* var = new IntVar(this, min, max);
-    int_variables->add(var);
-#ifdef DEBUG
-    fprintf(stderr, "gecoder: creating int variable %p (index %d)\n", var, id);
-#endif
+    int id = int_variables.size();
+    Gecode::IntVar* var = new IntVar(this, min, max);
+    int_variables.add(this, *var);
     return id;
   }
   int MSpace::new_int_var(IntSet domain) {
-    int id = int_variables->size();
-
-    // Create the variables.
-    IntVar* var = new IntVar(this, domain);
-    int_variables->add(var);
-#ifdef DEBUG
-    fprintf(stderr, "gecoder: creating int variable %p (index %d)\n", var, id);
-#endif
-
+    int id = int_variables.size();
+    Gecode::IntVar* var = new IntVar(this, domain);
+    int_variables.add(this, *var);
     return id;
   }
 
@@ -87,12 +65,12 @@ namespace Gecode {
    * Fetches the integer variable with the specified identifier.
    */
   Gecode::IntVar* MSpace::int_var(int id) {
-    return (Gecode::IntVar*)int_variables->at(id);
+    return &int_variables[id];
   }
 
   void MSpace::gc_mark() {
-    for(int i = 0; i < int_variables->size(); i++) {
-      rb_gc_mark(Rust_gecode::cxx2ruby((Gecode::IntVar*)int_variables->at(i), false, false));
+    for(int i = 0; i < int_variables.size(); i++) {
+      rb_gc_mark(Rust_gecode::cxx2ruby(&int_variables[i], false, false));
     }
   }
 
@@ -102,56 +80,6 @@ namespace Gecode {
     rb_funcall(Rust_gecode::cxx2ruby(this), rb_intern("constrain"), 1,
         Rust_gecode::cxx2ruby(s, false)); 
   }
-
-  /*
-   * PointerArray is an array of pointers that grows as needed.
-   */
-  MPointerArray::MPointerArray(int initial_size) {
-    arr = new void*[initial_size];
-    allocated_size = initial_size;
-    next_index = 0;
-  }
-
-  MPointerArray::~MPointerArray() {
-    delete [] arr;
-  }
-
-  void* MPointerArray::at(int i) {
-    return arr[i];
-  }
-
-  int MPointerArray::size() {
-    return next_index;
-  }
-
-  int MPointerArray::capacity() {
-    return allocated_size;
-  }
-
-  void MPointerArray::add(void* pointer) {
-    if(next_index >= allocated_size) {
-      // Grow the array.
-      void** old_array = arr;
-      arr = new void*[allocated_size*2];
-      memcpy(arr, old_array, allocated_size*sizeof(void*));
-
-#ifdef DEBUG
-      fprintf(stderr, "gecoder: growing from %d to %d\n", allocated_size, allocated_size*2);
-      for(int i = 0; i < size(); i++) {
-        fprintf(stderr, "gecoder: arr[%d] = %p\n", i, arr[i]);
-        fprintf(stderr, "gecoder: old_array[%d] = %p\n", i, arr[i]);
-      }
-#endif
-
-      delete [] old_array;
-      old_array = NULL;
-      allocated_size = allocated_size*2;
-    }
-
-    arr[next_index] = pointer;
-    next_index++;
-  }
-
 
   /* 
    * MDFS is the same as DFS but with the size of a space inferred from the
