@@ -6,18 +6,18 @@ module Gecode
     # domain is specified then the largest possible domain is used.
     def int_var(domain = 
         Gecode::Raw::IntLimits::MIN..Gecode::Raw::IntLimits::MAX)
-      enum = domain_enum(domain)
-      index = variable_creation_space.new_int_vars(enum).first
-      FreeIntVar.new(self, index)
+      args = domain_arguments(domain)
+      FreeIntVar.new(self, variable_creation_space.new_int_var(*args))
     end
     
     # Creates an array containing the specified number of integer variables 
     # with the specified domain. The domain can either be a range, a single 
     # element, or an enumeration of elements. 
     def int_var_array(count, domain)
-      enum = domain_enum(domain)
+      args = domain_arguments(domain)
       variables = []
-      variable_creation_space.new_int_vars(enum, count).each do |index|
+      count.times do 
+        index = variable_creation_space.new_int_var(*args)
         variables << FreeIntVar.new(self, index)
       end
       return wrap_enum(variables)
@@ -27,13 +27,16 @@ module Gecode
     # integer variables with the specified domain. The domain can either be a 
     # range, a single element, or an enumeration of elements. 
     def int_var_matrix(row_count, col_count, domain)
-      enum = domain_enum(domain)
-      indices = variable_creation_space.new_int_vars(enum, row_count*col_count)
+      args = domain_arguments(domain)
+      indices = variable_creation_space.new_int_var(*args)
       rows = []
       row_count.times do |i|
-        rows << indices[(i*col_count)...(i.succ*col_count)].map! do |index|
-          FreeIntVar.new(self, index)
+        row = []
+        col_count.times do |j|
+          index = variable_creation_space.new_int_var(*args)
+          row << FreeIntVar.new(self, index)
         end
+        rows << row
       end
       return wrap_enum(Util::EnumMatrix.rows(rows, false))
     end
@@ -176,20 +179,25 @@ module Gecode
     
     private
     
-    # Returns an enumeration of the specified domain arguments, which can 
-    # either be given as a range, a single number, or an enumerable of elements. 
-    def domain_enum(domain)
+    # Returns the array of arguments that correspond to the specified 
+    # domain when given to Gecode. The domain can be given as a range, 
+    # a single number, or an enumerable of elements. 
+    def domain_arguments(domain)
       if domain.respond_to?(:first) and domain.respond_to?(:last) and
             domain.respond_to?(:exclude_end?)
         if domain.exclude_end?
-          return domain.first..(domain.last - 1)
+          return [domain.first, (domain.last - 1)]
         else
-          return domain
+          return [domain.first, domain.last]
         end
       elsif domain.kind_of? Enumerable
-        return domain
+        array = domain.to_a
+        return [Gecode::Raw::IntSet.new(array, array.size)]
+      elsif domain.kind_of? Fixnum
+        return [domain, domain]
       else
-        return domain..domain
+        raise TypeError, 'The domain must be given as an instance of '
+          "Enumerable or Fixnum, but #{domain.class} was given."
       end
     end
     
