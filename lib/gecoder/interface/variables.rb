@@ -8,7 +8,6 @@ module Gecode
     def initialize(model, index)
       @model = model
       @index = index
-      @bound_space = @bound_var = nil
       model.track_variable(self)
     end
 
@@ -43,13 +42,7 @@ module Gecode
       # Binds the int variable to the currently active space of the model, 
       # returning the bound int variable.
       def bind
-        space = active_space
-        unless @bound_space == space
-          # We have not bound the variable to this space, so we do it now.
-          @bound = space.method(:#{space_bind_method}).call(@index)
-          @bound_space = space
-        end
-        return @bound
+        active_space.method(:#{space_bind_method}).call(@index)
       end
       
       private
