@@ -187,7 +187,7 @@ module Gecode
       elsif domain.kind_of? Fixnum
         return [domain, domain]
       else
-        raise TypeError, 'The domain must be given as an instance of '
+        raise TypeError, 'The domain must be given as an instance of ' +
           "Enumerable or Fixnum, but #{domain.class} was given."
       end
     end
