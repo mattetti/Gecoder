@@ -777,7 +777,7 @@ Rust::Bindings::create_bindings Rust::Bindings::LangCxx, "gecode" do |b|
           method.add_parameter "Gecode::MiniModel::LinRel<Gecode::BoolVar>", "e"
         end        
         
-        klass.add_method "post" do |method|
+        klass.add_method "post", "Gecode::BoolVar" do |method|
           method.add_parameter "Gecode::MSpace *", "home"
           method.add_parameter "Gecode::IntConLevel", "icl"
           method.add_parameter "Gecode::PropKind", "pk"
