@@ -11,18 +11,7 @@ module Gecode
       @bound_space = @bound_var = nil
       model.track_variable(self)
     end
-    
-    # Checks whether the variable is cached, i.e. whether it needs to be 
-    # rebound after changes to a space.
-    def cached?
-      not @bound_space.nil?
-    end
-    
-    # Forces the variable to refresh itself.
-    def refresh
-      @bound_space = nil
-    end
-    
+
     def inspect
       if assigned?
         "#<#{self.class} #{domain}>"
