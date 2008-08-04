@@ -103,6 +103,5 @@ describe Gecode::Constraints::IntEnum::Element do
     @model.solve!
   end
   
-  it_should_behave_like 'composite constraint'
-  it_should_behave_like 'reifiable constraint'
+  it_should_behave_like 'int-producing property'
 end

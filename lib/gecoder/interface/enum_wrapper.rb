@@ -60,6 +60,7 @@ module Gecode
   # A module containing the methods needed by enumerations containing int 
   # variables. Requires that it's included in an enumerable.
   module IntEnumMethods
+    include Constraints::IntEnum::IntVarEnumOperand
     include VariableEnumMethods
   
     # Returns an int variable array with all the bound variables.

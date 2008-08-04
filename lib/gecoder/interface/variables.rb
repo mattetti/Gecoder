@@ -71,6 +71,7 @@ module Gecode
   # single element, at which point #value can be used to retrieve the value.
   class FreeIntVar
     include Gecode::Constraints::Int::IntVarOperand
+    attr :model
 
     # Gets the minimum value still in the domain of the variable.
     delegate :min
@@ -107,7 +108,7 @@ module Gecode
     
     private
     
-    # Returns a string representation of the the range of the variable's domain.
+    # Returns a string representation of the range of the variable's domain.
     def domain #:nodoc:
       if assigned?
         "range: #{value.to_s}"
@@ -122,6 +123,7 @@ module Gecode
   # false.
   class FreeBoolVar
     include Gecode::Constraints::Bool::BoolVarOperand
+    attr :model
 
     # Checks whether the variable has been assigned.
     delegate :assigned?, :assigned

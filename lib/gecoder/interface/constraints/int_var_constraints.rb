@@ -1,20 +1,85 @@
 # A module that deals with the operands, properties and constraints of
 # integer variables.
 module Gecode::Constraints::Int
-  # Describes an integer variable operand.
+  # Describes an integer variable operand. Classes that mixes in
+  # IntVarOperand must define the method #model.
   module IntVarOperand  
     include Gecode::Constraints::Operand 
+
+    # Constructs an operand that acts as a normal operand but
+    # overrides equality so that it is short circuited. 
+    #
+    # The provided block should accept three parameters. The first is
+    # the variable that should represent the operand. The second is the
+    # hash of parameters. The third is a boolean, it it's true then the
+    # block should try to constrain the first variable's domain as much
+    # as possible. The block should constrain the variable to equal the
+    # operands value.
+    def self.operand_with_short_circuit_equality(model, &block)
+      klass = Class.new
+      klass.class_eval do
+        include Gecode::Constraints::Int::IntVarOperand
+
+        def construct_receiver(params)
+          params.update(:lhs => self)
+          receiver = IntVarConstraintReceiver.new(@model, params)
+
+          class <<receiver
+            alias_method :equality_without_short_circuit, :==
+            def ==(operand, options = {})
+              if !@params[:negate] and options[:reify].nil? and 
+                  operand.respond_to? :to_int_var
+                # Short circuit the constraint to avoid a needless
+                # constraint.
+                @params.update Gecode::Constraints::Util.decode_options(options)
+                @model.add_interaction do
+                  block.call(operand, @params, false)
+                end
+              else
+                equality_without_short_circuit(operand, options)
+              end
+            end
+            alias_comparison_methods
+          end
+
+          return receiver
+        end
+        
+        def to_int_var
+          variable = @model.int_var
+          @model.add_interaction do
+            block.call(variable, @params, true)
+          end
+          return variable
+        end
+      end
+
+      new_op = klass.new
+      new_op.instance_eval do 
+        @model = model
+      end
+
+      return new_op
+    end
 
     private
 
     def construct_receiver(params)
       params.update(:lhs => self)
-      IntVarConstraintReceiver.new(@model, params)
+      IntVarConstraintReceiver.new(model, params)
     end
   end
 
   # Describes a constraint receiver for integer variables.
   class IntVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+    # Raises TypeError unless the left hand side is an int var operand.
+    def initialize(model, params)
+      super
+
+      unless params[:lhs].respond_to? :to_int_var
+        raise TypeError, 'Must have int var operand as left hand side.'
+      end
+    end
   end
   
 =begin

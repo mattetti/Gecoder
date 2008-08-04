@@ -203,7 +203,7 @@ describe 'bool constraint with default options', :shared => true do
 end
 
 # Requires @expect_relation, @invoke_relation and @target.
-describe 'composite constraint', :shared => true do
+describe 'int-producing property', :shared => true do
   Gecode::Constraints::Util::RELATION_TYPES.each_pair do |relation, type|
     it "should translate #{relation} with constant target" do
       @expect_relation.call(type, 1, false)
@@ -232,10 +232,12 @@ describe 'composite constraint', :shared => true do
     end
   end
 
-  it 'should raise error if the target is of the wrong type' do
-    lambda do 
-      @invoke_relation.call(:==, 'hello', false)
-    end.should raise_error(TypeError) 
+  Gecode::Constraints::Util::RELATION_TYPES.each_pair do |relation, type|
+    it "should raise error if the target of #{relation} is of the wrong type" do
+      lambda do 
+        @invoke_relation.call(relation, 'hello', false)
+      end.should raise_error(TypeError) 
+    end
   end
 end
 

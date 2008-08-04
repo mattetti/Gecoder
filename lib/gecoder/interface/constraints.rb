@@ -10,17 +10,15 @@ module Gecode
     # variable and/or used as left hand side operand to #must (and its
     # variants). 
     #
-    # Classes that inherit from Operand must define the method
-    # #construct_receiver which produces a constraint receiver given a
-    # set of parameters.  They should also define a method that converts
+    # Classes that mixes in Operand must define the methods #model
+    # and #construct_receiver. They should also define a method that converts
     # the operand into a variable of the operand's type (e.g. int var
     # operands should define a method #to_int_var that returns an
     # instance of Gecode::FreeIntVar that represents the operand). The
     # latter method should be used by constraints to fetch variables
     # needed when posting constraints. The presence of the method should
     # also be used for type checking (rather than e.g. checking whether
-    # a parameter is of type IntVarOperand). They must also define
-    # @model.
+    # a parameter is of type IntVarOperand). 
     module Operand #:nodoc:
       # Specifies that a constraint must hold for the left hand side.
       def must
@@ -34,6 +32,11 @@ module Gecode
         construct_receiver update_params(:lhs => self, :negate => true)
       end
       alias_method :must_not_be, :must_not
+
+      # Fetches the model that the operand belongs to.
+      def model
+        raise NotImplementedError, 'Abstract method has not been implemented.'
+      end
       
       private
       
@@ -528,7 +531,7 @@ end
 
 require 'gecoder/interface/constraints/reifiable_constraints'
 require 'gecoder/interface/constraints/int_var_constraints'
-#require 'gecoder/interface/constraints/int_enum_constraints'
+require 'gecoder/interface/constraints/int_enum_constraints'
 require 'gecoder/interface/constraints/bool_var_constraints'
 #require 'gecoder/interface/constraints/bool_enum_constraints'
 #require 'gecoder/interface/constraints/set_var_constraints'

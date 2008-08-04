@@ -1,6 +1,8 @@
 # A module that deals with the operands, properties and constraints of
 # boolean variables.
 module Gecode::Constraints::Bool
+  # Describes an integer variable operand. Classes that mixes in
+  # IntVarOperand must define the method #model.
   module BoolVarOperand  
     include Gecode::Constraints::Operand 
 
@@ -14,6 +16,14 @@ module Gecode::Constraints::Bool
 
   # Describes a constraint receiver for boolean variables.
   class BoolVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+    # Raises TypeError unless the left hand side is an bool var operand.
+    def initialize(model, params)
+      super
+
+      unless params[:lhs].respond_to? :to_bool_var
+        raise TypeError, 'Must have bool var operand as left hand side.'
+      end
+    end
   end
 
 =begin
