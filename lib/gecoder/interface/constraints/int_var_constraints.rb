@@ -1,23 +1,24 @@
 module Gecode
-  class FreeIntVar
-    include Gecode::Constraints::LeftHandSideMethods
-    
-    private
-    
-    # Produces an expression for the lhs module.
-    def expression(params)
-      params.update(:lhs => self)
-      Constraints::Int::Expression.new(@model, params)
-    end
-  end
-  
   # A module containing constraints that have int variables as left hand side
   # (but not enumerations).
   module Constraints::Int
-    # Describes an integer expression.
-    class Expression < Gecode::Constraints::Expression #:nodoc:
+    # Describes an integer variable operand.
+    module IntVarOperand  
+      include Gecode::Constraints::Operand 
+
+      private
+
+      def construct_receiver(params)
+        params.update(:lhs => self)
+        Constraints::Int::IntVarConstraintReceiver.new(@model, params)
+      end
+    end
+
+    # Describes a constraint receiver for integer variables.
+    class IntVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     end
     
+=begin
     # A composite expression which is an int expression with a left hand side 
     # resulting from a previous constraint.
     class CompositeExpression < Gecode::Constraints::CompositeExpression #:nodoc:
@@ -28,6 +29,16 @@ module Gecode
       def initialize(model, params, &block)
         super(Expression, Gecode::FreeIntVar, lambda{ model.int_var }, model, 
           params, &block)
+      end
+
+      # Converts the expression into an instance of Gecode::FreeIntVar.
+      def to_int_var
+        # Link a variable to the composite constraint.
+        variable = @new_var_proc.call
+        @model.add_interaction do
+          @constrain_equal_proc.call(variable, @params, true)
+        end
+        return variable
       end
     end
     
@@ -50,10 +61,11 @@ module Gecode
         super(CompositeExpression, model, params)
       end
     end
+=end
   end
 end
 
-require 'gecoder/interface/constraints/int/linear'
+#require 'gecoder/interface/constraints/int/linear'
 require 'gecoder/interface/constraints/int/domain'
-require 'gecoder/interface/constraints/int/arithmetic'
-require 'gecoder/interface/constraints/int/channel'
+#require 'gecoder/interface/constraints/int/arithmetic'
+#require 'gecoder/interface/constraints/int/channel'

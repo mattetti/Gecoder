@@ -39,8 +39,8 @@ module Gecode
   def Gecode::FreeVar(bound_class, space_bind_method)
     clazz = Class.new(FreeVarBase)
     clazz.class_eval <<-"end_method_definitions"      
-      # Binds the int variable to the currently active space of the model, 
-      # returning the bound int variable.
+      # Binds the variable to the currently active space of the model, 
+      # returning the bound variable.
       def bind
         active_space.method(:#{space_bind_method}).call(@index)
       end
@@ -70,6 +70,8 @@ module Gecode
   # An integer variable is said to be assigned once the domain only contains a
   # single element, at which point #value can be used to retrieve the value.
   class FreeIntVar
+    include Gecode::Constraints::Int::IntVarOperand
+
     # Gets the minimum value still in the domain of the variable.
     delegate :min
     # Gets the maximum value still in the domain of the variable.
@@ -97,6 +99,11 @@ module Gecode
       raise 'No value is assigned.' unless assigned?
       send_bound(:val)
     end
+
+    # Returns the receiver.
+    def to_int_var
+      self
+    end
     
     private
     
@@ -122,6 +129,11 @@ module Gecode
     def value
       raise 'No value is assigned.' unless assigned?
       send_bound(:val) == 1
+    end
+
+    # Returns the receiver.
+    def to_bool_var
+      self
     end
   
     private
@@ -183,6 +195,11 @@ module Gecode
     # Returns a range containing the allowed values for the set's cardinality.
     def cardinality
       send_bound(:cardMin)..send_bound(:cardMax)
+    end
+    
+    # Returns the receiver.
+    def to_set_var
+      self
     end
     
     private
