@@ -19,7 +19,8 @@ module Gecode
     # latter method should be used by constraints to fetch variables
     # needed when posting constraints. The presence of the method should
     # also be used for type checking (rather than e.g. checking whether
-    # a parameter is of type IntVarOperand).
+    # a parameter is of type IntVarOperand). They must also define
+    # @model.
     module Operand #:nodoc:
       # Specifies that a constraint must hold for the left hand side.
       def must
