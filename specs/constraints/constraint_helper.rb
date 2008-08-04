@@ -95,6 +95,12 @@ describe 'reifiable int constraint', :shared => true do
   it_should_behave_like 'constraint with reification option'
 end
 
+# Requires @operand, @invoke_options and @expect_options.
+describe 'reifiable bool constraint', :shared => true do
+  it_should_behave_like 'bool constraint with default options'
+  it_should_behave_like 'constraint with reification option'
+end
+
 # Requires @invoke_options, @expect_options, @model
 describe 'int constraint', :shared => true do
   it 'should handle arbitrary int operands' do
@@ -114,6 +120,25 @@ describe 'int constraint', :shared => true do
   end
 end
 
+# Requires @invoke_options, @expect_options, @model
+describe 'bool constraint', :shared => true do
+  it 'should handle arbitrary bool operands' do
+    bool_var = @model.bool_var
+    mock_op_class = Class.new
+    mock_op_class.class_eval do
+      include Gecode::Constraints::Bool::BoolVarOperand
+    end
+    model = @model
+    op = mock_op_class.new
+    op.instance_eval do
+      @model = model
+    end
+    op.stub!(:to_bool_var).and_return bool_var
+    @expect_options.call(bool_var, {})
+    @invoke_options.call(op, {})
+  end
+end
+
 # Requires @operand, @invoke_options, @expect_options, @model
 describe 'non-reifiable int constraint', :shared => true do
   it 'should raise errors if reification is used' do
@@ -123,6 +148,17 @@ describe 'non-reifiable int constraint', :shared => true do
   end
 
   it_should_behave_like 'int constraint with default options'
+end
+
+# Requires @operand, @invoke_options, @expect_options, @model
+describe 'non-reifiable bool constraint', :shared => true do
+  it 'should raise errors if reification is used' do
+    lambda do 
+      @invoke_options.call(@operand, :reify => @model.bool_var)
+    end.should raise_error(ArgumentError)
+  end
+
+  it_should_behave_like 'bool constraint with default options'
 end
 
 # Requires @operand, @invoke_options and @expect_options.
@@ -135,6 +171,18 @@ describe 'int constraint with default options', :shared => true do
   it_should_behave_like 'constraint with strength option'
   it_should_behave_like 'constraint with kind option'
   it_should_behave_like 'int constraint'
+end
+
+# Requires @operand, @invoke_options and @expect_options.
+describe 'bool constraint with default options', :shared => true do
+  it 'should raise errors for unrecognized options' do
+    lambda{ @invoke_options.call(@operand, :does_not_exist => :foo) }.should(
+      raise_error(ArgumentError))
+  end
+
+  it_should_behave_like 'constraint with strength option'
+  it_should_behave_like 'constraint with kind option'
+  it_should_behave_like 'bool constraint'
 end
 
 # Requires @expect_relation, @invoke_relation and @target.

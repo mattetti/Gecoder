@@ -121,6 +121,8 @@ module Gecode
   # Describes a boolean variable. A boolean variable can be either true or 
   # false.
   class FreeBoolVar
+    include Gecode::Constraints::Bool::BoolVarOperand
+
     # Checks whether the variable has been assigned.
     delegate :assigned?, :assigned
     

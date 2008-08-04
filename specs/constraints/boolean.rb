@@ -19,13 +19,14 @@ describe Gecode::Constraints::Bool do
     @b1 = @model.b1
     @b2 = @model.b2
     @b3 = @model.b3
+    @operand = @b1 | @b2
     
     # For constraint option spec.
-    @invoke_options = lambda do |hash| 
-      (@b1 | @b2).must_be.true(hash) 
+    @invoke_options = lambda do |operand, hash| 
+      @operand.must_be.true(hash) 
       @model.solve!
     end
-    @expect_options = option_expectation do |strength, kind, reif_var|
+    @expect_options = option_expectation do |op_var, strength, kind, reif_var|
       @model.allow_space_access do
         # We only test the non-MiniModel parts.
         unless reif_var.nil?
@@ -238,5 +239,5 @@ describe Gecode::Constraints::Bool do
     lambda{ @b1.must.imply 'hello' }.should raise_error(TypeError) 
   end
 
-  it_should_behave_like 'reifiable constraint'
+  it_should_behave_like 'reifiable bool constraint'
 end
