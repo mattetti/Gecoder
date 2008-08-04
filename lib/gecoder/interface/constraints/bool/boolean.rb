@@ -1,28 +1,61 @@
 module Gecode::Constraints::Bool
-  module BoolVarOperand
-    # Initiates a boolean constraint with this variable or +var+.
-    def |(var)
-      ExpressionNode.new(self, @model) | var
+  module BoolVarOperand  
+    # Produces a new boolean operand representing this operand OR +bool_op+.
+    # 
+    # == Examples
+    #
+    #  # +b1+ and +b2+
+    #  b1 & b2
+    def |(bool_op)
+      ExpressionNode.new(self, @model) | bool_op
     end
     
-    # Initiates a boolean constraint with this variable and +var+.
-    def &(var)
-      ExpressionNode.new(self, @model) & var
+    # Produces a new boolean operand representing this operand AND +bool_op+.
+    #
+    # == Examples
+    #
+    #   # (+b1+ and +b2+) or +b3+ 
+    #   (b1 & b1) | b3
+    def &(bool_op)
+      ExpressionNode.new(self, @model) & bool_op
     end
     
-    # Initiates a boolean constraint with this variable exclusive or +var+.
-    def ^(var)
-      ExpressionNode.new(self, @model) ^ var
+    # Produces a new boolean operand representing this operand XOR +bool_op+.
+    #
+    # == Examples
+    #
+    #   # (+b1+ and +b2+) or (+b3+ exclusive or +b1+)
+    #   (b1 & b2) | (b3 ^ b1)
+    def ^(bool_op)
+      ExpressionNode.new(self, @model) ^ bool_op
     end
     
-    # Initiates a boolean constraint with this variable implies +var+.
-    def implies(var)
-      ExpressionNode.new(self, @model).implies var
+    # Produces a new boolean operand representing that this operand implies
+    # +bool_op+.
+    #
+    # == Examples
+    #   
+    #   # (+b1+ implies +b2+) and (+b3+ implies +b2+)
+    #   (b1.implies b2) & (b3.implies b2)
+    def implies(bool_op)
+      ExpressionNode.new(self, @model).implies bool_op
     end
   end
   
   class BoolVarConstraintReceiver
-    def ==(expression, options = {})
+    # Constrains the boolean operand to be equal to +bool_op+. Negation and 
+    # reification are supported. Any of <tt>==</tt>, +equal+ and +equal_to+ may 
+    # be used for equality.
+    # 
+    # === Examples
+    # 
+    #   # +b1+ and +b2+ must equal +b1+ or +b2+.
+    #   (b1 & b2).must == (b1 | b2)
+    #   
+    #   # +b1+ and +b2+ must not equal +b3+. We reify it with +bool+ and select 
+    #   # the strength +domain+.
+    #   (b1 & b2).must_not.equal(b3, :reify => bool, :select => :domain)
+    def ==(bool_op, options = {})
 =begin
 # TODO reenable when integer linear expressions are back.
       if expression.kind_of? Gecode::Constraints::Int::Linear::ExpressionTree
@@ -38,99 +71,64 @@ module Gecode::Constraints::Bool
     end
     alias_comparison_methods
     
-    # Constrains the boolean expression to imply the specified expression.
-    def imply(expression, options = {})
+    # Constrains the boolean operand to imply +bool_op+. Negation and reification 
+    # are supported.
+    # 
+    # === Examples
+    #   
+    #   # +b1+ must imply +b2+
+    #   b1.must.imply b2
+    #   
+    #   # +b1+ and +b2+ must not imply +b3+. We reify it with +bool+ and select
+    #   # +domain+ as strength.
+    #   (b1 & b2).must_not.imply(b3, :reify => bool, :strength => :domain)
+    def imply(bool_op, options = {})
       @params.update Gecode::Constraints::Util.decode_options(options)
       @params.update(:lhs => @params[:lhs].implies(expression), :rhs => true)
       @model.add_constraint BooleanConstraint.new(@model, @params)
     end
     
-    # Constrains the boolean expression to be true.
+    # Constrains the boolean operand to be true. Negation and reification are 
+    # supported.
+    # 
+    # === Examples
+    # 
+    #   # +b1+ and +b2+ must be true.
+    #   (b1 & b2).must_be.true
+    #   
+    #   # (+b1+ implies +b2+) and (+b3+ implies +b2+) must be true.
+    #   ((b1.implies b2) & (b3.implies b2)).must_be.true
+    # 
+    #   # +b1+ and +b2+ must be true. We reify it with +bool+ and select the
+    #   # strength +domain+.
+    #   (b1 & b2).must_be.true(:reify => bool, :strength => :domain)
     def true(options = {})
       @params.update Gecode::Constraints::Util.decode_options(options)
       @model.add_constraint BooleanConstraint.new(@model, 
         @params.update(:rhs => true))
     end
     
-    # Constrains the boolean expression to be false.
+    # Constrains the boolean operand to be false. Negation and reification are 
+    # supported.
+    #
+    # === Examples
+    # 
+    #   # +b1+ and +b2+ must be false.
+    #   (b1 & b2).must_be.false
+    #   
+    #   # (+b1+ implies +b2+) and (+b3+ implies +b2+) must be false.
+    #   ((b1.implies b2) & (b3.implies b2)).must_be.false
+    # 
+    #   # +b1+ and +b2+ must be false. We reify it with +bool+ and select the
+    #   # strength +domain+.
+    #   (b1 & b2).must_be.false(:reify => bool, :strength => :domain)
     def false(options = {})
       @params[:negate] = !@params[:negate]
       self.true
     end
   end
   
-  # Describes a constraint on a boolean expression.
-  # 
-  # == Boolean expressions
-  # 
-  # A boolean expression consists of several boolean variable with various 
-  # boolean operators. The available operators are:
-  # 
-  # [<tt>|</tt>] Or
-  # [<tt>&</tt>] And
-  # [<tt>^</tt>] Exclusive or
-  # [+implies+]  Implication
-  # 
-  # === Examples
-  # 
-  #   # +b1+ and +b2+
-  #   b1 & b2
-  #   
-  #   # (+b1+ and +b2+) or +b3+ 
-  #   (b1 & b1) | b3
-  # 
-  #   # (+b1+ and +b2+) or (+b3+ exclusive or +b1+)
-  #   (b1 & b2) | (b3 ^ b1)
-  #   
-  #   # (+b1+ implies +b2+) and (+b3+ implies +b2+)
-  #   (b1.implies b2) & (b3.implies b2)
-  #   
-  # == Domain
-  # 
-  # A domain constraint just specifies that a boolean expression must be true
-  # or false. Negation and reification are supported.
-  # 
-  # === Examples
-  # 
-  #   # +b1+ and +b2+ must be true.
-  #   (b1 & b2).must_be.true
-  #   
-  #   # (+b1+ implies +b2+) and (+b3+ implies +b2+) must be false.
-  #   ((b1.implies b2) & (b3.implies b2)).must_be.false
-  # 
-  #   # +b1+ and +b2+ must be true. We reify it with +bool+ and select the
-  #   # strength +domain+.
-  #   (b1 & b2).must_be.true(:reify => bool, :strength => :domain)
-  # 
-  # == Equality
-  # 
-  # A constraint with equality specifies that two boolean expressions must be
-  # equal. Negation and reification are supported. Any of <tt>==</tt>, 
-  # +equal+ and +equal_to+ may be used for equality.
-  # 
-  # === Examples
-  # 
-  #   # +b1+ and +b2+ must equal +b1+ or +b2+.
-  #   (b1 & b2).must == (b1 | b2)
-  #   
-  #   # +b1+ and +b2+ must not equal +b3+. We reify it with +bool+ and select 
-  #   # the strength +domain+.
-  #   (b1 & b2).must_not.equal(b3, :reify => bool, :select => :domain)
-  #   
-  # == Implication
-  # 
-  # A constraint using +imply+ specified that one boolean expression must
-  # imply the other. Negation and reification are supported.
-  # 
-  # === Examples
-  #   
-  #   # +b1+ must imply +b2+
-  #   b1.must.imply b2
-  #   
-  #   # +b1+ and +b2+ must not imply +b3+. We reify it with +bool+ and select
-  #   # +domain+ as strength.
-  #   (b1 & b2).must_not.imply b3
-  class BooleanConstraint < Gecode::Constraints::ReifiableConstraint
+  class BooleanConstraint < Gecode::Constraints::ReifiableConstraint #:nodoc:
     def post
       lhs, rhs, negate, reif_var = 
         @params.values_at(:lhs, :rhs, :negate, :reif)
