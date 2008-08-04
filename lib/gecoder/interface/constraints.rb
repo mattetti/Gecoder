@@ -410,8 +410,8 @@ module Gecode
                       
         # Reification.
         reif_var = options.delete(:reify)
-        unless reif_var.nil? or reif_var.kind_of? FreeBoolVar
-          raise TypeError, 'Only boolean variables may be used for reification.'
+        unless reif_var.nil? or reif_var.respond_to? :to_bool_var
+          raise TypeError, 'Only boolean operands may be used for reification.'
         end
         
         # Check for unrecognized options.

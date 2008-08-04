@@ -134,11 +134,11 @@ module Gecode::Constraints::Bool
     def post
       lhs, rhs, negate, reif_var = 
         @params.values_at(:lhs, :rhs, :negate, :reif)
-      space = (lhs.model || rhs.model).active_space
 
-      if lhs.kind_of?(Gecode::FreeBoolVar)
+      if lhs.respond_to? :to_bool_var
         lhs = ExpressionNode.new(lhs, @model)
       end
+      space = (lhs.model || rhs.model).active_space
 
       bot_eqv = Gecode::Raw::IRT_EQ
       bot_xor = Gecode::Raw::IRT_NQ
@@ -154,7 +154,7 @@ module Gecode::Constraints::Bool
             Gecode::Raw::MiniModel::BoolExpr::NT_EQV, rhs)
           var = tree.to_minimodel_bool_expr.post(space, *propagation_options)
           Gecode::Raw::rel(space, var, (negate ? bot_xor : bot_eqv),
-            reif_var.bind, *propagation_options)
+            reif_var.to_bool_var.bind, *propagation_options)
         end
       else
         should_hold = !negate & rhs
@@ -165,7 +165,7 @@ module Gecode::Constraints::Bool
           var = lhs.to_minimodel_bool_expr.post(space, *propagation_options)
           Gecode::Raw::rel(space, var, 
             (should_hold ? bot_eqv : bot_xor),
-            reif_var.bind, *propagation_options)
+            reif_var.to_bool_var.bind, *propagation_options)
         end
       end
     end
@@ -242,7 +242,7 @@ module Gecode::Constraints::Bool
     attr :model
   
     def initialize(value, model = nil)
-      unless value.kind_of?(Gecode::FreeBoolVar)
+      unless value.respond_to? :to_bool_var        
         raise TypeError, 'Invalid type used in boolean equation: ' +
           "#{value.class}."
       end
@@ -252,7 +252,7 @@ module Gecode::Constraints::Bool
     
     # Returns a MiniModel boolean expression representing the tree.
     def to_minimodel_bool_expr
-      Gecode::Raw::MiniModel::BoolExpr.new(@value.bind)
+      Gecode::Raw::MiniModel::BoolExpr.new(@value.to_bool_var.bind)
     end
   end
 end

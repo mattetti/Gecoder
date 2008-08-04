@@ -22,8 +22,8 @@ describe Gecode::Constraints::Bool do
     @operand = @b1 | @b2
     
     # For constraint option spec.
-    @invoke_options = lambda do |operand, hash| 
-      @operand.must_be.true(hash) 
+    @invoke_options = lambda do |op, hash| 
+      op.must_be.true(hash) 
       @model.solve!
     end
     @expect_options = option_expectation do |op_var, strength, kind, reif_var|

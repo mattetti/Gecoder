@@ -81,6 +81,23 @@ describe 'constraint with reification option', :shared => true do
     @expect_options.call(anything, :bool => var)
     @invoke_options.call(@operand, :reify => var)
   end
+
+  it 'should translate reification with arbitrary bool operand' do
+    bool_var = @model.bool_var
+    mock_op_class = Class.new
+    mock_op_class.class_eval do
+      include Gecode::Constraints::Bool::BoolVarOperand
+    end
+    model = @model
+    op = mock_op_class.new
+    op.instance_eval do
+      @model = model
+    end
+    op.stub!(:to_bool_var).and_return bool_var
+    
+    @expect_options.call(anything, :bool => bool_var)
+    @invoke_options.call(@operand, :reify => op)
+  end
   
   it 'should raise errors for reification variables of incorrect type' do
     lambda do 
