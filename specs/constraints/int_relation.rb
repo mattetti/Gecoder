@@ -4,25 +4,25 @@ require File.dirname(__FILE__) + '/constraint_helper'
 describe Gecode::Constraints::Int::Linear, ' (simple ones)' do
   before do
     @model = Gecode::Model.new
-    @x = @model.int_var(1..2)
+    @operand = @x = @model.int_var(1..2)
     @int = 4
     @y = @model.int_var(1..2)
     
     # For constraint option spec.
-    @invoke_options = lambda do |hash| 
-      @x.must_be.greater_than(3, hash) 
+    @invoke_options = lambda do |op, hash| 
+      op.must_be.greater_than(3, hash) 
       @model.solve!
     end
-    @expect_options = option_expectation do |strength, kind, reif_var|
+    @expect_options = option_expectation do |op_var, strength, kind, reif_var|
       if reif_var.nil?
         Gecode::Raw.should_receive(:rel).once.with(
           an_instance_of(Gecode::Raw::Space), 
-          anything, Gecode::Raw::IRT_GR, anything, 
+          op_var, Gecode::Raw::IRT_GR, anything, 
           strength, kind)
       else
         Gecode::Raw.should_receive(:rel).once.with(
           an_instance_of(Gecode::Raw::Space), 
-          an_instance_of(Gecode::Raw::IntVar), Gecode::Raw::IRT_GR, anything, 
+          op_var, Gecode::Raw::IRT_GR, anything, 
           reif_var, strength, kind)
       end
     end
@@ -78,5 +78,5 @@ describe Gecode::Constraints::Int::Linear, ' (simple ones)' do
     lambda{ @x.must == 'hello' }.should raise_error(TypeError) 
   end
   
-  it_should_behave_like 'reifiable constraint'
+  it_should_behave_like 'reifiable int constraint'
 end

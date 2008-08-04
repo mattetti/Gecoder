@@ -48,13 +48,14 @@ describe Gecode::Constraints::Int::Linear do
     @x = @model.x
     @y = @model.y
     @z = @model.z
-    
+    @operand = @x + @y
+
     # For constraint option spec.
-    @invoke_options = lambda do |hash| 
-      (@x + @y).must_be.greater_than(@z, hash)
+    @invoke_options = lambda do |op, hash| 
+      op.must_be.greater_than(@z, hash)
       @model.solve!
     end
-    @expect_options = option_expectation do |strength, kind, reif_var|
+    @expect_options = option_expectation do |op_var, strength, kind, reif_var|
       # TODO: this is hard to spec from this level.
     end
   end
@@ -187,7 +188,7 @@ describe Gecode::Constraints::Int::Linear do
     (@x * :foo).should be_nil
   end
   
-  it_should_behave_like 'reifiable constraint'
+  it_should_behave_like 'reifiable int constraint'
 end
 
 describe Gecode::Constraints::Int::Linear, '(with booleans)' do
@@ -196,13 +197,14 @@ describe Gecode::Constraints::Int::Linear, '(with booleans)' do
     @x = @model.x
     @y = @model.y
     @z = @model.z
+    @operand = @x + @y
     
     # For constraint option spec.
-    @invoke_options = lambda do |hash| 
-      (@x + @y).must_be.greater_than(@z, hash)
+    @invoke_options = lambda do |op, hash| 
+      op.must_be.greater_than(@z, hash)
       @model.solve!
     end
-    @expect_options = option_expectation do |strength, kind, reif_var|
+    @expect_options = option_expectation do |op_var, strength, kind, reif_var|
       # TODO: this is hard to spec from this level.
     end
   end
@@ -334,7 +336,7 @@ describe Gecode::Constraints::Int::Linear, '(with booleans)' do
     (@x * :foo).should be_nil
   end
   
-  it_should_behave_like 'reifiable constraint'
+  it_should_behave_like 'reifiable int constraint'
 end
 
 
