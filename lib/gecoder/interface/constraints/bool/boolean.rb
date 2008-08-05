@@ -7,7 +7,7 @@ module Gecode::Constraints::Bool
     #  # +b1+ and +b2+
     #  b1 & b2
     def |(bool_op)
-      ExpressionNode.new(self, @model) | bool_op
+      bool_expression_operation(:|, bool_op)
     end
     
     # Produces a new boolean operand representing this operand AND +bool_op+.
@@ -17,7 +17,7 @@ module Gecode::Constraints::Bool
     #   # (+b1+ and +b2+) or +b3+ 
     #   (b1 & b1) | b3
     def &(bool_op)
-      ExpressionNode.new(self, @model) & bool_op
+      bool_expression_operation(:&, bool_op)
     end
     
     # Produces a new boolean operand representing this operand XOR +bool_op+.
@@ -27,7 +27,7 @@ module Gecode::Constraints::Bool
     #   # (+b1+ and +b2+) or (+b3+ exclusive or +b1+)
     #   (b1 & b2) | (b3 ^ b1)
     def ^(bool_op)
-      ExpressionNode.new(self, @model) ^ bool_op
+      bool_expression_operation(:^, bool_op)
     end
     
     # Produces a new boolean operand representing that this operand implies
@@ -38,7 +38,22 @@ module Gecode::Constraints::Bool
     #   # (+b1+ implies +b2+) and (+b3+ implies +b2+)
     #   (b1.implies b2) & (b3.implies b2)
     def implies(bool_op)
-      ExpressionNode.new(self, @model).implies bool_op
+      bool_expression_operation(:implies, bool_op)
+    end
+
+    private
+
+    # Performs the bool expression operation +operator+ on self
+    # and +operand2+.
+    def bool_expression_operation(operator, operand2)
+      unless operand2.respond_to? :to_minimodel_bool_expr
+        operand2 = ExpressionNode.new operand2
+      end
+      operand1 = self
+      unless operand1.respond_to? :to_minimodel_bool_expr
+        operand1 = ExpressionNode.new(self, @model)
+      end
+      ExpressionTree.new(operand1, operator, operand2)
     end
   end
   
@@ -56,23 +71,20 @@ module Gecode::Constraints::Bool
     #   # the strength +domain+.
     #   (b1 & b2).must_not.equal(b3, :reify => bool, :select => :domain)
     def ==(bool_op, options = {})
-=begin
-# TODO reenable when integer linear expressions are back.
-      if expression.kind_of? Gecode::Constraints::Int::Linear::ExpressionTree
-        return expression.must == @params[:lhs]
+      if bool_op.kind_of? Gecode::Constraints::Int::Linear::ExpressionTree
+        return bool_op.must == @params[:lhs]
       end
-=end
-      unless expression.respond_to? :to_minimodel_bool_expr
-        expression = ExpressionNode.new(expression, @model)
+      unless bool_op.respond_to? :to_minimodel_bool_expr
+        bool_op = ExpressionNode.new(bool_op, @model)
       end
       @params.update Gecode::Constraints::Util.decode_options(options)
-      @params.update(:lhs => @params[:lhs], :rhs => expression)
+      @params.update(:lhs => @params[:lhs], :rhs => bool_op)
       @model.add_constraint BooleanConstraint.new(@model, @params)
     end
     alias_comparison_methods
     
-    # Constrains the boolean operand to imply +bool_op+. Negation and reification 
-    # are supported.
+    # Constrains the boolean operand to imply +bool_op+. Negation and
+    # reification are supported.
     # 
     # === Examples
     #   
@@ -84,7 +96,7 @@ module Gecode::Constraints::Bool
     #   (b1 & b2).must_not.imply(b3, :reify => bool, :strength => :domain)
     def imply(bool_op, options = {})
       @params.update Gecode::Constraints::Util.decode_options(options)
-      @params.update(:lhs => @params[:lhs].implies(expression), :rhs => true)
+      @params.update(:lhs => @params[:lhs].implies(bool_op), :rhs => true)
       @model.add_constraint BooleanConstraint.new(@model, @params)
     end
     
@@ -143,13 +155,11 @@ module Gecode::Constraints::Bool
 
       if rhs.respond_to? :to_minimodel_bool_expr
         if reif_var.nil?
-          tree = ExpressionTree.new(lhs, 
-            Gecode::Raw::MiniModel::BoolExpr::NT_EQV, rhs)
+          tree = ExpressionTree.new(lhs, :==, rhs)
           tree.to_minimodel_bool_expr.post(space, !negate, 
             *propagation_options)
         else
-          tree = ExpressionTree.new(lhs, 
-            Gecode::Raw::MiniModel::BoolExpr::NT_EQV, rhs)
+          tree = ExpressionTree.new(lhs, :==, rhs)
           var = tree.to_minimodel_bool_expr.post(space, *propagation_options)
           Gecode::Raw::rel(space, var, (negate ? bot_xor : bot_eqv),
             reif_var.to_bool_var.bind, *propagation_options)
@@ -169,9 +179,9 @@ module Gecode::Constraints::Bool
     end
   end
 
-  # A module containing the methods for the basic boolean operations. Depends
-  # on that the class mixing it in defined #model.
-  module OperationMethods #:nodoc
+  # Describes a binary tree of expression nodes which together form a boolean 
+  # expression.
+  class ExpressionTree #:nodoc:
     include BoolVarOperand
 
     private
@@ -182,36 +192,12 @@ module Gecode::Constraints::Bool
       :|        => Gecode::Raw::MiniModel::BoolExpr::NT_OR,
       :&        => Gecode::Raw::MiniModel::BoolExpr::NT_AND,
       :^        => Gecode::Raw::MiniModel::BoolExpr::NT_XOR,
-      :implies  => Gecode::Raw::MiniModel::BoolExpr::NT_IMP
+      :implies  => Gecode::Raw::MiniModel::BoolExpr::NT_IMP,
+      :==       => Gecode::Raw::MiniModel::BoolExpr::NT_EQV
     }
-    
-    public
-    
-    OPERATION_TYPES.each_pair do |name, operation|
-      module_eval <<-"end_code"
-        def #{name}(expression)
-          unless expression.kind_of? ExpressionTree
-            expression = ExpressionNode.new(expression)
-          end
-          ExpressionTree.new(self, #{operation}, expression)
-        end
-      end_code
-    end
-    
-    private
-    
-    # Produces a receiver (for the BoolVarOperand module).
-    def construct_receiver(params)
-      params.update(:lhs => self)
-      BoolVarConstraintReceiver.new(model, params)
-    end
-  end
 
-  # Describes a binary tree of expression nodes which together form a boolean 
-  # expression.
-  class ExpressionTree #:nodoc:
-    include OperationMethods
-  
+    public
+
     # Constructs a new expression with the specified binary operation 
     # applied to the specified trees.
     def initialize(left_tree, operation, right_tree)
@@ -223,7 +209,7 @@ module Gecode::Constraints::Bool
     # Returns a MiniModel boolean expression representing the tree.
     def to_minimodel_bool_expr
       Gecode::Raw::MiniModel::BoolExpr.new(
-        @left.to_minimodel_bool_expr, @operation, 
+        @left.to_minimodel_bool_expr, OPERATION_TYPES[@operation], 
         @right.to_minimodel_bool_expr)
     end
     
@@ -231,12 +217,28 @@ module Gecode::Constraints::Bool
     def model
       @left.model || @right.model
     end
+
+    def to_bool_var
+      bool_var = model.bool_var
+      tree = ExpressionTree.new(self, :==, ExpressionNode.new(bool_var))
+      model.add_interaction do
+        tree.to_minimodel_bool_expr.post(model.active_space, true, 
+          Gecode::Raw::ICL_DEF, Gecode::Raw::PK_DEF)
+      end
+      return bool_var
+    end
+    
+    private
+
+    # Produces a receiver (for the BoolVarOperand module).
+    def construct_receiver(params)
+      params.update(:lhs => self)
+      BoolVarConstraintReceiver.new(model, params)
+    end
   end
 
   # Describes a single node in a boolean expression.
   class ExpressionNode #:nodoc:
-    include OperationMethods
-  
     attr :model
   
     def initialize(value, model = nil)

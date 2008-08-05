@@ -3,14 +3,14 @@ require File.dirname(__FILE__) + '/../spec_helper'
 # Several of these shared specs requires one or more of the following instance 
 # variables to be used: 
 # [@expect_options]  A method that creates an expectation on the aspect to be 
-#                    tested, using the provided operand variable and hash of Gecode 
-#                    values. The hash can have values for the keys :icl 
+#                    tested, using the provided operand variable and hash of 
+#                    Gecode values. The hash can have values for the keys :icl 
 #                    (ICL_*), :pk (PK_*), and :bool (bound reification 
 #                    variable). Any values not provided are assumed to be 
 #                    default values (nil in the case of :bool).
 # [@invoke_options]  A method that invokes the aspect to be tested, with the 
-#                    provided operand and hash of options (with at most the keys 
-#                    :strength, :kind and :reify).
+#                    provided operand and hash of options (with at most the 
+#                    keys :strength, :kind and :reify).
 # [@operand]         An operand of a type that has the constraint that
 #                    is being tested.
 # [@model]           The model instance that contains the aspects being tested.
@@ -87,6 +87,7 @@ describe 'constraint with reification option', :shared => true do
     mock_op_class = Class.new
     mock_op_class.class_eval do
       include Gecode::Constraints::Bool::BoolVarOperand
+      attr :model
     end
     model = @model
     op = mock_op_class.new
@@ -125,6 +126,7 @@ describe 'int constraint', :shared => true do
     mock_op_class = Class.new
     mock_op_class.class_eval do
       include Gecode::Constraints::Int::IntVarOperand
+      attr :model
     end
     model = @model
     op = mock_op_class.new
@@ -132,7 +134,7 @@ describe 'int constraint', :shared => true do
       @model = model
     end
     op.stub!(:to_int_var).and_return int_var
-    @expect_options.call(int_var, {})
+    @expect_options.call(@model.allow_space_access{ int_var.bind }, {})
     @invoke_options.call(op, {})
   end
 end
@@ -144,6 +146,7 @@ describe 'bool constraint', :shared => true do
     mock_op_class = Class.new
     mock_op_class.class_eval do
       include Gecode::Constraints::Bool::BoolVarOperand
+      attr :model
     end
     model = @model
     op = mock_op_class.new
@@ -151,7 +154,7 @@ describe 'bool constraint', :shared => true do
       @model = model
     end
     op.stub!(:to_bool_var).and_return bool_var
-    @expect_options.call(bool_var, {})
+    @expect_options.call(@model.allow_space_access{ bool_var.bind }, {})
     @invoke_options.call(op, {})
   end
 end

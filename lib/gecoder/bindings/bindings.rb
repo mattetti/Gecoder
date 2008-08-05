@@ -735,6 +735,11 @@ Rust::Bindings::create_bindings Rust::Bindings::LangCxx, "gecode" do |b|
       ['Gecode::IntVar', 'Gecode::BoolVar'].each do |template_type|
         minimodelns.add_cxx_class "LinExpr<#{template_type}>" do |klass|
           klass.add_constructor
+
+          klass.add_constructor do |method|
+            method.add_parameter "#{template_type}&", "x"
+            method.add_parameter "int", "a", true
+          end
         
           klass.add_method "post" do |method|
             method.add_parameter "Gecode::MSpace *", "home"

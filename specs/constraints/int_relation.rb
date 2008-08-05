@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 require File.dirname(__FILE__) + '/constraint_helper'
 
-describe Gecode::Constraints::Int::Linear, ' (simple ones)' do
+describe Gecode::Constraints::Int::Relation do
   before do
     @model = Gecode::Model.new
     @operand = @x = @model.int_var(1..2)

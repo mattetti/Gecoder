@@ -32,7 +32,7 @@ describe Gecode::Constraints::Bool do
         unless reif_var.nil?
           Gecode::Raw.should_receive(:rel).once.with(
             an_instance_of(Gecode::Raw::Space), 
-            an_instance_of(Gecode::Raw::BoolVar), Gecode::Raw::IRT_EQ, 
+            op_var, Gecode::Raw::IRT_EQ, 
             an_instance_of(Gecode::Raw::BoolVar), strength, kind)
         end
       end

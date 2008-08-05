@@ -17,13 +17,13 @@ describe Gecode::Constraints::Int::Domain, ' (non-range)' do
         if reif_var.nil?
           Gecode::Raw.should_receive(:dom).once.with(
             an_instance_of(Gecode::Raw::Space), 
-            an_instance_of(Gecode::Raw::IntVar), 
+            op_var, 
             an_instance_of(Gecode::Raw::IntSet), 
             strength, kind)
         else
           Gecode::Raw.should_receive(:dom).once.with(
             an_instance_of(Gecode::Raw::Space), 
-            an_instance_of(Gecode::Raw::IntVar), 
+            op_var, 
             an_instance_of(Gecode::Raw::IntSet), 
             reif_var, strength, kind)
         end
@@ -61,13 +61,13 @@ describe Gecode::Constraints::Int::Domain, ' (range)' do
         if reif_var.nil?
           Gecode::Raw.should_receive(:dom).once.with(
             an_instance_of(Gecode::Raw::Space), 
-            an_instance_of(Gecode::Raw::IntVar), 
+            op_var, 
             @range_domain.first, @range_domain.last,
             strength, kind)
         else
           Gecode::Raw.should_receive(:dom).once.with(
             an_instance_of(Gecode::Raw::Space), 
-            an_instance_of(Gecode::Raw::IntVar), 
+            op_var, 
             @range_domain.first, @range_domain.last,
             reif_var, strength, kind)
         end

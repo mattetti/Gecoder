@@ -9,16 +9,17 @@ module Gecode::Constraints::IntEnum
       if vars.first.respond_to? :to_int_var
         params = {:lhs => self, :position => vars.first}
         return Gecode::Constraints::Int::IntVarOperand.
-            operand_with_short_circuit_equality(model) do |var, params, constrain|
+            operand_with_short_circuit_equality(model) do |operand, params, constrain|
           enum, position = @params.values_at(:lhs, :position)
           if constrain
-            var.must_be.in enum.domain_range
+            operand.must_be.in enum.domain_range
           end
           
           # The enum can be a constant array.
           enum = enum.to_int_var_array if enum.respond_to? :to_int_var_array
           Gecode::Raw::element(@model.active_space, enum, 
-            position.bind, var.bind, *propagation_options)
+            position.to_int_var.bind, operand.to_int_var.bind, 
+            *propagation_options)
         end
       else
         pre_element_access(*vars) if respond_to? :pre_element_access
