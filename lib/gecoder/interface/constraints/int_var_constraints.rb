@@ -2,67 +2,9 @@
 # integer variables.
 module Gecode::Constraints::Int
   # Describes an integer variable operand. Classes that mixes in
-  # IntVarOperand must define the method #model.
+  # IntVarOperand must define the method #model and #to_int_var.
   module IntVarOperand  
     include Gecode::Constraints::Operand 
-
-    # Constructs an operand that acts as a normal operand but returns a
-    # receiver that short circuits equality when there is no negation
-    # nor reification.
-    #
-    # The provided block should accept three parameters. The first is
-    # the variable that should represent the operand. The second is the
-    # hash of parameters. The third is a boolean, it it's true then the
-    # block should try to constrain the variable's domain as much
-    # as possible. The block should constrain the variable to equal the
-    # operands value.
-    def self.operand_with_short_circuit_equality(model, &block)
-      klass = Class.new
-      klass.class_eval do
-        include Gecode::Constraints::Int::IntVarOperand
-        attr :model
-
-        def construct_receiver(params)
-          params.update(:lhs => self)
-          receiver = IntVarConstraintReceiver.new(@model, params)
-
-          class <<receiver
-            alias_method :equality_without_short_circuit, :==
-            def ==(operand, options = {})
-              if !@params[:negate] and options[:reify].nil? and 
-                  operand.respond_to? :to_int_var
-                # Short circuit the constraint to avoid a needless
-                # constraint.
-                @params.update Gecode::Constraints::Util.decode_options(options)
-                @model.add_interaction do
-                  block.call(operand, @params, false)
-                end
-              else
-                equality_without_short_circuit(operand, options)
-              end
-            end
-            alias_comparison_methods
-          end
-
-          return receiver
-        end
-        
-        def to_int_var
-          variable = model.int_var
-          model.add_interaction do
-            block.call(variable, {}, true)
-          end
-          return variable
-        end
-      end
-
-      new_op = klass.new
-      new_op.instance_eval do 
-        @model = model
-      end
-
-      return new_op
-    end
 
     private
 
@@ -72,8 +14,62 @@ module Gecode::Constraints::Int
     end
   end
 
-  # An operand that short circuits integer inequality relations and
-  # the equality relation.
+  # An operand that short circuits integer equality.
+  class ShortCircuitEqualityOperand
+    include Gecode::Constraints::Int::IntVarOperand
+    attr :model
+
+    def initialize(model)
+      @model = model
+    end
+
+    def construct_receiver(params)
+      params.update(:lhs => self)
+      receiver = IntVarConstraintReceiver.new(@model, params)
+      op = self
+      receiver.instance_eval{ @short_circuit = op }
+      class <<receiver
+        alias_method :equality_without_short_circuit, :==
+        def ==(operand, options = {})
+          if !@params[:negate] and options[:reify].nil? and 
+              operand.respond_to? :to_int_var
+            # Short circuit the constraint.
+            @params.update Gecode::Constraints::Util.decode_options(options)
+            @model.add_interaction do
+              @short_circuit.constrain_equal(operand, false,
+                @params.values_at(:strength, :kind))
+            end
+          else
+            equality_without_short_circuit(operand, options)
+          end
+        end
+        alias_comparison_methods
+      end
+
+      return receiver
+    end
+
+    def to_int_var
+      variable = model.int_var
+      model.add_interaction do
+        constrain_equal(variable, true, 
+          [Gecode::Raw::ICL_DEF, Gecode::Raw::PK_DEF])
+      end
+      return variable
+    end
+
+    private
+
+    # Constrains this operand to equal +int_variable+ using the
+    # specified +propagation_options+. If +constrain_domain+ is true
+    # then the method should also attempt to constrain the bounds of the
+    # domain of +int_variable+.
+    def constrain_equal(int_operand, constrain_domain, propagation_options)
+      raise NotImplementedError, 'Abstract method has not been implemented.'
+    end
+  end
+
+  # An operand that short circuits integer relation constraints.
   class ShortCircuitRelationsOperand
     include Gecode::Constraints::Int::IntVarOperand
     attr :model

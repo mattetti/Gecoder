@@ -2,7 +2,7 @@
 # boolean variables.
 module Gecode::Constraints::Bool
   # Describes an integer variable operand. Classes that mixes in
-  # IntVarOperand must define the method #model.
+  # IntVarOperand must define the method #model and #to_bool_var.
   module BoolVarOperand  
     include Gecode::Constraints::Operand 
 

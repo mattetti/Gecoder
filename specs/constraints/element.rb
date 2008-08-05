@@ -86,15 +86,9 @@ describe Gecode::Constraints::IntEnum::Element do
   end
 
   it 'should not disturb normal array access' do
-    @fixnum_prices[2].should_not be_nil
     @prices[2].should_not be_nil
   end
 
-  it 'should handle fixnum enums as enumeration' do
-    @fixnum_prices[@store].must == @fixnum_prices[2]
-    @model.solve!.store.value.should equal(2)
-  end
-  
   it 'should translate reification when using equality' do
     bool_var = @model.bool_var
     @expect.call(@store, Gecode::Raw::IRT_EQ, @target, Gecode::Raw::ICL_DEF, 
@@ -103,5 +97,27 @@ describe Gecode::Constraints::IntEnum::Element do
     @model.solve!
   end
   
+  # TODO make this more specific? Operand etc?
+  it_should_behave_like 'int-producing property'
+end
+
+describe Gecode::Constraints::IntEnum::Element do
+  before do
+    @model = ElementSampleProblem.new
+    @target = @price = @model.price
+    @store = @model.store
+    @enum = @model.fixnum_prices
+  end
+
+  it 'should not disturb normal array access' do
+    @enum[2].should_not be_nil
+  end
+
+  it 'should handle variables as indices' do
+    @enum[@store].must == @enum[2]
+    @model.solve!.store.value.should equal(2)
+  end
+  
+  # TODO make this more specific? Operand etc?
   it_should_behave_like 'int-producing property'
 end

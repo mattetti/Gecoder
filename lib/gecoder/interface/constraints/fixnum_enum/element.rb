@@ -1,6 +1,5 @@
-# A module that gathers the classes and modules used by element constraints.
-module Gecode::Constraints::IntEnum
-  module IntVarEnumOperand
+module Gecode::Constraints::FixnumEnum
+  module FixnumEnumOperand
     # This adds the adder for the methods in the modules including it. The 
     # reason for doing it so indirect is that the first #[] won't be defined 
     # before the module that this is mixed into is mixed into an enum.
@@ -16,15 +15,15 @@ module Gecode::Constraints::IntEnum
               end
           
               # Produces an integer variable operand representing the
-              # i:th integer variable in the enumeration, where i is the
+              # i:th constant integer in the enumeration, where i is the
               # value of the integer variable used as index. Think of it
               # as array access in the world of constraint programming.
               # 
               # == Example
               # 
-              #   # The variable at the +x+:th position in +int_enum+,
-              #   # where +x+ is an integer variable.  
-              #   int_enum[x]
+              #   # The price of +selected_item+ as described by +prices+ .
+              #   prices = wrap_enum([500, 24, 4711, 412, 24])
+              #   prices[selected_item]
               # 
               def [](*vars)
                 if vars.first.respond_to? :to_int_var
@@ -51,12 +50,11 @@ module Gecode::Constraints::IntEnum
       end
 
       def constrain_equal(int_operand, constrain, propagation_options)
-        enum = @enum.to_int_var_enum
         if constrain
-          int_operand.must_be.in enum.domain_range
+          int_operand.must_be.in @enum
         end
 
-        Gecode::Raw::element(@model.active_space, enum.bind_array, 
+        Gecode::Raw::element(@model.active_space, @enum, 
           @position.to_int_var.bind, int_operand.to_int_var.bind, 
           *propagation_options)
       end

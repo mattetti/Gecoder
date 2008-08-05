@@ -1,8 +1,8 @@
 # A module containing constraints that have enumerations of integer 
 # variables as left hand side.
 module Gecode::Constraints::IntEnum
-  # Describes an integer variable operand. Classes that mix in
-  # IntVarEnumOperand must define #model .
+  # Describes an integer variable enumeration operand. Classes that mix in
+  # IntVarEnumOperand must define #model and #to_int_var_enum .
   module IntVarEnumOperand
     include Gecode::Constraints::Operand 
 

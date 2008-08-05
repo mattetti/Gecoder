@@ -66,12 +66,17 @@ module Gecode
         variables = wrap_enum [variables]
       end
 
-      if variables.respond_to? :to_int_var_array or 
-          variables.respond_to? :to_bool_var_array
-        add_branch(variables, options, Constants::BRANCH_INT_VAR_CONSTANTS, 
+      if variables.respond_to? :to_int_var_enum 
+        add_branch(variables.to_int_var_enum, options,
+          Constants::BRANCH_INT_VAR_CONSTANTS, 
           Constants::BRANCH_INT_VALUE_CONSTANTS)
-      elsif variables.respond_to? :to_set_var_array
-        add_branch(variables, options, Constants::BRANCH_SET_VAR_CONSTANTS, 
+      elsif variables.respond_to? :to_bool_var_enum
+        add_branch(variables.to_bool_var_enum, options, 
+          Constants::BRANCH_INT_VAR_CONSTANTS, 
+          Constants::BRANCH_INT_VALUE_CONSTANTS)
+      elsif variables.respond_to? :to_set_var_enum
+        add_branch(variables.to_set_var_enum, options, 
+          Constants::BRANCH_SET_VAR_CONSTANTS, 
           Constants::BRANCH_SET_VALUE_CONSTANTS)
       else
         raise TypeError, "Unknown type of variable enum #{variables.class}."
@@ -148,7 +153,7 @@ module Gecode
 
       # Add the branching as a gecode interaction.
       add_interaction do
-        Gecode::Raw.branch(active_space, variables.to_var_array, 
+        Gecode::Raw.branch(active_space, variables.bind_array, 
           branch_var_hash[var_strat], branch_value_hash[val_strat])
       end
     end

@@ -64,7 +64,7 @@ module Gecode
     include VariableEnumMethods
   
     # Returns an int variable array with all the bound variables.
-    def to_int_var_array
+    def bind_array
       space = @model.active_space
       unless @bound_space == space
         elements = to_a
@@ -74,7 +74,11 @@ module Gecode
       end
       return @bound_arr
     end
-    alias_method :to_var_array, :to_int_var_array
+
+    # Returns the receiver.
+    def to_int_var_enum
+      self
+    end
     
     # Returns the smallest range that contains the domains of all integer 
     # variables involved.
@@ -97,7 +101,7 @@ module Gecode
     include VariableEnumMethods
   
     # Returns a bool variable array with all the bound variables.
-    def to_bool_var_array
+    def bind_array
       space = @model.active_space
       unless @bound_space == space
         elements = to_a
@@ -107,7 +111,11 @@ module Gecode
       end
       return @bound_arr
     end
-    alias_method :to_var_array, :to_bool_var_array
+
+    # Returns the receiver.
+    def to_bool_var_enum
+      self
+    end
   end
   
   # A module containing the methods needed by enumerations containing set
@@ -116,7 +124,7 @@ module Gecode
     include VariableEnumMethods
   
     # Returns a set variable array with all the bound variables.
-    def to_set_var_array
+    def bind_array
       space = @model.active_space
       unless @bound_space == space
         elements = to_a
@@ -126,8 +134,12 @@ module Gecode
       end
       return @bound_arr
     end
-    alias_method :to_var_array, :to_set_var_array
     
+    # Returns the receiver.
+    def to_set_var_enum
+      self
+    end
+
     # Returns the range of the union of the contained sets' upper bounds.
     def upper_bound_range
       inject(nil) do |range, var|
@@ -146,8 +158,14 @@ module Gecode
   # A module containing the methods needed by enumerations containing fixnums. 
   # Requires that it's included in an enumerable.
   module FixnumEnumMethods
+    include Constraints::FixnumEnum::FixnumEnumOperand
     include EnumMethods
     
+    # Returns the receiver.
+    def to_fixnum_enum
+      self
+    end
+
     # Returns the smallest range that contains the domains of all integer 
     # variables involved.
     def domain_range
