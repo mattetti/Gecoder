@@ -13,7 +13,7 @@ class ElementSampleProblem < Gecode::Model
     @prices = int_var_array(4, prices)
     @store = int_var(0...prices.size)
     @price = int_var(prices)
-    branch_on wrap_enum([@store])
+    branch_on @store
   end
 end
 
@@ -23,101 +23,81 @@ describe Gecode::Constraints::IntEnum::Element do
     @prices = @model.prices
     @target = @price = @model.price
     @store = @model.store
-    @fixnum_prices = @model.fixnum_prices
     
-    # Creates an expectation corresponding to the specified input.
-    @expect = lambda do |element, relation, target, strength, kind, reif_var, negated|
-      @model.allow_space_access do
-        target = an_instance_of(Gecode::Raw::IntVar) if target.respond_to? :bind
-        element = an_instance_of(Gecode::Raw::IntVar) if element.respond_to? :bind
-        if reif_var.nil?
-          if !negated and relation == Gecode::Raw::IRT_EQ and 
-              !target.kind_of? Fixnum
-            Gecode::Raw.should_receive(:element).once.with( 
-              an_instance_of(Gecode::Raw::Space), 
-              an_instance_of(Gecode::Raw::IntVarArray), 
-              element, target, strength, kind)
-          else
-            Gecode::Raw.should_receive(:element).once.with(
-              an_instance_of(Gecode::Raw::Space), 
-              an_instance_of(Gecode::Raw::IntVarArray), 
-              element, an_instance_of(Gecode::Raw::IntVar), strength, kind)
-            Gecode::Raw.should_receive(:rel).once.with(
-              an_instance_of(Gecode::Raw::Space), 
-              an_instance_of(Gecode::Raw::IntVar), 
-              relation, target, strength, kind)
-          end
-        else
-          Gecode::Raw.should_receive(:element).once.with(
-            an_instance_of(Gecode::Raw::Space), 
-            an_instance_of(Gecode::Raw::IntVarArray), 
-            element, an_instance_of(Gecode::Raw::IntVar), strength, kind)
-          Gecode::Raw.should_receive(:rel).once.with(
-            an_instance_of(Gecode::Raw::Space), 
-            an_instance_of(Gecode::Raw::IntVar), relation, target, 
-            an_instance_of(Gecode::Raw::BoolVar), strength, kind)
-        end
-      end
+    # For int operand producing property spec.
+    @property_types = [:int_enum, :int]
+    @select_property = lambda do |int_enum, int|
+      int_enum[int]
     end
-
-    # For constraint option spec.
-    @invoke_options = lambda do |hash| 
-      @prices[@store].must_be.greater_than(@price, hash) 
-      @model.solve!
-    end
-    @expect_options = option_expectation do |strength, kind, reif_var|
-      @expect.call(@store, Gecode::Raw::IRT_GR, @price, strength, kind, 
-        reif_var, false)
-    end
-    
-    # For composite spec.
-    @invoke_relation = lambda do |relation, target, negated|
-      if negated
-        @prices[@store].must_not.send(relation, target)
-      else
-        @prices[@store].must.send(relation, target)
-      end
-      @model.solve!
-    end
-    @expect_relation = lambda do |relation, target, negated|
-      @expect.call(@store, relation, target, Gecode::Raw::ICL_DEF, 
-        Gecode::Raw::PK_DEF, nil, negated)
-    end
+    @selected_property = @prices[@store]
   end
 
   it 'should not disturb normal array access' do
     @prices[2].should_not be_nil
   end
 
-  it 'should translate reification when using equality' do
-    bool_var = @model.bool_var
-    @expect.call(@store, Gecode::Raw::IRT_EQ, @target, Gecode::Raw::ICL_DEF, 
-      Gecode::Raw::PK_DEF, bool_var, false)
-    @prices[@store].must_be.equal_to(@target, :reify => bool_var)
+  it 'should constrain the selected element' do
+    @prices[@store].must == 63
+    @prices.values_at(0,2,3).each{ |x| x.must < 50 }
+    @model.solve!.should_not be_nil
+    @store.value.should equal(1)
+  end
+
+  it 'should be translated into an element constraint' do
+    @prices[@store].must == @price
+    @model.allow_space_access do
+      Gecode::Raw.should_receive(:element).once.with( 
+        an_instance_of(Gecode::Raw::Space), 
+        an_instance_of(Gecode::Raw::IntVarArray), 
+        @store.bind, @price.bind, 
+        Gecode::Raw::ICL_DEF,
+        Gecode::Raw::PK_DEF)
+    end
     @model.solve!
   end
   
-  # TODO make this more specific? Operand etc?
-  it_should_behave_like 'int-producing property'
+  it_should_behave_like(
+    'property that produces int operand by short circuiting equality')
 end
 
-describe Gecode::Constraints::IntEnum::Element do
+describe Gecode::Constraints::FixnumEnum::Element do
   before do
     @model = ElementSampleProblem.new
-    @target = @price = @model.price
+    @price = @model.price
     @store = @model.store
     @enum = @model.fixnum_prices
+    
+    # For int operand producing property spec.
+    @property_types = [:fixnum_enum, :int]
+    @select_property = lambda do |fixnum_enum, int|
+      fixnum_enum[int]
+    end
+    @selected_property = @enum[@store]
   end
 
   it 'should not disturb normal array access' do
     @enum[2].should_not be_nil
   end
 
-  it 'should handle variables as indices' do
+  it 'should constrain the selected element' do
     @enum[@store].must == @enum[2]
-    @model.solve!.store.value.should equal(2)
+    @model.solve!.should_not be_nil
+    @store.value.should equal(2)
+  end
+
+  it 'should be translated into an element constraint' do
+    @enum[@store].must == @price
+    @model.allow_space_access do
+      Gecode::Raw.should_receive(:element).once.with( 
+        an_instance_of(Gecode::Raw::Space), 
+        an_instance_of(Array), 
+        @store.bind, @price.bind, 
+        Gecode::Raw::ICL_DEF,
+        Gecode::Raw::PK_DEF)
+    end
+    @model.solve!
   end
   
-  # TODO make this more specific? Operand etc?
-  it_should_behave_like 'int-producing property'
+  it_should_behave_like(
+    'property that produces int operand by short circuiting equality')
 end

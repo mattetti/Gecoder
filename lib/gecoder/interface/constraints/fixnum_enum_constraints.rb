@@ -6,6 +6,15 @@ module Gecode::Constraints::FixnumEnum
   module FixnumEnumOperand
     include Gecode::Constraints::Operand 
 
+    def method_missing(method, *args)
+      if Gecode::FixnumEnum.instance_methods.include? method.to_s
+        # Delegate to the fixnum enum.
+        to_fixnum_enum.method(method).call(*args)
+      else
+        super
+      end
+    end
+
     def model
       raise NotImplementedError, 'Fixnum enums are not connected to any model.'
     end

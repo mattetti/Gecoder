@@ -121,6 +121,9 @@ module Gecode::Constraints::Int
       attr :model
     
       def initialize(value, model = nil)
+        unless value.respond_to?(:to_int_var) or value.kind_of?(Fixnum)
+          raise TypeError, "Expected int operand or fixnum, got #{value.class}."
+        end
         @value = value
         @model = model
       end

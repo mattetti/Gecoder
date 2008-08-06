@@ -5,7 +5,7 @@ module Gecode::Constraints::FixnumEnum
     # before the module that this is mixed into is mixed into an enum.
     def self.included(enum_mod)
       enum_mod.module_eval do
-        # Now we enter the module IntVarEnumOperands is mixed into.
+        # Now we enter the module FixnumEnumOperands is mixed into.
         class << self
           alias_method :pre_element_included, :included
           def included(mod)

@@ -1,12 +1,12 @@
 # A module that gathers the classes and modules used by element constraints.
 module Gecode::Constraints::IntEnum
-  module IntVarEnumOperand
+  module IntEnumOperand
     # This adds the adder for the methods in the modules including it. The 
     # reason for doing it so indirect is that the first #[] won't be defined 
     # before the module that this is mixed into is mixed into an enum.
     def self.included(enum_mod)
       enum_mod.module_eval do
-        # Now we enter the module IntVarEnumOperands is mixed into.
+        # Now we enter the module IntEnumOperands is mixed into.
         class << self
           alias_method :pre_element_included, :included
           def included(mod)
@@ -29,7 +29,7 @@ module Gecode::Constraints::IntEnum
               def [](*vars)
                 if vars.first.respond_to? :to_int_var
                   return Element::ElementIntVarOperand.new(
-                    self, vars.first, model)
+                    model, self, vars.first)
                 else
                   pre_element_access(*vars) if respond_to? :pre_element_access
                 end
@@ -44,7 +44,7 @@ module Gecode::Constraints::IntEnum
 
   module Element #:nodoc:
     class ElementIntVarOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
-      def initialize(enum_op, position_int_var_op, model)
+      def initialize(model, enum_op, position_int_var_op)
         super model
         @enum = enum_op
         @position = position_int_var_op
@@ -56,7 +56,7 @@ module Gecode::Constraints::IntEnum
           int_operand.must_be.in enum.domain_range
         end
 
-        Gecode::Raw::element(@model.active_space, enum.bind_array, 
+        Gecode::Raw::element(model.active_space, enum.bind_array, 
           @position.to_int_var.bind, int_operand.to_int_var.bind, 
           *propagation_options)
       end

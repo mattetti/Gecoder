@@ -76,7 +76,7 @@ describe Gecode::IntEnumMethods do
   
   it 'should convert to an int var array' do
     @model.allow_space_access do
-      @int_enum.to_int_var_array.should be_kind_of(Gecode::Raw::IntVarArray)
+      @int_enum.bind_array.should be_kind_of(Gecode::Raw::IntVarArray)
     end
   end
   
@@ -94,7 +94,7 @@ describe Gecode::BoolEnumMethods do
   
   it 'should convert to a bool var array' do
     @model.allow_space_access do
-      @bool_enum.to_bool_var_array.should be_kind_of(Gecode::Raw::BoolVarArray)
+      @bool_enum.bind_array.should be_kind_of(Gecode::Raw::BoolVarArray)
     end
   end
 end
@@ -107,7 +107,7 @@ describe Gecode::SetEnumMethods do
   
   it 'should convert to a set var array' do
     @model.allow_space_access do
-      @set_enum.to_set_var_array.should be_kind_of(Gecode::Raw::SetVarArray)
+      @set_enum.bind_array.should be_kind_of(Gecode::Raw::SetVarArray)
     end
   end
   

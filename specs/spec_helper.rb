@@ -5,16 +5,23 @@ require File.dirname(__FILE__) + '/../lib/gecoder'
 module CustomVarMatchers
   class HaveDomain
     def initialize(expected)
-      @expected = expected.to_a
+      @expected = expected
     end
     
     def matches?(target)
       @target = target
-      return false unless @target.size == @expected.size
-      @expected.each do |element|
-        return false unless @target.include? element
+      if @expected.kind_of? Range
+        return @target.range? && @expected.begin == @target.min && 
+          @expected.end == @target.max
+      else
+        @expected = @expected.to_a
+        return false unless @target.size == @expected.size
+        @expected.each do |element|
+          return false unless @target.include? element
+        end
+        return true
       end
-      return true
+      return false
     end
     
     def failure_message

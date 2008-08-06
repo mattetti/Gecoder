@@ -191,6 +191,90 @@ describe Gecode::Constraints::Int::Linear do
   it_should_behave_like 'reifiable int constraint'
 end
 
+describe Gecode::Constraints::Int::Linear, ' (+ property)' do
+  before do
+    @x_dom = 0..2
+    @y_dom = -3..3
+    @z_dom = 0..10
+    @model = LinearSampleProblem.new(@x_dom, @y_dom, @z_dom)
+    @x = @model.x
+    @y = @model.y
+    @z = @model.z
+
+    # For int operand producing property spec.
+    @property_types = [:int, :int]
+    @select_property = lambda do |int1, int2|
+      int1 + int2
+    end
+    @selected_property = @x + @y
+  end
+
+  it 'should constrain the sum' do
+    (@x + @y).must == 5
+    @model.solve!
+    (@x.value + @y.value).should == 5
+  end
+
+  it_should_behave_like(
+    'property that produces int operand by short circuiting relations')
+end
+
+describe Gecode::Constraints::Int::Linear, ' (- property)' do
+  before do
+    @x_dom = 0..2
+    @y_dom = -3..3
+    @z_dom = 0..10
+    @model = LinearSampleProblem.new(@x_dom, @y_dom, @z_dom)
+    @x = @model.x
+    @y = @model.y
+    @z = @model.z
+
+    # For int operand producing property spec.
+    @property_types = [:int, :int]
+    @select_property = lambda do |int1, int2|
+      int1 - int2
+    end
+    @selected_property = @x - @y
+  end
+
+  it 'should constrain the difference' do
+    (@x - @y).must == 1
+    @model.solve!
+    (@x.value - @y.value).should == 1
+  end
+
+  it_should_behave_like(
+    'property that produces int operand by short circuiting relations')
+end
+
+describe Gecode::Constraints::Int::Linear, ' (* property)' do
+  before do
+    @x_dom = 0..2
+    @y_dom = -3..3
+    @z_dom = 0..10
+    @model = LinearSampleProblem.new(@x_dom, @y_dom, @z_dom)
+    @x = @model.x
+    @y = @model.y
+    @z = @model.z
+
+    # For int operand producing property spec.
+    @property_types = [:int]
+    @select_property = lambda do |int|
+      int * 17
+    end
+    @selected_property = @x * 2
+  end
+
+  it 'should constrain the value times a constant' do
+    (@x * 2).must == 4
+    @model.solve!
+    (@x.value * 2).should == 4
+  end
+
+  it_should_behave_like(
+    'property that produces int operand by short circuiting relations')
+end
+
 describe Gecode::Constraints::Int::Linear, '(with booleans)' do
   before do
     @model = BoolLinearSampleProblem.new

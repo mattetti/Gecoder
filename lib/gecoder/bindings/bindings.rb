@@ -1180,6 +1180,7 @@ Rust::Bindings::create_bindings Rust::Bindings::LangCxx, "gecode" do |b|
       func.add_parameter "Gecode::IntVar", "y0"
       func.add_parameter "Gecode::IntVar", "y1"
       func.add_parameter "Gecode::IntConLevel", "icl"
+      func.add_parameter "Gecode::PropKind", "pk"
     end
     
     ns.add_function "linear", "void" do |func|

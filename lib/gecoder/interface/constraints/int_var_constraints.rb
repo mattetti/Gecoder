@@ -6,6 +6,15 @@ module Gecode::Constraints::Int
   module IntVarOperand  
     include Gecode::Constraints::Operand 
 
+    def method_missing(method, *args)
+      if Gecode::FreeIntVar.instance_methods.include? method.to_s
+        # Delegate to the int var.
+        to_int_var.method(method).call(*args)
+      else
+        super
+      end
+    end
+
     private
 
     def construct_receiver(params)

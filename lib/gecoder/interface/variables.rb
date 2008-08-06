@@ -13,9 +13,9 @@ module Gecode
 
     def inspect
       if assigned?
-        "#<#{self.class} #{domain}>"
+        "#<#{self.class} #{domain_string}>"
       else
-        "#<#{self.class} #{domain}>"
+        "#<#{self.class} #{domain_string}>"
       end
     end
     
@@ -106,10 +106,21 @@ module Gecode
       self
     end
     
+    # Returns an enumeration corresponding to the domain.
+    def domain
+      if range?
+        min..max
+      else
+        (min..max).select do |i|
+          include? i
+        end
+      end
+    end
+
     private
     
     # Returns a string representation of the range of the variable's domain.
-    def domain #:nodoc:
+    def domain_string #:nodoc:
       if assigned?
         "range: #{value.to_s}"
       else
@@ -143,7 +154,7 @@ module Gecode
     private
   
     # Returns a string representation of the the variable's domain.
-    def domain
+    def domain_string
       if assigned?
         value.to_s
       else
@@ -209,7 +220,7 @@ module Gecode
     private
     
     # Returns a string representation of the the variable's domain.
-    def domain
+    def domain_string
       if assigned?
         lower_bound.to_a.inspect
       else

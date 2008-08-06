@@ -60,7 +60,7 @@ module Gecode
   # A module containing the methods needed by enumerations containing int 
   # variables. Requires that it's included in an enumerable.
   module IntEnumMethods
-    include Constraints::IntEnum::IntVarEnumOperand
+    include Constraints::IntEnum::IntEnumOperand
     include VariableEnumMethods
   
     # Returns an int variable array with all the bound variables.
@@ -93,6 +93,12 @@ module Gecode
         range
       end
     end
+  end
+
+  # A dummy class that just shows what methods an int enum responds to.
+  class IntEnum < Array
+    include Constraints::IntEnum::IntEnumOperand
+    include VariableEnumMethods
   end
   
   # A module containing the methods needed by enumerations containing boolean
@@ -171,5 +177,11 @@ module Gecode
     def domain_range
       min..max
     end
+  end
+  
+  # A dummy class that just shows what methods a fixnum enum responds to.
+  class FixnumEnum < Array
+    include Constraints::FixnumEnum::FixnumEnumOperand
+    include VariableEnumMethods
   end
 end

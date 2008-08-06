@@ -345,7 +345,7 @@ module Gecode
         :>= => Gecode::Raw::IRT_LE,
         :>  => Gecode::Raw::IRT_LQ
       }
-      
+
       # Maps the names of the methods to the corresponding set relation type in 
       # Gecode.
       SET_RELATION_TYPES = { 

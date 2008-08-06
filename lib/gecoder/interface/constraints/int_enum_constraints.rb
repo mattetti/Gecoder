@@ -2,26 +2,35 @@
 # variables as left hand side.
 module Gecode::Constraints::IntEnum
   # Describes an integer variable enumeration operand. Classes that mix in
-  # IntVarEnumOperand must define #model and #to_int_var_enum .
-  module IntVarEnumOperand
+  # IntEnumOperand must define #model and #to_int_enum .
+  module IntEnumOperand
     include Gecode::Constraints::Operand 
+
+    def method_missing(method, *args)
+      if Gecode::IntEnum.instance_methods.include? method.to_s
+        # Delegate to the int enum.
+        to_int_enum.method(method).call(*args)
+      else
+        super
+      end
+    end
 
     private
 
     def construct_receiver(params)
       params.update(:lhs => self)
-      IntVarEnumConstraintReceiver.new(@model, params)
+      IntEnumConstraintReceiver.new(@model, params)
     end
   end
 
   # Describes a constraint receiver for integer variables.
-  class IntVarEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class IntEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is an int enum
     # operand.
     def initialize(model, params)
       super
 
-      unless params[:lhs].respond_to? :to_int_var_array
+      unless params[:lhs].respond_to? :to_int_enum
         raise TypeError, 'Must have int var enum operand as left hand side.'
       end
     end
