@@ -216,6 +216,9 @@ end
 
 
 
+
+
+
 # Several of these shared specs requires one or more of the following instance 
 # variables to be used: 
 # [@operand]  The operand that is being tested.
@@ -253,19 +256,25 @@ describe 'int var operand', :shared => true do
   end
 end
 
-# Requires @model, @property_types and @select_property.
-describe 'property that produces int operand', :shared => true do
-  def produce_general_arguments(property_types)
-    operands = []
-    variables = []
-    property_types.each do |type|
-      op, var = eval "general_#{type}_operand(@model)"
-      operands << op
-      variables << var
-    end
-    return operands, variables
+# Requires @operand and @model.
+describe 'bool var operand', :shared => true do
+  it 'should implement #model' do
+    @operand.model.should be_kind_of(Gecode::Model)
   end
 
+  it 'should implement #to_bool_var' do
+    bool_var = @operand.to_bool_var
+    bool_var.should be_kind_of(Gecode::FreeBoolVar)
+  end
+
+  it 'should implement #must' do
+    receiver = @operand.must
+    receiver.should be_kind_of(Gecode::Constraints::Bool::BoolVarConstraintReceiver)
+  end
+end
+
+# Requires @model, @property_types and @select_property.
+describe 'property that produces int operand', :shared => true do
   it 'should produce int operand' do
     operands, variables = produce_general_arguments(@property_types)
     operand = @select_property.call(*operands)
@@ -279,6 +288,35 @@ describe 'property that produces int operand', :shared => true do
     receiver = operand.must
     receiver.should be_kind_of(
       Gecode::Constraints::Int::IntVarConstraintReceiver)
+  end
+
+  it 'should raise errors if parameters of the incorrect type are given' do
+    operands, variables = produce_general_arguments(@property_types)
+    (1...operands.size).each do |i|
+      bogus_operands = operands.clone
+      bogus_operands[i] = Object.new
+      lambda do
+        @select_property.call(*bogus_operands)
+      end.should raise_error(TypeError)
+    end
+  end
+end
+
+# Requires @model, @property_types and @select_property.
+describe 'property that produces bool operand', :shared => true do
+  it 'should produce bool operand' do
+    operands, variables = produce_general_arguments(@property_types)
+    operand = @select_property.call(*operands)
+
+    # Test the same invariants as in the test for bool var operands.
+    operand.model.should be_kind_of(Gecode::Model)
+
+    bool_var = operand.to_bool_var
+    bool_var.should be_kind_of(Gecode::FreeBoolVar)
+
+    receiver = operand.must
+    receiver.should be_kind_of(
+      Gecode::Constraints::Bool::BoolVarConstraintReceiver)
   end
 
   it 'should raise errors if parameters of the incorrect type are given' do
@@ -527,10 +565,10 @@ module GecodeR::Specs
     # is called.
     def general_bool_operand(model)
       op = general_operand_base(model)
-      
+
       bool_var = @model.bool_var
       class <<op
-        include Gecode::Constraints::Int::IntVarOperand
+        include Gecode::Constraints::Bool::BoolVarOperand
         attr :model
       end
       op.stub!(:to_bool_var).and_return bool_var
@@ -568,6 +606,19 @@ module GecodeR::Specs
       op.stub!(:to_fixnum_enum).and_return fixnum_enum
 
       return op, fixnum_enum
+    end
+
+    # Produces an array of general operands of the specified types.
+    # Returns an array of operands and an array of their variables.
+    def produce_general_arguments(property_types)
+      operands = []
+      variables = []
+      property_types.each do |type|
+        op, var = eval "general_#{type}_operand(@model)"
+        operands << op
+        variables << var
+      end
+      return operands, variables
     end
   end
 end
