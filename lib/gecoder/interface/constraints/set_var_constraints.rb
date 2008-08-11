@@ -1,78 +1,179 @@
-module Gecode
-  class FreeSetVar
-    include Gecode::Constraints::LeftHandSideMethods
-    
+# A module containing constraints that have set variables as left hand side
+# (but not enumerations).
+module Gecode::Constraints::Set
+  # Describes a set variable operand. Classes that mix in
+  # SetVarOperand must define the method #model and #to_set_var.
+  module SetVarOperand  
+    include Gecode::Constraints::Operand 
+
+    def method_missing(method, *args)
+      if Gecode::FreeSetVar.instance_methods.include? method.to_s
+        # Delegate to the set var.
+        to_set_var.method(method).call(*args)
+      else
+        super
+      end
+    end
+
     private
-    
-    # Produces an expression for the lhs module.
-    def expression(params)
-      params.update(:lhs => self)
-      Constraints::Set::Expression.new(@model, params)
+
+    def construct_receiver(params)
+      SetVarConstraintReceiver.new(model, params)
     end
   end
-  
-  # A module containing constraints that have set variables as left hand side
-  # (but not enumerations).
-  module Constraints::Set
-    # An expression with a set as left hand side.
-    class Expression < Gecode::Constraints::Expression #:nodoc:
+
+  # An operand that short circuits set equality.
+  class ShortCircuitEqualityOperand
+    include Gecode::Constraints::Set::SetVarOperand
+    attr :model
+
+    def initialize(model)
+      @model = model
     end
-    
-    # Utility methods for sets.
-    module Util #:nodoc:
-      module_function
-      def decode_options(options)
-        if options.has_key? :strength
-          raise ArgumentError, 'Set constraints do not support the strength ' +
-            'option.'
+
+    def construct_receiver(params)
+      params.update(:lhs => self)
+      receiver = SetVarConstraintReceiver.new(@model, params)
+      op = self
+      receiver.instance_eval{ @short_circuit = op }
+      class <<receiver
+        alias_method :equality_without_short_circuit, :==
+        def ==(operand, options = {})
+          if !@params[:negate] and !options.has_key?(:reify) and 
+              operand.respond_to? :to_set_var
+            # Short circuit the constraint.
+            @params.update Gecode::Constraints::Util.decode_options(options)
+            @model.add_interaction do
+              @short_circuit.constrain_equal(operand, false,
+                @params.values_at(:strength, :kind))
+            end
+          else
+            equality_without_short_circuit(operand, options)
+          end
         end
-        if options.has_key? :kind
-          raise ArgumentError, 'Set constraints do not support the kind ' +
-            'option.'
+        alias_comparison_methods
+      end
+
+      return receiver
+    end
+
+    def to_set_var
+      variable = model.set_var
+      model.add_interaction do
+        constrain_equal(variable, true, 
+          [Gecode::Raw::ICL_DEF, Gecode::Raw::PK_DEF])
+      end
+      return variable
+    end
+
+    private
+
+    # Constrains this operand to equal +set_variable+ using the
+    # specified +propagation_options+. If +constrain_domain+ is true
+    # then the method should also attempt to constrain the bounds of the
+    # domain of +set_variable+.
+    def constrain_equal(set_operand, constrain_domain, propagation_options)
+      raise NotImplementedError, 'Abstract method has not been implemented.'
+    end
+  end
+
+  # An operand that short circuits set non-negated and non-reified versions 
+  # of the relation constraints.
+  class ShortCircuitRelationsOperand
+    include Gecode::Constraints::Set::SetVarOperand
+    attr :model
+
+    def initialize(model)
+      @model = model
+    end
+
+    def construct_receiver(params)
+      params.update(:lhs => self)
+      receiver = SetVarConstraintReceiver.new(@model, params)
+      op = self
+      receiver.instance_eval{ @short_circuit = op }
+      class <<receiver
+        Gecode::Constraints::Util::SET_RELATION_TYPES.keys.each do |comp|
+          eval <<-end_code
+            alias_method :alias_#{comp.to_i}_without_short_circuit, :#{comp}
+            def #{comp}(operand, options = {})
+              if !@params[:negate] && !options.has_key?(:reify) && 
+                  (operand.respond_to?(:to_set_var) or 
+                  Gecode::Constraints::Util::constant_set?(operand))
+                # Short circuit the constraint.
+                @params.update Gecode::Constraints::Util.decode_options(options)
+                @model.add_constraint(
+                  @short_circuit.relation_constraint(
+                    :#{comp}, operand, @params))
+              else
+                alias_#{comp.to_i}_without_short_circuit(operand, options)
+              end
+            end
+          end_code
         end
-        
-        Gecode::Constraints::Util.decode_options(options)
+        alias_comparison_methods
+      end
+
+      return receiver
+    end
+
+    def to_set_var
+      variable = model.set_var
+      model.add_interaction do
+        constrain_equal variable
+      end
+      return variable
+    end
+
+    # Returns a constraint that constrains this operand to have relation
+    # +relation+ to +set_operand_or_constant_set+, which is either a set
+    # operand or a constant set, given the specified hash +params+ of 
+    # parameters. The constraints are never negated nor reified.
+    def relation_constraint(relation, set_operand_or_constant_set, params)
+      raise NotImplementedError, 'Abstract method has not been implemented.'
+    end
+
+    private
+
+    # Constrains this operand to equal +set_variable+.
+    def constrain_equal(set_variable)
+      raise NotImplementedError, 'Abstract method has not been implemented.'
+    end
+  end
+
+  # Describes a constraint receiver for set variables.
+  class SetVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+    # Raises TypeError unless the left hand side is an set var operand.
+    def initialize(model, params)
+      super
+
+      unless params[:lhs].respond_to? :to_set_var
+        raise TypeError, 'Must have set var operand as left hand side.'
       end
     end
-    
-    # A composite expression which is an set expression with a left hand side 
-    # resulting from a previous constraint.
-    class CompositeExpression < Gecode::Constraints::CompositeExpression #:nodoc:
-      # The block given should take three parameters. The first is the variable 
-      # that should be the left hand side, if it's nil then a new one should be
-      # created. The second is the has of parameters. The block should return 
-      # the variable used as left hand side.
-      def initialize(model, params, &block)
-        super(Expression, Gecode::FreeSetVar, lambda{ model.set_var }, model,
-          params, &block)
+  end
+
+  # Utility methods for sets.
+  module Util #:nodoc:
+    module_function
+    def decode_options(options)
+      if options.has_key? :strength
+        raise ArgumentError, 'Set constraints do not support the strength ' +
+          'option.'
       end
-    end
-    
-    # Describes a stub that produces a set variable, which can then be used with 
-    # the normal set variable constraints. An example of a set composite 
-    # constraints would be set selection constraint.
-    #
-    #   sets[int_var].must_be.subset_of(another_set)
-    # 
-    # <tt>sets[int_var]</tt> produces a set variable which the constraint 
-    # <tt>.must_be.subset_of(another_set)</tt> is then applied to.In the above 
-    # case two constraints (and one temporary variable) are required, but in the 
-    # case of equality only one constraint is required.
-    # 
-    # Whether a constraint involving a reification stub supports negation and 
-    # reification depends on the constraint on the right hand side (none 
-    # support the strength option as no set constraints do).
-    class CompositeStub < Gecode::Constraints::CompositeStub
-      def initialize(model, params)
-        super(CompositeExpression, model, params)
+      if options.has_key? :kind
+        raise ArgumentError, 'Set constraints do not support the kind ' +
+          'option.'
       end
+      
+      Gecode::Constraints::Util.decode_options(options)
     end
   end
 end
 
 require 'gecoder/interface/constraints/set/domain'
 require 'gecoder/interface/constraints/set/relation'
-require 'gecoder/interface/constraints/set/cardinality'
-require 'gecoder/interface/constraints/set/connection'
+#require 'gecoder/interface/constraints/set/cardinality'
+#require 'gecoder/interface/constraints/set/connection'
 require 'gecoder/interface/constraints/set/operation'
-require 'gecoder/interface/constraints/set/channel'
+#require 'gecoder/interface/constraints/set/channel'

@@ -66,16 +66,16 @@ module Gecode
         variables = wrap_enum [variables]
       end
 
-      if variables.respond_to? :to_int_var_enum 
-        add_branch(variables.to_int_var_enum, options,
+      if variables.respond_to? :to_int_enum 
+        add_branch(variables.to_int_enum, options,
           Constants::BRANCH_INT_VAR_CONSTANTS, 
           Constants::BRANCH_INT_VALUE_CONSTANTS)
-      elsif variables.respond_to? :to_bool_var_enum
-        add_branch(variables.to_bool_var_enum, options, 
+      elsif variables.respond_to? :to_bool_enum
+        add_branch(variables.to_bool_enum, options, 
           Constants::BRANCH_INT_VAR_CONSTANTS, 
           Constants::BRANCH_INT_VALUE_CONSTANTS)
-      elsif variables.respond_to? :to_set_var_enum
-        add_branch(variables.to_set_var_enum, options, 
+      elsif variables.respond_to? :to_set_enum
+        add_branch(variables.to_set_enum, options, 
           Constants::BRANCH_SET_VAR_CONSTANTS, 
           Constants::BRANCH_SET_VALUE_CONSTANTS)
       else

@@ -28,3 +28,4 @@ module Gecode::Constraints::FixnumEnum
 end
 
 require 'gecoder/interface/constraints/fixnum_enum/element'
+require 'gecoder/interface/constraints/fixnum_enum/operation'

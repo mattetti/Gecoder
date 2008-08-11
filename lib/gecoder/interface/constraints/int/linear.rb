@@ -1,39 +1,48 @@
 module Gecode::Constraints::Int
   module IntVarOperand
-    # Produces a new integer operand representing this operand plus +op2+.
+    # Produces a new integer operand representing this operand plus 
+    # +int_operand_or_fixnum+.
     #
     # == Examples
     #
     #   # +int1+ plus +int2+
     #   int1 + int2
-    def +(op2)
-      int_linear_expression_operation(:+, op2)
+    #
+    #   # +int+ plus 17
+    #   int + 17
+    def +(int_operand_or_fixnum)
+      int_linear_expression_operation(:+, int_operand_or_fixnum)
     end
     
-    alias_method :pre_linear_mult, :* if instance_methods.include? '*'
-
-    # Produces a new integer operand representing this operand times a constant.
-    #
-    # == Examples
-    #
-    #   # +int+ times 17
-    #   int * 17
-    def *(op2)
-      if op2.kind_of? Fixnum
-        int_linear_expression_operation(:*, op2)
-      else
-        pre_linear_mult(op) if respond_to? :pre_linear_mult
-      end
-    end
-
-    # Produces a new integer operand representing this operand minus +op2+.
+    # Produces a new integer operand representing this operand minus 
+    # +int_operand_or_fixnum+. 
     #
     # == Examples
     #
     #   # +int1+ minus +int2+
     #   int1 - int2
-    def -(op2)
-      int_linear_expression_operation(:-, op2)
+    #
+    #   # +int+ minus 17
+    #   int - 17
+    def -(int_operand_or_fixnum)
+      int_linear_expression_operation(:-, int_operand_or_fixnum)
+    end
+
+    alias_method :pre_linear_mult, :* if instance_methods.include? '*'
+
+    # Produces a new integer operand representing this operand times a 
+    # constant. 
+    #
+    # == Examples
+    #
+    #   # +int+ times 17
+    #   int * 17
+    def *(fixnum)
+      if fixnum.kind_of? Fixnum
+        int_linear_expression_operation(:*, fixnum)
+      else
+        pre_linear_mult(fixnum) if respond_to? :pre_linear_mult
+      end
     end
 
     private
@@ -122,7 +131,8 @@ module Gecode::Constraints::Int
     
       def initialize(value, model = nil)
         unless value.respond_to?(:to_int_var) or value.kind_of?(Fixnum)
-          raise TypeError, "Expected int operand or fixnum, got #{value.class}."
+          raise TypeError, 'Expected int operand or fixnum, ' + 
+            "got #{value.class}."
         end
         @value = value
         @model = model

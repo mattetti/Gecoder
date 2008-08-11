@@ -22,14 +22,14 @@ module Gecode
     module Operand #:nodoc:
       # Specifies that a constraint must hold for the left hand side.
       def must
-        construct_receiver update_params(:lhs => self, :negate => false)
+        construct_receiver :lhs => self, :negate => false
       end
       alias_method :must_be, :must
       
       # Specifies that the negation of a constraint must hold for the left hand 
       # side.
       def must_not
-        construct_receiver update_params(:lhs => self, :negate => true)
+        construct_receiver :lhs => self, :negate => true
       end
       alias_method :must_not_be, :must_not
 
@@ -39,12 +39,6 @@ module Gecode
       end
       
       private
-      
-      # Updates the parameters with the specified new parameters.
-      def update_params(params_to_add)
-        @constraint_params ||= {}
-        @constraint_params.update(params_to_add)
-      end
 
       # Constructs the appropriate constraint receiver given the
       # specified parameters.
@@ -534,7 +528,7 @@ require 'gecoder/interface/constraints/int_var_constraints'
 require 'gecoder/interface/constraints/int_enum_constraints'
 require 'gecoder/interface/constraints/bool_var_constraints'
 #require 'gecoder/interface/constraints/bool_enum_constraints'
-#require 'gecoder/interface/constraints/set_var_constraints'
-#require 'gecoder/interface/constraints/set_enum_constraints'
+require 'gecoder/interface/constraints/set_var_constraints'
+require 'gecoder/interface/constraints/set_enum_constraints'
 require 'gecoder/interface/constraints/fixnum_enum_constraints'
 #require 'gecoder/interface/constraints/extensional_regexp'

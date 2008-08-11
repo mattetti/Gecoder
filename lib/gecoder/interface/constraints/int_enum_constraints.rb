@@ -18,12 +18,11 @@ module Gecode::Constraints::IntEnum
     private
 
     def construct_receiver(params)
-      params.update(:lhs => self)
       IntEnumConstraintReceiver.new(@model, params)
     end
   end
 
-  # Describes a constraint receiver for integer variables.
+  # Describes a constraint receiver for enumerations of integer operands.
   class IntEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is an int enum
     # operand.
@@ -31,13 +30,13 @@ module Gecode::Constraints::IntEnum
       super
 
       unless params[:lhs].respond_to? :to_int_enum
-        raise TypeError, 'Must have int var enum operand as left hand side.'
+        raise TypeError, 'Must have int enum operand as left hand side.'
       end
     end
   end
 end
 
-#require 'gecoder/interface/constraints/int_enum/distinct'
+require 'gecoder/interface/constraints/int_enum/distinct'
 #require 'gecoder/interface/constraints/int_enum/equality'
 #require 'gecoder/interface/constraints/int_enum/channel'
 require 'gecoder/interface/constraints/int_enum/element'

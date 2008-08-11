@@ -71,7 +71,7 @@ module Gecode::Constraints::Bool
     #   # the strength +domain+.
     #   (b1 & b2).must_not.equal(b3, :reify => bool, :select => :domain)
     def ==(bool_op, options = {})
-      if bool_op.kind_of? Gecode::Constraints::Int::Linear::ExpressionTree
+      if bool_op.kind_of? Gecode::Constraints::Bool::Linear::ExpressionTree
         return bool_op.must == @params[:lhs]
       end
       unless bool_op.respond_to? :to_minimodel_bool_expr
@@ -136,7 +136,7 @@ module Gecode::Constraints::Bool
     #   (b1 & b2).must_be.false(:reify => bool, :strength => :domain)
     def false(options = {})
       @params[:negate] = !@params[:negate]
-      self.true
+      self.true(options)
     end
   end
   

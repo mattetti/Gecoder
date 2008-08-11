@@ -1,5 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
-require File.dirname(__FILE__) + '/constraint_helper'
+require File.dirname(__FILE__) + '/../constraint_helper'
 
 class BoolSampleProblem < Gecode::Model
   attr :b1
@@ -13,30 +12,114 @@ class BoolSampleProblem < Gecode::Model
   end
 end
 
+[:true, :false].each do |type|
+  describe Gecode::Constraints::Bool, " (must be #{type})" do
+    before do
+      @model = Gecode::Model.new
+      @bool = @model.bool_var
+
+      @types = [:bool]
+      @invoke = lambda do |receiver, hash| 
+        receiver.method(type).call(hash) 
+        @model.solve!
+      end
+      @expect = lambda do |var, opts, reif_var|
+        # We only test the non-MiniModel parts.
+        unless reif_var.nil?
+          Gecode::Raw.should_receive(:rel).once.with(
+            an_instance_of(Gecode::Raw::Space), 
+            an_instance_of(Gecode::Raw::BoolVar), 
+            (type == :true) ? Gecode::Raw::IRT_EQ : Gecode::Raw::IRT_NQ,
+            reif_var, *opts)
+        end
+      end
+    end
+
+    it "should constrain variables to be #{type}" do
+      @bool.must.method(type).call
+      @model.solve!
+      @bool.value.should == (type == :true)
+    end
+    
+    it "should make negation constrain variables to not be #{type}" do
+      @bool.must_not.method(type).call
+      @model.solve!
+      @bool.value.should == (type != :true)
+    end  
+
+    it_should_behave_like 'reifiable constraint'
+  end
+end
+
+describe Gecode::Constraints::Bool, " (implies)" do
+  before do
+    @model = Gecode::Model.new
+    @b1 = @model.bool_var
+    @b2 = @model.bool_var
+    @model.branch_on @model.wrap_enum([@b1, @b2])
+
+    @types = [:bool, :bool]
+    @invoke = lambda do |receiver, op, hash| 
+      receiver.imply(op, hash) 
+      @model.solve!
+    end
+    @expect = lambda do |var1, var2, opts, reif_var|
+    end
+  end
+
+  it "should constrain variables to imply each other" do
+    @b1.must.imply @b2
+    @model.solve!
+    (!@b1.value || @b2.value).should be_true
+  end
+  
+  it "should, when negated, constrain variables to not imply each other" do
+    @b1.must_not.imply @b2
+    @model.solve!
+    @b1.value.should be_true
+    @b2.value.should_not be_true
+  end  
+
+  it_should_behave_like 'reifiable constraint'
+end
+
+describe Gecode::Constraints::Bool, " (equality)" do
+  before do
+    @model = Gecode::Model.new
+    @b1 = @model.bool_var
+    @b2 = @model.bool_var
+    @model.branch_on @model.wrap_enum([@b1, @b2])
+
+    @types = [:bool, :bool]
+    @invoke = lambda do |receiver, op, hash| 
+      receiver.equal(op, hash) 
+      @model.solve!
+    end
+    @expect = lambda do |var1, var2, opts, reif_var|
+    end
+  end
+
+  it "should constrain variables to imply each other" do
+    @b1.must == @b2
+    @model.solve!
+    @b1.value.should == @b2.value
+  end
+  
+  it "should, when negated, constrain variables to not imply each other" do
+    @b1.must_not == @b2
+    @model.solve!
+    @b1.value.should_not == @b2.value
+  end  
+
+  it_should_behave_like 'reifiable constraint'
+end
+
 describe Gecode::Constraints::Bool do
   before do
     @model = BoolSampleProblem.new
     @b1 = @model.b1
     @b2 = @model.b2
     @b3 = @model.b3
-    @operand = @b1 | @b2
-    
-    # For constraint option spec.
-    @invoke_options = lambda do |op, hash| 
-      op.must_be.true(hash) 
-      @model.solve!
-    end
-    @expect_options = option_expectation do |op_var, strength, kind, reif_var|
-      @model.allow_space_access do
-        # We only test the non-MiniModel parts.
-        unless reif_var.nil?
-          Gecode::Raw.should_receive(:rel).once.with(
-            an_instance_of(Gecode::Raw::Space), 
-            op_var, Gecode::Raw::IRT_EQ, 
-            an_instance_of(Gecode::Raw::BoolVar), strength, kind)
-        end
-      end
-    end
   end
 
   it 'should handle single variables constrainted to be true' do
@@ -230,64 +313,5 @@ describe Gecode::Constraints::Bool do
     sol = @model.solve!
     sol.b3.value.should be_true
   end
-  
-  it 'should raise error on right hand sides of incorrect type given to #==' do
-    lambda{ @b1.must == 'hello' }.should raise_error(TypeError) 
-  end
-
-  it 'should raise error on right hand sides of incorrect type given to #imply' do
-    lambda{ @b1.must.imply 'hello' }.should raise_error(TypeError) 
-  end
-
-  it_should_behave_like 'reifiable bool constraint'
 end
 
-[:&, :|, :^].each do |property|
-  describe Gecode::Constraints::Bool, " (#{property} property)" do
-    before do
-      @model = BoolSampleProblem.new
-      @b1 = @model.b1
-      @b2 = @model.b2
-      @model.branch_on @model.wrap_enum([@b1, @b2])
-
-      # For bool operand producing property spec.
-      @property_types = [:bool, :bool]
-      @select_property = lambda do |bool1, bool2|
-        bool1.method(property).call bool2
-      end
-      @selected_property = @b1.method(property).call @b2
-    end
-
-    it 'should constrain the conjunction/disjunction/exclusive disjunction' do
-      (@b1.method(property).call @b2).must_be.true
-      @model.solve!
-      @b1.value.method(property).call(@b2.value).should be_true
-    end
-
-    it_should_behave_like('property that produces bool operand')
-  end
-end
-
-describe Gecode::Constraints::Bool, ' (#implies property)' do
-  before do
-    @model = BoolSampleProblem.new
-    @b1 = @model.b1
-    @b2 = @model.b2
-    @model.branch_on @model.wrap_enum([@b1, @b2])
-
-    # For bool operand producing property spec.
-    @property_types = [:bool, :bool]
-    @select_property = lambda do |bool1, bool2|
-      bool1.implies bool2
-    end
-    @selected_property = @b1.implies @b2
-  end
-
-  it 'should constrain the implication' do
-    (@b1.implies @b2).must_be.true
-    @model.solve!
-    (!@b1.value | @b2.value).should be_true
-  end
-
-  it_should_behave_like('property that produces bool operand')
-end

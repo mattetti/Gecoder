@@ -1,30 +1,128 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-# Several of these shared specs requires one or more of the following instance 
-# variables to be used: 
-# [@expect_options]  A method that creates an expectation on the aspect to be 
-#                    tested, using the provided operand variable and hash of 
-#                    Gecode values. The hash can have values for the keys :icl 
-#                    (ICL_*), :pk (PK_*), and :bool (bound reification 
-#                    variable). Any values not provided are assumed to be 
-#                    default values (nil in the case of :bool).
-# [@invoke_options]  A method that invokes the aspect to be tested, with the 
-#                    provided operand and hash of options (with at most the 
-#                    keys :strength, :kind and :reify).
-# [@operand]         An operand of a type that has the constraint that
-#                    is being tested.
+# Every constraint should have a spec that specs the following:
+#
+# * An example where the constraint is used to constrain a sample
+# problem (and one for negation if deemed necessary).
+# * should_behave_like [non-reifiable|reifiable] constraint (possibly
+# indirect).
+# * Those constraints that do not support negation must
+# should_behave_like 'non-negatable constraint'
+#
+
+
+# These specs assume that the following variables are defined:
+# [@expect]          A proc that creates an expectation corresponding to
+#                    constraint. It should take three parameter. The
+#                    first is an array of operands of types specified by
+#                    @types. The second is whether or not the constraint
+#                    should be negated. The third is a hash that can
+#                    have values for the keys :icl (ICL_*), :pk (PK_*),
+#                    and :bool (bound reification variable). Any values
+#                    not provided are assumed to be default values (nil
+#                    in the case of :bool).
+# [@invoke]          A proc that invokes the constraint to be tested, It 
+#                    should have arity arity(@types) + 1. The first
+#                    parameter is a constraint receiver (type decided by 
+#                    @types). The next arity(@types)-1 parameters are 
+#                    given operands of types specified by @types. The
+#                    last parameter is a hash of options (with at most
+#                    the keys :strength, :kind and :reify)..
+# [@types]           An array of symbols signaling what types of
+#                    arguments @ accepts. The symbols
+#                    must be one of: :int, :bool, :set, :int_enum,
+#                    :bool_enum, :set_enum, :fixnum_enum.
 # [@model]           The model instance that contains the aspects being tested.
-# [@expect_relation] A method that takes a relation, right hand side, and 
-#                    whether it's negated, as arguments and sets up the 
-#                    corresponding expectations. 
-# [@invoke_relation] A method that takes a relation, right hand side, and 
-#                    whether it's negated, as arguments and adds the 
-#                    corresponding constraint and invokes it.
-# [@target]          A legal right hand side that can be used as argument to 
-#                    the above two methods.
 
+def expect(variables, options)
+  bool = options[:bool]
+  bool = @model.allow_space_access{ bool.bind } unless bool.nil?
+  args = @model.allow_space_access do 
+    variables.map do |var| 
+      if var.respond_to? :bind
+        var.bind
+      else
+        var.bind_array
+      end
+    end
+  end
+  args << [options[:icl] || Gecode::Raw::ICL_DEF,
+           options[:pk]  || Gecode::Raw::PK_DEF]
+  args << bool
+  @expect.call(*args)
+end
 
-# Requires @operand, @invoke_options and @expect_options.
+def invoke(operands, options)
+  base_op = operands.first
+  if options.delete(:negate)
+    receiver = base_op.must_not
+  else
+    receiver = base_op.must
+  end
+  args = ([receiver] + operands[1..-1]) << options
+  @invoke.call(*args)
+end
+
+describe 'reifiable constraint', :shared => true do
+  it_should_behave_like 'constraint with default options'
+  it_should_behave_like 'constraint with reification option'
+end
+
+describe 'non-reifiable constraint', :shared => true do
+  it 'should raise errors if reification is used' do
+    operands, variables = produce_general_arguments(@types)
+    lambda do 
+      invoke(operands, :reify => @model.bool_var)
+    end.should raise_error(ArgumentError)
+  end
+
+  it_should_behave_like 'constraint with default options'
+end
+
+describe 'non-negatable constraint', :shared => true do
+  it 'should raise errors if negation is used' do
+    operands, variables = produce_general_arguments(@types)
+    lambda do 
+      invoke(operands, :negate => true)
+    end.should raise_error(Gecode::MissingConstraintError)
+  end
+end
+
+describe 'constraint with reification option', :shared => true do
+  it 'should translate reification' do
+    operands, variables = produce_general_arguments(@types)
+    var = @model.bool_var
+    expect(variables, :bool => var)
+    invoke(operands, :reify => var)
+  end
+
+  it 'should translate reification with arbitrary bool operand' do
+    operands, variables = produce_general_arguments(@types)
+    op, bool_var = general_bool_operand(@model)
+    expect(variables, :bool => bool_var)
+    invoke(operands, :reify => op)
+  end
+  
+  it 'should raise errors for reification variables of incorrect type' do
+    operands, variables = produce_general_arguments(@types)
+    lambda do 
+      invoke(operands, :reify => 'foo')
+    end.should raise_error(TypeError)
+  end
+end
+
+describe 'constraint with default options', :shared => true do
+  it 'should raise errors for unrecognized options' do
+    operands, variables = produce_general_arguments(@types)
+    lambda do 
+      invoke(operands, :does_not_exist => :foo) 
+    end.should raise_error(ArgumentError)
+  end
+
+  it_should_behave_like 'constraint with strength option'
+  it_should_behave_like 'constraint with kind option'
+end
+
 describe 'constraint with strength option', :shared => true do
   { :default  => Gecode::Raw::ICL_DEF,
     :value    => Gecode::Raw::ICL_VAL,
@@ -32,594 +130,88 @@ describe 'constraint with strength option', :shared => true do
     :domain   => Gecode::Raw::ICL_DOM
   }.each_pair do |name, gecode_value|
     it "should translate propagation strength #{name}" do
-      @expect_options.call(anything, :icl => gecode_value)
-      @invoke_options.call(@operand, :strength => name)
+      operands, variables = produce_general_arguments(@types)
+      expect(variables, :icl => gecode_value)
+      invoke(operands, :strength => name)
     end
   end
   
   it 'should default to using default as propagation strength' do
-    @expect_options.call(anything, {})
-    @invoke_options.call(@operand, {})
+    operands, variables = produce_general_arguments(@types)
+    expect(variables, {})
+    invoke(operands, {})
   end
   
   it 'should raise errors for unrecognized propagation strengths' do
+    operands, variables = produce_general_arguments(@types)
     lambda do 
-      @invoke_options.call(@operand, :strength => :does_not_exist) 
+      invoke(operands, :strength => :does_not_exist) 
     end.should raise_error(ArgumentError)
   end
 end
 
-# Requires @operand, @invoke_options and @expect_options.
 describe 'constraint with kind option', :shared => true do
   { :default  => Gecode::Raw::PK_DEF,
     :speed    => Gecode::Raw::PK_SPEED,
     :memory   => Gecode::Raw::PK_MEMORY
   }.each_pair do |name, gecode_value|
     it "should translate propagation kind #{name}" do
-      @expect_options.call(anything, :pk => gecode_value)
-      @invoke_options.call(@operand, :kind => name)
+      operands, variables = produce_general_arguments(@types)
+      expect(variables, :pk => gecode_value)
+      invoke(operands, :kind => name)
     end
   end
   
   it 'should default to using default as propagation kind' do
-    @expect_options.call(anything, {})
-    @invoke_options.call(@operand, {})
+    operands, variables = produce_general_arguments(@types)
+    expect(variables, {})
+    invoke(operands, {})
   end
   
   it 'should raise errors for unrecognized propagation kinds' do
+    operands, variables = produce_general_arguments(@types)
     lambda do 
-      @invoke_options.call(@operand, :kind => :does_not_exist)
+      invoke(operands, :kind => :does_not_exist)
     end.should raise_error(ArgumentError)
   end
 end
 
-# Requires @operand, @invoke_options and @expect_options.
-describe 'constraint with reification option', :shared => true do
-  it 'should translate reification' do
-    var = @model.bool_var
-    @expect_options.call(anything, :bool => var)
-    @invoke_options.call(@operand, :reify => var)
-  end
-
-  it 'should translate reification with arbitrary bool operand' do
-    op, bool_var = general_bool_operand(@model)
-    @expect_options.call(anything, :bool => bool_var)
-    @invoke_options.call(@operand, :reify => op)
-  end
-  
-  it 'should raise errors for reification variables of incorrect type' do
-    lambda do 
-      @invoke_options.call(@operand, :reify => 'foo')
-    end.should raise_error(TypeError)
-  end
-end
-
-# Requires @operand, @invoke_options and @expect_options.
-describe 'reifiable int constraint', :shared => true do
-  it_should_behave_like 'int constraint with default options'
-  it_should_behave_like 'constraint with reification option'
-end
-
-# Requires @operand, @invoke_options and @expect_options.
-describe 'reifiable bool constraint', :shared => true do
-  it_should_behave_like 'bool constraint with default options'
-  it_should_behave_like 'constraint with reification option'
-end
-
-# TODO test arbitrary int operands as target.
-
-# Requires @invoke_options, @expect_options, @model
-describe 'int constraint', :shared => true do
-  it 'should handle arbitrary int operands' do
-    op, int_var = general_int_operand(@model)
-    @expect_options.call(@model.allow_space_access{ int_var.bind }, {})
-    @invoke_options.call(op, {})
-  end
-end
-
-# Requires @invoke_options, @expect_options, @model
-describe 'bool constraint', :shared => true do
-  it 'should handle arbitrary bool operands' do
-    op, bool_var = general_bool_operand(@model)
-    @expect_options.call(@model.allow_space_access{ bool_var.bind }, {})
-    @invoke_options.call(op, {})
-  end
-end
-
-# Requires @operand, @invoke_options, @expect_options, @model
-describe 'non-reifiable int constraint', :shared => true do
-  it 'should raise errors if reification is used' do
-    lambda do 
-      @invoke_options.call(@operand, :reify => @model.bool_var)
-    end.should raise_error(ArgumentError)
-  end
-
-  it_should_behave_like 'int constraint with default options'
-end
-
-# Requires @operand, @invoke_options, @expect_options, @model
-describe 'non-reifiable bool constraint', :shared => true do
-  it 'should raise errors if reification is used' do
-    lambda do 
-      @invoke_options.call(@operand, :reify => @model.bool_var)
-    end.should raise_error(ArgumentError)
-  end
-
-  it_should_behave_like 'bool constraint with default options'
-end
-
-# Requires @operand, @invoke_options and @expect_options.
-describe 'int constraint with default options', :shared => true do
-  it 'should raise errors for unrecognized options' do
-    lambda do 
-      @invoke_options.call(@operand, :does_not_exist => :foo) 
-    end.should raise_error(ArgumentError)
-  end
-
-  it_should_behave_like 'constraint with strength option'
-  it_should_behave_like 'constraint with kind option'
-  it_should_behave_like 'int constraint'
-end
-
-# Requires @operand, @invoke_options and @expect_options.
-describe 'bool constraint with default options', :shared => true do
-  it 'should raise errors for unrecognized options' do
-    lambda do 
-      @invoke_options.call(@operand, :does_not_exist => :foo)
-    end.should raise_error(ArgumentError)
-  end
-
-  it_should_behave_like 'constraint with strength option'
-  it_should_behave_like 'constraint with kind option'
-  it_should_behave_like 'bool constraint'
-end
-
-# Requires @invoke_options and @operand.
 describe 'set constraint', :shared => true do
   it 'should not accept strength option' do
+    operands, variables = produce_general_arguments(@types)
     lambda do 
-      @invoke_options.call(@operand, :strength => :default)
+      invoke(operands, :strength => :default)
     end.should raise_error(ArgumentError)
   end
   
   it 'should not accept kind option' do
+    operands, variables = produce_general_arguments(@types)
     lambda do 
-      @invoke_options.call(@operand, :kind => :default)
+      invoke(operands, :kind => :default)
     end.should raise_error(ArgumentError)
   end
   
   it 'should raise errors for unrecognized options' do
+    operands, variables = produce_general_arguments(@types)
     lambda do 
-      @invoke_options.call(@operand, :does_not_exist => :foo) 
+      invoke(operands, :does_not_exist => :foo) 
     end.should raise_error(ArgumentError)
   end
 end
 
-# Requires @operand, @invoke_options and @model.
 describe 'non-reifiable set constraint', :shared => true do
   it 'should not accept reification option' do
     bool = @model.bool_var
+    operands, variables = produce_general_arguments(@types)
     lambda do 
-      @invoke_options.call(@operand, :reify => bool)
+      invoke(operands, :reify => bool)
     end.should raise_error(ArgumentError)
   end
   
   it_should_behave_like 'set constraint'
 end
 
-# Requires @operand, @invoke_options, @expect_options and @model.
 describe 'reifiable set constraint', :shared => true do
   it_should_behave_like 'set constraint'
   it_should_behave_like 'constraint with reification option'
 end
-
-
-
-
-
-
-
-# Several of these shared specs requires one or more of the following instance 
-# variables to be used: 
-# [@operand]  The operand that is being tested.
-# [@model]    The model that defines the context in which the test is
-#             conducted.
-# [@property_types]  An array of symbols signaling what types of
-#                    arguments @select_property accepts. The symbols
-#                    must be one of: :int, :bool, :set, :int_enum,
-#                    :bool_enum, :set_enum, :fixnum_enum.
-# [@select_property] A proc that selects the property under test. It
-#                    should take at least one argument: the operand that
-#                    the property should be selected from.
-# [@selected_property] The resulting operand of the property. It should
-#                      be constrained to the degree that it has a
-#                      non-maximal domain.
-#
-
-
-# Requires @operand and @model.
-describe 'int var operand', :shared => true do
-  it 'should implement #model' do
-    @operand.model.should be_kind_of(Gecode::Model)
-  end
-
-  it 'should implement #to_int_var' do
-    int_var = @operand.to_int_var
-    int_var.should be_kind_of(Gecode::FreeIntVar)
-    @model.solve!
-    (int_var.min..int_var.max).should_not equal(Gecode::Model::LARGEST_INT_DOMAIN)
-  end
-
-  it 'should implement #must' do
-    receiver = @operand.must
-    receiver.should be_kind_of(Gecode::Constraints::Int::IntVarConstraintReceiver)
-  end
-end
-
-# Requires @operand and @model.
-describe 'bool var operand', :shared => true do
-  it 'should implement #model' do
-    @operand.model.should be_kind_of(Gecode::Model)
-  end
-
-  it 'should implement #to_bool_var' do
-    bool_var = @operand.to_bool_var
-    bool_var.should be_kind_of(Gecode::FreeBoolVar)
-  end
-
-  it 'should implement #must' do
-    receiver = @operand.must
-    receiver.should be_kind_of(Gecode::Constraints::Bool::BoolVarConstraintReceiver)
-  end
-end
-
-# Requires @model, @property_types and @select_property.
-describe 'property that produces int operand', :shared => true do
-  it 'should produce int operand' do
-    operands, variables = produce_general_arguments(@property_types)
-    operand = @select_property.call(*operands)
-
-    # Test the same invariants as in the test for int var operands.
-    operand.model.should be_kind_of(Gecode::Model)
-
-    int_var = operand.to_int_var
-    int_var.should be_kind_of(Gecode::FreeIntVar)
-
-    receiver = operand.must
-    receiver.should be_kind_of(
-      Gecode::Constraints::Int::IntVarConstraintReceiver)
-  end
-
-  it 'should raise errors if parameters of the incorrect type are given' do
-    operands, variables = produce_general_arguments(@property_types)
-    (1...operands.size).each do |i|
-      bogus_operands = operands.clone
-      bogus_operands[i] = Object.new
-      lambda do
-        @select_property.call(*bogus_operands)
-      end.should raise_error(TypeError)
-    end
-  end
-end
-
-# Requires @model, @property_types and @select_property.
-describe 'property that produces bool operand', :shared => true do
-  it 'should produce bool operand' do
-    operands, variables = produce_general_arguments(@property_types)
-    operand = @select_property.call(*operands)
-
-    # Test the same invariants as in the test for bool var operands.
-    operand.model.should be_kind_of(Gecode::Model)
-
-    bool_var = operand.to_bool_var
-    bool_var.should be_kind_of(Gecode::FreeBoolVar)
-
-    receiver = operand.must
-    receiver.should be_kind_of(
-      Gecode::Constraints::Bool::BoolVarConstraintReceiver)
-  end
-
-  it 'should raise errors if parameters of the incorrect type are given' do
-    operands, variables = produce_general_arguments(@property_types)
-    (1...operands.size).each do |i|
-      bogus_operands = operands.clone
-      bogus_operands[i] = Object.new
-      lambda do
-        @select_property.call(*bogus_operands)
-      end.should raise_error(TypeError)
-    end
-  end
-end
-
-# Requires @model, @property_types, @select_property and
-# @selected_property.
-#
-# These properties should only short circuit equality when there is no
-# negation nor reification and the right hand side is an int operand.
-describe 'property that produces int operand by short circuiting equality', :shared => true do
-  it 'should give the same solution regardless of whether short circuit was used' do
-    int_operand = @selected_property
-    direct_int_var = int_operand.to_int_var
-    indirect_int_var = @model.int_var
-    @selected_property.must == indirect_int_var
-    @model.solve!
-
-    direct_int_var.should_not have_domain(Gecode::Model::LARGEST_INT_DOMAIN)
-    direct_int_var.should have_domain(indirect_int_var.domain)
-  end
-
-  it 'should not place rel constraints when it should be short circuiting' do
-    Gecode::Raw.should_not_receive(:rel)
-    @selected_property.must == @model.int_var
-    @model.solve!
-  end
-
-  it 'should not short circuit when negation is used' do
-    Gecode::Raw.should_receive(:rel)
-    @selected_property.must_not == @model.int_var
-    @model.solve!
-  end
-
-  it 'should not short circuit when reification is used' do
-    Gecode::Raw.should_receive(:rel)
-    @selected_property.must.equal(@model.int_var, :reify => @model.bool_var)
-    @model.solve!
-  end
-
-  it 'should not short circuit when the right hand side is not a operand' do
-    Gecode::Raw.should_receive(:rel)
-    @selected_property.must == 17
-    @model.solve!
-  end
-
-  it 'should not short circuit when equality is not used' do
-    Gecode::Raw.should_receive(:rel)
-    @selected_property.must > @model.int_var
-    @model.solve!
-  end
-
-  it 'should raise error when the right hand side is of illegal type' do
-    lambda do
-      @selected_property.must == 'foo'
-    end.should raise_error(TypeError)
-  end
-
-  it_should_behave_like 'property that produces int operand'
-end
-
-# Requires @model, @property_types and @select_property.
-# 
-# These properties should short circuit all comparison relations
-# even when negated and when fixnums are used as right hand side.
-describe 'property that produces int operand by short circuiting relations', :shared => true do
-  Gecode::Constraints::Util::RELATION_TYPES.keys.each do |relation|
-    it "should give the same solution regardless of whether short circuit #{relation} was used" do
-      direct_int_var = @model.int_var
-      @selected_property.to_int_var.must.method(relation).call direct_int_var
-      indirect_int_var = @model.int_var
-      @selected_property.must.method(relation).call indirect_int_var
-      @model.solve!
-
-      direct_int_var.should_not have_domain(Gecode::Model::LARGEST_INT_DOMAIN)
-      direct_int_var.should have_domain(indirect_int_var.domain)
-    end
-
-    it "should short circuit #{relation}" do
-      Gecode::Raw.should_not_receive(:rel)
-      @selected_property.must.method(relation).call @model.int_var
-      @model.solve!
-    end
-
-    it "should short circuit negated #{relation}" do
-      Gecode::Raw.should_not_receive(:rel)
-      @selected_property.must_not.method(relation).call @model.int_var
-      @model.solve!
-    end
-
-    it "should short circuit #{relation} when reification is used" do
-      Gecode::Raw.should_not_receive(:rel)
-      @selected_property.must.method(relation).call(@model.int_var, :reify => @model.bool_var)
-      @model.solve!
-    end
-
-    it "should short circuit #{relation} even when the right hand side is a fixnum" do
-      Gecode::Raw.should_not_receive(:rel)
-      @selected_property.must.method(relation).call(2)
-      @model.solve!
-    end
-
-    it "should raise error when the #{relation} right hand side is of illegal type" do
-      lambda do
-        @selected_property.must.method(relation).call('foo')
-      end.should raise_error(TypeError)
-    end
-  end
-
-  it_should_behave_like 'property that produces int operand'
-end
-
-  # TODO
-  # * Test &, |, implies, ^ as properties.
-  #
-
-
-# Requires @expect_relation, @invoke_relation and @target.
-describe 'composite set constraint', :shared => true do
-  Gecode::Constraints::Util::SET_RELATION_TYPES.each_pair do |relation, type|
-    it "should translate #{relation} with constant target" do
-      @expect_relation.call(type, [1], false)
-      @invoke_relation.call(relation, [1], false)
-    end
-  end
-  
-  Gecode::Constraints::Util::SET_RELATION_TYPES.each_pair do |relation, type|
-    it "should translate #{relation} with variable target" do
-      @expect_relation.call(type, @target, false)
-      @invoke_relation.call(relation, @target, false)
-    end
-  end
-  
-  Gecode::Constraints::Util::NEGATED_SET_RELATION_TYPES.each_pair do |relation, type|
-    it "should translate negated #{relation} with constant target" do
-      @expect_relation.call(type, [1], true)
-      @invoke_relation.call(relation, [1], true)
-    end
-  end
-  
-  Gecode::Constraints::Util::NEGATED_SET_RELATION_TYPES.each_pair do |relation, type|
-    it "should translate negated #{relation} with variable target" do
-      @expect_relation.call(type, @target, true)
-      @invoke_relation.call(relation, @target, true)
-    end
-  end
-
-  it 'should raise error if the target is of the wrong type' do
-    lambda do 
-      @invoke_relation.call(:==, 'hello', false)
-    end.should raise_error(TypeError) 
-  end
-end
-
-
-
-
-
-
-
-# Help methods for the GecodeR specs. 
-module GecodeR::Specs
-  module SetHelper
-    module_function
-  
-    # Returns the arguments that should be used in a partial mock to expect the
-    # specified constant set (possibly an array of arguments).
-    def expect_constant_set(constant_set)
-      if constant_set.kind_of? Range
-        return constant_set.first, constant_set.last
-      elsif constant_set.kind_of? Fixnum
-        constant_set
-      else
-        an_instance_of(Gecode::Raw::IntSet)
-      end
-    end
-  end
-
-  module GeneralHelper
-    module_function
-
-    # Helper for creating @expect_option. Creates a method that takes an
-    # operand variable and a hash that may have values for the keys :icl
-    # (ICL_*), :pk (PK_*), and :bool (reification variable).
-    # Expectations corresponding to the hash values are given to the
-    # specified block in the order of operand_variable, icl, pk and
-    # bool. Default values are provided if the hash doesn't specify
-    # anything else.
-    def option_expectation(&block)
-      lambda do |operand_var, hash|
-        bool = hash[:bool]
-        # We loosen the expectation some to avoid practical problems with expecting
-        # specific variables not under our control.
-        bool = an_instance_of(Gecode::Raw::BoolVar) unless bool.nil?
-        yield(operand_var, hash[:icl] || Gecode::Raw::ICL_DEF,
-          hash[:pk]  || Gecode::Raw::PK_DEF,
-          bool)
-      end
-    end
-
-    # Produces a base operand that can be used to mock specific types of
-    # operands.
-    def general_operand_base(model)
-      mock_op_class = Class.new
-      mock_op_class.class_eval do
-        attr :model
-
-        def bind
-          raise 'Bind should not be called directly for an operand.'
-        end
-      end
-      op = mock_op_class.new
-      op.instance_eval do
-        @model = model
-      end
-      return op
-    end
-
-    # Produces a general int operand. The method returns two objects: 
-    # the operand itself and the variable it returns when #to_int_var
-    # is called.
-    def general_int_operand(model)
-      op = general_operand_base(model)
-      
-      int_var = @model.int_var
-      class <<op
-        include Gecode::Constraints::Int::IntVarOperand
-        attr :model
-      end
-      op.stub!(:to_int_var).and_return int_var
-
-      return op, int_var
-    end
-
-    # Produces a general bool operand. The method returns two objects: 
-    # the operand itself and the variable it returns when #to_bool_var
-    # is called.
-    def general_bool_operand(model)
-      op = general_operand_base(model)
-
-      bool_var = @model.bool_var
-      class <<op
-        include Gecode::Constraints::Bool::BoolVarOperand
-        attr :model
-      end
-      op.stub!(:to_bool_var).and_return bool_var
-
-      return op, bool_var
-    end
-    
-    # Produces a general int enum operand. The method returns two objects: 
-    # the operand itself and the variable it returns when #to_int_enum
-    # is called.
-    def general_int_enum_operand(model)
-      op = general_operand_base(model)
-      
-      int_enum = @model.int_var_array(5)
-      class <<op
-        include Gecode::Constraints::IntEnum::IntEnumOperand
-        attr :model
-      end
-      op.stub!(:to_int_enum).and_return int_enum
-
-      return op, int_enum
-    end
-
-    # Produces a general fixnum enum operand. The method returns two objects: 
-    # the operand itself and the variable it returns when #to_fixnum_enum
-    # is called.
-    def general_fixnum_enum_operand(model)
-      op = general_operand_base(model)
-      
-      fixnum_enum = model.wrap_enum([1, -4, 9, 4, 0])
-      class <<op
-        include Gecode::Constraints::FixnumEnum::FixnumEnumOperand
-        attr :model
-      end
-      op.stub!(:to_fixnum_enum).and_return fixnum_enum
-
-      return op, fixnum_enum
-    end
-
-    # Produces an array of general operands of the specified types.
-    # Returns an array of operands and an array of their variables.
-    def produce_general_arguments(property_types)
-      operands = []
-      variables = []
-      property_types.each do |type|
-        op, var = eval "general_#{type}_operand(@model)"
-        operands << op
-        variables << var
-      end
-      return operands, variables
-    end
-  end
-end
-include GecodeR::Specs::GeneralHelper

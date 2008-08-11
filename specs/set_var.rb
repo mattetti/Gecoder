@@ -1,9 +1,9 @@
-require File.dirname(__FILE__) + '/spec_helper'
+require File.dirname(__FILE__) + '/constraints/property_helper'
 
 describe Gecode::FreeSetVar, '(not assigned)' do
   before do
-    model = Gecode::Model.new
-    @var = model.set_var(1..3, 0..4)
+    @model = Gecode::Model.new
+    @operand = @var = @model.set_var(1..3, 0..4)
   end
   
   it 'should not be assigned' do
@@ -42,13 +42,15 @@ describe Gecode::FreeSetVar, '(not assigned)' do
       lower_bound.each{}
     end.should_not raise_error
   end
+
+  it_should_behave_like 'set var operand'
 end
 
 describe Gecode::FreeSetVar, '(assigned)' do
   before do
-    model = Gecode::Model.new
-    @var = model.set_var(1, 1)
-    model.solve!
+    @model = Gecode::Model.new
+    @operand = @var = @model.set_var(1, 1)
+    @model.solve!
   end
   
   it 'should be assigned' do
@@ -65,4 +67,6 @@ describe Gecode::FreeSetVar, '(assigned)' do
     @var.lower_bound.to_a.should == [1]
     @var.value.to_a.should == [1]
   end
+
+  it_should_behave_like 'set var operand'
 end

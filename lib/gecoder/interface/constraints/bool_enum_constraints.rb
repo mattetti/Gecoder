@@ -6,7 +6,6 @@ module Gecode
     
     # Produces an expression for the lhs module.
     def expression(params)
-      params.update(:lhs => self)
       Constraints::BoolEnum::Expression.new(@model, params)
     end
   end

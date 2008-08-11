@@ -9,7 +9,6 @@ module Gecode::Constraints::Bool
     private
 
     def construct_receiver(params)
-      params.update(:lhs => self)
       BoolVarConstraintReceiver.new(@model, params)
     end
   end
@@ -85,5 +84,5 @@ module Gecode::Constraints::Bool
 end
 
 require 'gecoder/interface/constraints/bool/boolean'
-#require 'gecoder/interface/constraints/bool/linear'
+require 'gecoder/interface/constraints/bool/linear'
 #require 'gecoder/interface/constraints/bool/channel'

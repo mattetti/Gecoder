@@ -1,4 +1,3 @@
-# A module that gathers the classes and modules used by element constraints.
 module Gecode::Constraints::IntEnum
   module IntEnumOperand
     # This adds the adder for the methods in the modules including it. The 
@@ -51,7 +50,7 @@ module Gecode::Constraints::IntEnum
       end
 
       def constrain_equal(int_operand, constrain, propagation_options)
-        enum = @enum.to_int_var_enum
+        enum = @enum.to_int_enum
         if constrain
           int_operand.must_be.in enum.domain_range
         end

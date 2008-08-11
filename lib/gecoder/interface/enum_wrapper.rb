@@ -76,7 +76,7 @@ module Gecode
     end
 
     # Returns the receiver.
-    def to_int_var_enum
+    def to_int_enum
       self
     end
     
@@ -119,7 +119,7 @@ module Gecode
     end
 
     # Returns the receiver.
-    def to_bool_var_enum
+    def to_bool_enum
       self
     end
   end
@@ -127,6 +127,7 @@ module Gecode
   # A module containing the methods needed by enumerations containing set
   # variables. Requires that it's included in an enumerable.
   module SetEnumMethods
+    include Constraints::SetEnum::SetEnumOperand
     include VariableEnumMethods
   
     # Returns a set variable array with all the bound variables.
@@ -142,7 +143,7 @@ module Gecode
     end
     
     # Returns the receiver.
-    def to_set_var_enum
+    def to_set_enum
       self
     end
 
@@ -159,6 +160,12 @@ module Gecode
         range
       end
     end
+  end
+
+  # A dummy class that just shows what methods a set enum responds to.
+  class SetEnum < Array
+    include Constraints::SetEnum::SetEnumOperand
+    include VariableEnumMethods
   end
   
   # A module containing the methods needed by enumerations containing fixnums. 

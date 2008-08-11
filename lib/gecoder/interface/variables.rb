@@ -178,9 +178,16 @@ module Gecode
   # The domain of a set variable may also specify the cardinality of the set, 
   # i.e. the number of elements that the set may contains.
   class FreeSetVar
+    include Gecode::Constraints::Set::SetVarOperand
+    attr :model
+
     # Checks whether the variable has been assigned.
     delegate :assigned?, :assigned
-    
+    # Checks whether a value is included in the set.
+    delegate :in_lower_bound?, :contains
+    # Checks whether a value is not included in the set.
+    delegate :not_in_upper_bound?, :notContains
+
     # Gets all the elements located in the greatest lower bound of the set (an 
     # Enumerable).
     def lower_bound
@@ -222,9 +229,17 @@ module Gecode
     # Returns a string representation of the the variable's domain.
     def domain_string
       if assigned?
-        lower_bound.to_a.inspect
+        if lower_bound.size < 100
+          lower_bound.to_a.inspect
+        else
+          "the domain is too large to display"
+        end
       else
-        "glb-range: #{lower_bound.to_a.inspect}, lub-range: #{upper_bound.to_a.inspect}"
+        if upper_bound.size < 100
+          "glb-range: #{lower_bound.to_a.inspect}, lub-range: #{upper_bound.to_a.inspect}"
+        else
+          "the domain is too large to display"
+        end
       end
     end
   end

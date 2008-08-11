@@ -50,7 +50,9 @@ module Gecode::Constraints::Int
         var, domain, reif_var = @params.values_at(:lhs, :domain, :reif)
           
         (params = []) << var.to_int_var.bind
-        params << domain.first << domain.last
+        last = domain.last
+        last -= 1 if domain.exclude_end?
+        params << domain.first << last
         params << reif_var.to_bool_var.bind if reif_var.respond_to? :to_bool_var
         params.concat propagation_options
         
