@@ -1,15 +1,16 @@
-module Gecode
-  class FreeSetVar
-    # Starts a constraint on the size of the set.
+module Gecode::Constraints::Set
+  module SetVarOperand
+    # Produces an integer operand representing the size of the set.
+    #
+    # == Examples
+    #
+    #   # The size of +set+.
+    #   set.size
     def size
-      params = {:lhs => self}
-      Gecode::Constraints::Set::Cardinality::SizeExpressionStub.new(
-        @model, params)
+      Cardinality::SetSizeOperand.new(@model, self)
     end
   end
-end
 
-module Gecode::Constraints::Set
   # A module that gathers the classes and modules used in cardinality 
   # constraints.
   module Cardinality #:nodoc:
@@ -24,15 +25,8 @@ module Gecode::Constraints::Set
       end
     end
     
-    # A custom composite stub to change the composite expression used.
-    class CompositeStub < Gecode::Constraints::CompositeStub #:nodoc:
-      def initialize(model, params)
-        super(Expression, model, params)
-      end
-    end
-    
     # Describes a cardinality expression started with set.size.must .
-    class Expression < Gecode::Constraints::Int::CompositeExpression #:nodoc:
+    class Expression #:nodoc:
       def in(range)
         if range.kind_of?(Range) and !@params[:negate]
           @params.update(:range => range)
@@ -43,32 +37,20 @@ module Gecode::Constraints::Set
       end
     end
     
-    # Describes a CompositeStub for the cardianlity constraint which constrains
-    # the cardianlity (size) of a set.
-    # 
-    # == Example
-    # 
-    #   # The size of +set+ must be within 1..17
-    #   set.size.must_be.in 1..17
-    #   
-    #   # The size must equal the integer variable +size+.
-    #   set.size.must == size
-    #   
-    #   # The size must not be larger than 17
-    #   set.size.must_not > 17
-    #   
-    #   # We reify the above with a boolean variable called +is_not_large+ and 
-    #   # select the strength +domain+.
-    #   set.size.must_not_be.larger_than(17, :reify => is_not_large, 
-    #     :strength => :domain)
-    class SizeExpressionStub < CompositeStub
-      def constrain_equal(variable, params, constrain)
-        lhs = @params[:lhs]
+    class SetSizeOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
+      def initialize(model, set_op)
+        super model
+        @set = set_op
+      end
+
+      def constrain_equal(int_operand, constrain, propagation_options)
+        set = @set.to_set_var
         if constrain
-          variable.must_be.in lhs.lower_bound.size..lhs.upper_bound.size
+          int_operand.must_be.in set.lower_bound.size..set.upper_bound.size
         end
         
-        Gecode::Raw::cardinality(@model.active_space, lhs.bind, variable.bind)
+        Gecode::Raw::cardinality(@model.active_space, set.bind, 
+          int_operand.to_int_var.bind)
       end
     end
   end

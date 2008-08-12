@@ -174,7 +174,7 @@ end
 
 require 'gecoder/interface/constraints/set/domain'
 require 'gecoder/interface/constraints/set/relation'
-#require 'gecoder/interface/constraints/set/cardinality'
+require 'gecoder/interface/constraints/set/cardinality'
 require 'gecoder/interface/constraints/set/connection'
 #require 'gecoder/interface/constraints/set/include'
 require 'gecoder/interface/constraints/set/operation'
