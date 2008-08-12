@@ -88,7 +88,6 @@ module Gecode::Constraints::Int
     end
 
     def construct_receiver(params)
-      params.update(:lhs => self)
       receiver = IntVarConstraintReceiver.new(@model, params)
       op = self
       receiver.instance_eval{ @short_circuit = op }
@@ -117,7 +116,7 @@ module Gecode::Constraints::Int
 
     def to_int_var
       variable = model.int_var
-      params = {:lhs => self}
+      params = {}
       params.update Gecode::Constraints::Util.decode_options({})
       model.add_constraint relation_constraint(:==, variable, params)
       return variable
