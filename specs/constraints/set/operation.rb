@@ -40,7 +40,7 @@ Gecode::Constraints::Util::SET_OPERATION_TYPES.each_pair do |operation, type|
         when :union
           (s1 | s2).should == rhs
         when :disjoint_union
-          (s1 | s2 - (s1 & s2)).sort.should == rhs.sort
+          (s1 | s2).sort.should == rhs.sort
         when :intersection
           (s1 & s2).should == rhs
         when :minus
@@ -49,19 +49,10 @@ Gecode::Constraints::Util::SET_OPERATION_TYPES.each_pair do |operation, type|
     end
 
     it "should constrain the #{operation} of the sets when used with constant rhs" do
-      if operation == :union
+      if operation == :union || operation == :disjoint_union
         @constant_set << 0 << 1 # Or there will not be any solution.
       end
       @set1.method(operation).call(@set2).must == @constant_set
-      # TODO disjoint union fails for some reason, because of
-      # not finding any solution.
-      #
-      # There should be a solution for disjoint union:
-      # set1: 0, 1, 2, 3
-      # set2: 1, 0, 5
-      # constant_set: 2,3,5
-      #
-      # Or have I misunderstood how disjoint union works?
       @model.solve!
 
       s1 = @set1.value.to_a
@@ -71,7 +62,7 @@ Gecode::Constraints::Util::SET_OPERATION_TYPES.each_pair do |operation, type|
         when :union
           (s1 | s2).sort.should == rhs.sort
         when :disjoint_union
-          (s1 | s2 - (s1 & s2)).sort.should == rhs.sort
+          (s1 | s2).sort.should == rhs.sort
         when :intersection
           (s1 & s2).should == rhs
         when :minus
@@ -124,7 +115,7 @@ Gecode::Constraints::Util::SET_OPERATION_TYPES.each_pair do |operation, type|
         when :union
           (s1 | s2).should == rhs
         when :disjoint_union
-          (s1 | s2 - (s1 & s2)).sort.should == rhs.sort
+          (s1 | s2).sort.should == rhs.sort
         when :intersection
           (s1 & s2).should == rhs
         when :minus
