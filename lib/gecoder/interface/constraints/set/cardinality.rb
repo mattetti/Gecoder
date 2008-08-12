@@ -20,20 +20,8 @@ module Gecode::Constraints::Set
     class CardinalityConstraint < Gecode::Constraints::Constraint #:nodoc:
       def post
         var, range = @params.values_at(:lhs, :range)
-        Gecode::Raw::cardinality(@model.active_space, var.bind, range.first, 
-          range.last)
-      end
-    end
-    
-    # Describes a cardinality expression started with set.size.must .
-    class Expression #:nodoc:
-      def in(range)
-        if range.kind_of?(Range) and !@params[:negate]
-          @params.update(:range => range)
-          @model.add_constraint CardinalityConstraint.new(@model, @params)
-        else
-          super(range)
-        end
+        Gecode::Raw::cardinality(@model.active_space, var.to_set_var.bind, 
+          range.first, range.last)
       end
     end
     
@@ -51,6 +39,24 @@ module Gecode::Constraints::Set
         
         Gecode::Raw::cardinality(@model.active_space, set.bind, 
           int_operand.to_int_var.bind)
+      end
+
+      alias_method :pre_cardinality_construct_receiver, :construct_receiver
+      def construct_receiver(params)
+        receiver = pre_cardinality_construct_receiver(params)
+        class <<receiver 
+          alias_method :in_without_short_circut, :in
+          def in(range, options = {})
+            if range.kind_of?(Range) and !@params[:negate] and 
+                !options.has_key?(:reify)
+              @params.update(:range => range)
+              @model.add_constraint CardinalityConstraint.new(@model, @params)
+            else
+              in_without_short_circuit(range, options)
+            end
+          end
+        end
+        return receiver
       end
     end
   end
