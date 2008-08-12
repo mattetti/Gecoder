@@ -180,6 +180,22 @@ module GecodeR::Specs
       return op, int_enum
     end
 
+    # Produces a general bool enum operand. The method returns two objects: 
+    # the operand itself and the variable it returns when #to_bool_enum
+    # is called.
+    def general_bool_enum_operand(model)
+      op = general_operand_base(model)
+      
+      bool_enum = @model.bool_var_array(5)
+      class <<op
+        include Gecode::Constraints::BoolEnum::BoolEnumOperand
+        attr :model
+      end
+      op.stub!(:to_bool_enum).and_return bool_enum
+
+      return op, bool_enum
+    end
+
     # Produces a general set enum operand. The method returns two objects: 
     # the operand itself and the variable it returns when #to_set_enum
     # is called.

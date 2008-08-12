@@ -1,5 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
-require File.dirname(__FILE__) + '/constraint_helper'
+require File.dirname(__FILE__) + '/../property_helper'
 
 class BoolEnumSampleProblem < Gecode::Model
   attr :bools
@@ -74,43 +73,22 @@ describe Gecode::Constraints::BoolEnum::Relation, ' (conjunction)' do
     @b1 = @model.b1
     @b2 = @model.b2
     
-    # For constraint option spec.
-    @invoke_options = lambda do |hash| 
-      @bools.conjunction.must.equal(@b1, hash) 
-      @model.solve!
+    # For property spec.
+    @property_types = [:bool_enum]
+    @select_property = lambda do |bool_enum|
+      bool_enum.conjunction
     end
-    @expect_options = option_expectation do |strength, kind, reif_var|
-      @model.allow_space_access do
-        if reif_var.nil?
-          Gecode::Raw.should_receive(:rel).once.with(
-            an_instance_of(Gecode::Raw::Space),
-            Gecode::Raw::BOT_AND, 
-            an_instance_of(Gecode::Raw::BoolVarArray),
-            an_instance_of(Gecode::Raw::BoolVar), 
-            strength, kind)
-        else
-          Gecode::Raw.should_receive(:rel).once.with(
-            an_instance_of(Gecode::Raw::Space), 
-            an_instance_of(Gecode::Raw::BoolVar),
-            anything,
-            an_instance_of(Gecode::Raw::BoolVar),
-            anything, anything)
-          Gecode::Raw.should_receive(:rel).once.with(
-            an_instance_of(Gecode::Raw::Space), 
-            Gecode::Raw::BOT_AND, 
-            an_instance_of(Gecode::Raw::BoolVarArray),
-            reif_var, strength, kind)
-        end
-      end
-    end
+    @selected_property = @bools.conjunction
+    @constraint_class = Gecode::Constraints::BlockConstraint
     
     # For bool enum spec.
-    @stub = @bools.conjunction
+    @stub = @selected_property
     @compute_result = lambda{ @bools.all?{ |b| b.value } }
   end
   
   it_should_behave_like 'bool enum relation constraint'
-  it_should_behave_like 'reifiable constraint'
+  it_should_behave_like(
+    'property that produces bool operand by short circuiting equality')
 end
 
 describe Gecode::Constraints::BoolEnum::Relation, ' (disjunction)' do
@@ -121,40 +99,19 @@ describe Gecode::Constraints::BoolEnum::Relation, ' (disjunction)' do
     @b2 = @model.b2
     
     # For constraint option spec.
-    @invoke_options = lambda do |hash| 
-      @bools.disjunction.must.equal(@b1, hash) 
-      @model.solve!
+    @property_types = [:bool_enum]
+    @select_property = lambda do |bool_enum|
+      bool_enum.disjunction
     end
-    @expect_options = option_expectation do |strength, kind, reif_var|
-      @model.allow_space_access do
-        if reif_var.nil?
-          Gecode::Raw.should_receive(:rel).once.with(
-            an_instance_of(Gecode::Raw::Space), 
-            Gecode::Raw::BOT_OR, 
-            an_instance_of(Gecode::Raw::BoolVarArray),
-            an_instance_of(Gecode::Raw::BoolVar), 
-            strength, kind)
-        else
-          Gecode::Raw.should_receive(:rel).once.with(
-            an_instance_of(Gecode::Raw::Space), 
-            an_instance_of(Gecode::Raw::BoolVar),
-            anything,
-            an_instance_of(Gecode::Raw::BoolVar),
-            anything, anything)          
-          Gecode::Raw.should_receive(:rel).once.with(
-            an_instance_of(Gecode::Raw::Space), 
-            Gecode::Raw::BOT_OR, 
-            an_instance_of(Gecode::Raw::BoolVarArray),
-            reif_var, strength, kind)
-        end
-      end
-    end
+    @selected_property = @bools.disjunction
+    @constraint_class = Gecode::Constraints::BlockConstraint
     
     # For bool enum spec.
-    @stub = @bools.disjunction
+    @stub = @selected_property
     @compute_result = lambda{ @bools.any?{ |b| b.value } }
   end
   
   it_should_behave_like 'bool enum relation constraint'
-  it_should_behave_like 'reifiable constraint'
+  it_should_behave_like(
+    'property that produces bool operand by short circuiting equality')
 end

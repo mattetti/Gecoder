@@ -1,5 +1,5 @@
 # A module containing constraints that have enumerations of integer 
-# variables as left hand side.
+# operands as left hand side.
 module Gecode::Constraints::IntEnum
   # Describes an integer variable enumeration operand. Classes that mix in
   # IntEnumOperand must define #model and #to_int_enum .

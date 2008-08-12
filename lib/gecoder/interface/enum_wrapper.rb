@@ -104,6 +104,7 @@ module Gecode
   # A module containing the methods needed by enumerations containing boolean
   # variables. Requires that it's included in an enumerable.
   module BoolEnumMethods
+    include Constraints::BoolEnum::BoolEnumOperand
     include VariableEnumMethods
   
     # Returns a bool variable array with all the bound variables.
@@ -122,6 +123,12 @@ module Gecode
     def to_bool_enum
       self
     end
+  end
+
+  # A dummy class that just shows what methods a bool enum responds to.
+  class BoolEnum < Array
+    include Constraints::BoolEnum::BoolEnumOperand
+    include VariableEnumMethods
   end
   
   # A module containing the methods needed by enumerations containing set

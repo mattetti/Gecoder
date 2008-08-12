@@ -215,6 +215,55 @@ describe 'property that produces int operand by short circuiting equality', :sha
   it_should_behave_like 'property that produces int operand'
 end
 
+# Requires @model, @constraint_class, @property_types, @select_property and
+# @selected_property.
+#
+# These properties should only short circuit equality when there is no
+# negation nor reification and the right hand side is a bool operand.
+describe 'property that produces bool operand by short circuiting equality', :shared => true do
+  it 'should produce constraints when short circuited' do
+    @constraint_class.superclass.should == Gecode::Constraints::Constraint
+  end
+
+  it 'should give the same solution regardless of whether short circuit was used' do
+    bool_operand = @selected_property
+    direct_bool_var = bool_operand.to_bool_var
+    indirect_bool_var = @model.bool_var
+    @selected_property.must == indirect_bool_var
+    @model.solve!
+
+    direct_bool_var.value.should == indirect_bool_var.value
+  end
+
+  it 'should short circuit equality' do
+    (@selected_property.must == @model.bool_var).should(
+      be_kind_of(@constraint_class))
+  end
+
+  it 'should not short circuit when negation is used' do
+    (@selected_property.must_not == @model.bool_var).should_not(
+      be_kind_of(@constraint_class))
+  end
+
+  it 'should not short circuit when reification is used' do
+    @selected_property.must.equal(@model.bool_var, 
+      :reify => @model.bool_var).should_not(be_kind_of(@constraint_class))
+  end
+
+  it 'should not short circuit when equality is not used' do
+    (@selected_property.must.imply @model.bool_var).should_not(
+      be_kind_of(@constraint_class))
+  end
+
+  it 'should raise error when the right hand side is of illegal type' do
+    lambda do
+      @selected_property.must == 'foo'
+    end.should raise_error(TypeError)
+  end
+
+  it_should_behave_like 'property that produces bool operand'
+end
+
 # Requires @model, @constraint_class, @property_types and @select_property.
 # 
 # These properties should short circuit all comparison relations

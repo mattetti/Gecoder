@@ -60,9 +60,11 @@ module Gecode::Constraints::Set
 
     def to_set_var
       variable = model.set_var
+      options = 
+        Gecode::Constraints::Set::Util.decode_options(
+          {}).values_at(:strength, :kind)
       model.add_interaction do
-        constrain_equal(variable, true, 
-          [Gecode::Raw::ICL_DEF, Gecode::Raw::PK_DEF])
+        constrain_equal(variable, true, options)
       end
       return variable
     end

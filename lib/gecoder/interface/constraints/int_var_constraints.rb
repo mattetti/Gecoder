@@ -60,9 +60,10 @@ module Gecode::Constraints::Int
 
     def to_int_var
       variable = model.int_var
+      options = 
+        Gecode::Constraints::Util.decode_options({}).values_at(:strength, :kind)
       model.add_interaction do
-        constrain_equal(variable, true, 
-          Gecode::Constraints::Util.decode_options({}))
+        constrain_equal(variable, true, options)
       end
       return variable
     end
