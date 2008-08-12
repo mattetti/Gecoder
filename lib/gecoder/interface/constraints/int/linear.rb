@@ -116,7 +116,8 @@ module Gecode::Constraints::Int
           int_operand_or_fix = Linear::ExpressionNode.new(int_operand_or_fix);
         end
 
-        params.update(:rhs => int_operand_or_fix, :relation_type => relation_type)
+        params.update(:lhs => self, :rhs => int_operand_or_fix, 
+          :relation_type => relation_type)
         LinearRelationConstraint.new(model, params)
       end
     end
