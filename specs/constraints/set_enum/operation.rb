@@ -10,7 +10,6 @@ describe 'set enum operation property', :shared => true do
     @selected_property = @set_enum.method(@operation).call
 
     @constraint_class = Gecode::Constraints::BlockConstraint
-    # TODO short circuits should return constraints.
   end
 
   it "should translate #{@operation} into an operand constraint" do
@@ -50,16 +49,14 @@ describe Gecode::Constraints::SetEnum::Operation, ' (union)' do
   it_should_behave_like 'set enum operation property'
 end
 
-=begin
 describe Gecode::Constraints::SetEnum::Operation, ' (intersection)' do
   before do
     @model = Gecode::Model.new
-    @sets = @model.set_var_array(10, [], 0..20)
-    @target = @rhs = @model.set_var([], 0..20)
+    @set_enum = @sets = @model.set_var_array(10, [], 0..20)
+    @set = @model.set_var([], 0..20)
     @model.branch_on @sets
     
-    @stub = @sets.intersection
-    @operation_type = Gecode::Raw::SOT_INTER
+    @operation = :intersection
   end
 
   it 'should constrain the intersection of the sets' do
@@ -74,18 +71,17 @@ describe Gecode::Constraints::SetEnum::Operation, ' (intersection)' do
     (intersection - [1,4,17]).should be_empty
   end
   
-  it_should_behave_like 'set enum operation constraint'
+  it_should_behave_like 'set enum operation property'
 end
 
 describe Gecode::Constraints::SetEnum::Operation, ' (disjoint union)' do
   before do
     @model = Gecode::Model.new
-    @sets = @model.set_var_array(10, [], 0..20)
-    @target = @rhs = @model.set_var([], 0..20)
+    @set_enum = @sets = @model.set_var_array(10, [], 0..20)
+    @set = @model.set_var([], 0..20)
     @model.branch_on @sets
     
-    @stub = @sets.disjoint_union
-    @operation_type = Gecode::Raw::SOT_DUNION
+    @operation = :disjoint_union
   end
 
   it 'should constrain the disjoint union of the sets' do
@@ -93,13 +89,23 @@ describe Gecode::Constraints::SetEnum::Operation, ' (disjoint union)' do
     @sets.disjoint_union.must_be.superset_of [1]
     @model.solve!.should_not be_nil
     disjoint_union = @sets.values.inject([]) do |union, set|
-      intersection = union & set.to_a
-      union += set.to_a - intersection
+      unless union.any?{ |x| set.to_a.include? x }
+        union += set.to_a
+      end
     end.uniq
     disjoint_union.should include(1)
     (disjoint_union - [1,4,17]).should be_empty
   end
+
+  it 'should constrain the disjoint union of the sets (2)' do
+    @sets.disjoint_union.must_be.subset_of [1,4,17]
+    @sets.disjoint_union.must_be.superset_of [1]
+    @sets[0].must_be.superset_of [1]
+    @sets[1].must_be.superset_of [1]
+    lambda do
+      @model.solve!
+    end.should raise_error(Gecode::NoSolutionError)
+  end
   
-  it_should_behave_like 'set enum operation constraint'
+  it_should_behave_like 'set enum operation property'
 end
-=end
