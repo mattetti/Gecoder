@@ -62,7 +62,7 @@ module Gecode::Constraints::Int
       variable = model.int_var
       model.add_interaction do
         constrain_equal(variable, true, 
-          [Gecode::Raw::ICL_DEF, Gecode::Raw::PK_DEF])
+          Gecode::Constraints::Util.decode_options({}))
       end
       return variable
     end
@@ -117,9 +117,9 @@ module Gecode::Constraints::Int
 
     def to_int_var
       variable = model.int_var
-      model.add_interaction do
-        constrain_equal variable
-      end
+      params = {:lhs => self}
+      params.update Gecode::Constraints::Util.decode_options({})
+      model.add_constraint relation_constraint(:==, variable, params)
       return variable
     end
 
@@ -127,13 +127,6 @@ module Gecode::Constraints::Int
     # +relation+ to +int_operand_or_fix+, which is either an integer 
     # operand or a fixnum, given the specified hash +params+ of parameters.
     def relation_constraint(relation, int_operand_or_fix, params)
-      raise NotImplementedError, 'Abstract method has not been implemented.'
-    end
-
-    private
-
-    # Constrains this operand to equal +int_variable+.
-    def constrain_equal(int_variable)
       raise NotImplementedError, 'Abstract method has not been implemented.'
     end
   end

@@ -134,14 +134,6 @@ module Gecode::Constraints::Bool
         params.update(:rhs => bool_operand_or_fix, :relation_type => relation_type)
         LinearRelationConstraint.new(model, params)
       end
-
-      private
-
-      def constrain_equal(bool_variable)
-        (to_minimodel_lin_exp - bool_variable.bind).post(
-          model.active_space, Gecode::Raw::IRT_EQ, 
-          Gecode::Raw::ICL_DEF, Gecode::Raw::PK_DEF)
-      end
     end
     
     # Describes a single node in a linear expression.

@@ -93,25 +93,6 @@ module Gecode::Constraints::Set
           :operation => operation)
         OperationConstraint.new(model, params)
       end
-
-      private
-
-      def constrain_equal(set_variable)
-        operation = Gecode::Constraints::Util::SET_OPERATION_TYPES[@operator]
-
-        op1, op2 = [@op1, @op2].map do |expression|
-          # The expressions can either be set variables or constant sets, 
-          # convert them appropriately.
-          if expression.respond_to? :to_set_var
-            expression.to_set_var.bind
-          else
-            Gecode::Constraints::Util::constant_set_to_int_set(expression)
-          end
-        end
-
-        Gecode::Raw::rel(@model.active_space, op1,
-          operation, op2, Gecode::Raw::SRT_EQ, set_variable.bind)
-      end
     end
     
     class OperationConstraint < Gecode::Constraints::Constraint #:nodoc:

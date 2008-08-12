@@ -102,7 +102,7 @@ module Gecode::Constraints::Set
                   (operand.respond_to?(:to_set_var) or 
                   Gecode::Constraints::Util::constant_set?(operand))
                 # Short circuit the constraint.
-                @params.update Gecode::Constraints::Util.decode_options(options)
+                @params.update Gecode::Constraints::Set::Util.decode_options(options)
                 @model.add_constraint(
                   @short_circuit.relation_constraint(
                     :#{comp}, operand, @params))
@@ -120,9 +120,9 @@ module Gecode::Constraints::Set
 
     def to_set_var
       variable = model.set_var
-      model.add_interaction do
-        constrain_equal variable
-      end
+      params = {:lhs => self}
+      params.update Gecode::Constraints::Set::Util.decode_options({})
+      model.add_constraint relation_constraint(:==, variable, params)
       return variable
     end
 
@@ -131,13 +131,6 @@ module Gecode::Constraints::Set
     # operand or a constant set, given the specified hash +params+ of 
     # parameters. The constraints are never negated nor reified.
     def relation_constraint(relation, set_operand_or_constant_set, params)
-      raise NotImplementedError, 'Abstract method has not been implemented.'
-    end
-
-    private
-
-    # Constrains this operand to equal +set_variable+.
-    def constrain_equal(set_variable)
       raise NotImplementedError, 'Abstract method has not been implemented.'
     end
   end

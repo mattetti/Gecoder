@@ -119,14 +119,6 @@ module Gecode::Constraints::Int
         params.update(:rhs => int_operand_or_fix, :relation_type => relation_type)
         LinearRelationConstraint.new(model, params)
       end
-
-      private
-
-      def constrain_equal(int_variable)
-        (to_minimodel_lin_exp - int_variable.bind).post(
-          model.active_space, Gecode::Raw::IRT_EQ, 
-          Gecode::Raw::ICL_DEF, Gecode::Raw::PK_DEF)
-      end
     end
     
     # Describes a single node in a linear expression.
