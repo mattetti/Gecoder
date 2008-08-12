@@ -43,10 +43,11 @@ module Gecode::Constraints::Int
               operand.respond_to? :to_int_var
             # Short circuit the constraint.
             @params.update Gecode::Constraints::Util.decode_options(options)
-            @model.add_interaction do
+            @model.add_constraint(Gecode::Constraints::BlockConstraint.new(
+                @model, @params) do
               @short_circuit.constrain_equal(operand, false,
                 @params.values_at(:strength, :kind))
-            end
+            end)
           else
             equality_without_short_circuit(operand, options)
           end

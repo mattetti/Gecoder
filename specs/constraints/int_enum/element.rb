@@ -29,6 +29,7 @@ describe Gecode::Constraints::IntEnum::Element do
       int_enum[int]
     end
     @selected_property = @prices[@store]
+    @constraint_class = Gecode::Constraints::BlockConstraint
   end
 
   it 'should not disturb normal array access' do

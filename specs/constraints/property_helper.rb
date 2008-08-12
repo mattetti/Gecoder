@@ -22,6 +22,8 @@ require File.dirname(__FILE__) + '/../spec_helper'
 # [@selected_property] The resulting operand of the property. It should
 #                      be constrained to the degree that it has a
 #                      non-maximal domain.
+# [@constraint_class] The class of the constraints that are expected to be
+#                     produced when a constraint is short circuited.
 #
 
 
@@ -159,12 +161,16 @@ describe 'property that produces set operand', :shared => true do
   it_should_behave_like 'property that produces operand'
 end
 
-# Requires @model, @property_types, @select_property and
+# Requires @model, @constraint_class, @property_types, @select_property and
 # @selected_property.
 #
 # These properties should only short circuit equality when there is no
 # negation nor reification and the right hand side is an int operand.
 describe 'property that produces int operand by short circuiting equality', :shared => true do
+  it 'should produce constraints when short circuited' do
+    @constraint_class.superclass.should == Gecode::Constraints::Constraint
+  end
+
   it 'should give the same solution regardless of whether short circuit was used' do
     int_operand = @selected_property
     direct_int_var = int_operand.to_int_var
@@ -176,34 +182,28 @@ describe 'property that produces int operand by short circuiting equality', :sha
     direct_int_var.should have_domain(indirect_int_var.domain)
   end
 
-  it 'should not place rel constraints when it should be short circuiting' do
-    Gecode::Raw.should_not_receive(:rel)
-    @selected_property.must == @model.int_var
-    @model.solve!
+  it 'should short circuit equality' do
+    (@selected_property.must == @model.int_var).should(
+      be_kind_of(@constraint_class))
   end
 
   it 'should not short circuit when negation is used' do
-    Gecode::Raw.should_receive(:rel)
-    @selected_property.must_not == @model.int_var
-    @model.solve!
+    (@selected_property.must_not == @model.int_var).should_not(
+      be_kind_of(@constraint_class))
   end
 
   it 'should not short circuit when reification is used' do
-    Gecode::Raw.should_receive(:rel)
-    @selected_property.must.equal(@model.int_var, :reify => @model.bool_var)
-    @model.solve!
+    @selected_property.must.equal(@model.int_var, 
+      :reify => @model.bool_var).should_not(be_kind_of(@constraint_class))
   end
 
   it 'should not short circuit when the right hand side is not a operand' do
-    Gecode::Raw.should_receive(:rel)
-    @selected_property.must == 17
-    @model.solve!
+    @selected_property.must.equal(2).should_not(be_kind_of(@constraint_class))
   end
 
   it 'should not short circuit when equality is not used' do
-    Gecode::Raw.should_receive(:rel)
-    @selected_property.must > @model.int_var
-    @model.solve!
+    (@selected_property.must > @model.int_var).should_not(
+      be_kind_of(@constraint_class))
   end
 
   it 'should raise error when the right hand side is of illegal type' do
@@ -215,11 +215,16 @@ describe 'property that produces int operand by short circuiting equality', :sha
   it_should_behave_like 'property that produces int operand'
 end
 
-# Requires @model, @property_types and @select_property.
+# Requires @model, @constraint_class, @property_types and @select_property.
 # 
 # These properties should short circuit all comparison relations
 # even when negated and when fixnums are used as right hand side.
 describe 'property that produces int operand by short circuiting relations', :shared => true do
+  it 'should produce reifiable constraints when short circuited' do
+    @constraint_class.superclass.should == 
+      Gecode::Constraints::ReifiableConstraint
+  end
+
   Gecode::Constraints::Util::RELATION_TYPES.keys.each do |relation|
     it "should give the same solution regardless of whether short circuit #{relation} was used" do
       direct_int_var = @model.int_var
@@ -233,27 +238,23 @@ describe 'property that produces int operand by short circuiting relations', :sh
     end
 
     it "should short circuit #{relation}" do
-      Gecode::Raw.should_not_receive(:rel)
-      @selected_property.must.method(relation).call @model.int_var
-      @model.solve!
+      (@selected_property.must.method(relation).call @model.int_var).should(
+        be_kind_of(@constraint_class))
     end
 
     it "should short circuit negated #{relation}" do
-      Gecode::Raw.should_not_receive(:rel)
-      @selected_property.must_not.method(relation).call @model.int_var
-      @model.solve!
+      (@selected_property.must_not.method(relation).call @model.int_var).should(
+        be_kind_of(@constraint_class))
     end
 
     it "should short circuit #{relation} when reification is used" do
-      Gecode::Raw.should_not_receive(:rel)
-      @selected_property.must.method(relation).call(@model.int_var, :reify => @model.bool_var)
-      @model.solve!
+      (@selected_property.must.method(relation).call(@model.int_var, 
+        :reify => @model.bool_var)).should(be_kind_of(@constraint_class))
     end
 
     it "should short circuit #{relation} even when the right hand side is a fixnum" do
-      Gecode::Raw.should_not_receive(:rel)
-      @selected_property.must.method(relation).call(2)
-      @model.solve!
+      (@selected_property.must.method(relation).call 2).should(
+        be_kind_of(@constraint_class))
     end
 
     it "should raise error when the #{relation} right hand side is of illegal type" do
@@ -272,6 +273,10 @@ end
 # These properties should only short circuit equality when there is no
 # negation nor reification and the right hand side is a set operand.
 describe 'property that produces set operand by short circuiting equality', :shared => true do
+  it 'should produce constraints when short circuited' do
+    @constraint_class.superclass.should == Gecode::Constraints::Constraint
+  end
+
   it 'should give the same solution regardless of whether short circuit was used' do
     set_operand = @selected_property
     direct_set_var = set_operand.to_set_var
@@ -283,7 +288,7 @@ describe 'property that produces set operand by short circuiting equality', :sha
       indirect_set_var.upper_bound)
   end
 
-  it 'should not place rel constraints when it should be short circuiting' do
+  it 'should short circuit equality' do
     (@selected_property.must == @model.set_var).should(
       be_kind_of(@constraint_class))
   end
@@ -324,6 +329,10 @@ end
 # variables). 
 describe 'property that produces set operand by short circuiting set relations', :shared => true do
   Gecode::Constraints::Util::SET_RELATION_TYPES.keys.each do |relation|
+    it 'should produce constraints when short circuited' do
+      @constraint_class.superclass.should == Gecode::Constraints::Constraint
+    end
+
     it "should give the same solution regardless of whether short circuit #{relation} was used" do
       if relation == :complement
         direct_set_var, indirect_set_var = Array.new(2){ @model.set_var }
@@ -353,7 +362,7 @@ describe 'property that produces set operand by short circuiting set relations',
           indirect_set_var.upper_bound)
       end
     end
-    
+
     it "should short circuit #{relation}" do
       @selected_property.must.method(relation).call(@model.set_var).should( 
         be_kind_of(@constraint_class))

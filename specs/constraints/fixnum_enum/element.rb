@@ -27,6 +27,7 @@ describe Gecode::Constraints::FixnumEnum::Element do
       fixnum_enum[int]
     end
     @selected_property = @enum[@store]
+    @constraint_class = Gecode::Constraints::BlockConstraint
   end
 
   it 'should not disturb normal array access' do

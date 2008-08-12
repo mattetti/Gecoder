@@ -26,6 +26,8 @@ describe Gecode::Constraints::Int::Linear, ' (+ property)' do
       int1 + int2
     end
     @selected_property = @x + @y
+    @constraint_class = 
+      Gecode::Constraints::Int::Linear::LinearRelationConstraint
   end
 
   it 'should constrain the sum' do
@@ -51,6 +53,8 @@ describe Gecode::Constraints::Int::Linear, ' (- property)' do
       int1 - int2
     end
     @selected_property = @x - @y
+    @constraint_class = 
+      Gecode::Constraints::Int::Linear::LinearRelationConstraint
   end
 
   it 'should constrain the difference' do
@@ -76,6 +80,8 @@ describe Gecode::Constraints::Int::Linear, ' (* property)' do
       int * 17
     end
     @selected_property = @x * 2
+    @constraint_class = 
+      Gecode::Constraints::Int::Linear::LinearRelationConstraint
   end
 
   it 'should constrain the value times a constant' do

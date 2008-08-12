@@ -9,7 +9,7 @@ describe 'set enum operation property', :shared => true do
     end
     @selected_property = @set_enum.method(@operation).call
 
-    @constraint_class = Object
+    @constraint_class = Gecode::Constraints::BlockConstraint
     # TODO short circuits should return constraints.
   end
 

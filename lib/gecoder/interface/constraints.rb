@@ -303,6 +303,19 @@ module Gecode
       end
     end
 
+    # A constraint that can be specified by providing a block containing the
+    # post method.
+    class BlockConstraint < Constraint
+      def initialize(model, params, &block)
+        super(model, params)
+        @proc = block
+      end
+
+      def post
+        @proc.call
+      end
+    end
+
     # A module that provides some utility-methods for constraints.
     module Util #:nodoc:
       # Maps the name used in options to the value used in Gecode for 
