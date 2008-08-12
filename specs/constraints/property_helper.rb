@@ -5,7 +5,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 # * An example where the property is used to constrain a sample problem.
 # * should_behave_like foo operand
 # * A test that the property is translated to the correct Gecode
-# constraint if applicable.
+# constraint if deemed necessary.
 
 # Several of these shared specs requires one or more of the following instance 
 # variables to be used: 

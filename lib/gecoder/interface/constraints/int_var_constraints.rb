@@ -154,5 +154,5 @@ end
 require 'gecoder/interface/constraints/int/relation'
 require 'gecoder/interface/constraints/int/linear'
 require 'gecoder/interface/constraints/int/domain'
-#require 'gecoder/interface/constraints/int/arithmetic'
+require 'gecoder/interface/constraints/int/arithmetic'
 #require 'gecoder/interface/constraints/int/channel'

@@ -160,8 +160,4 @@ describe Gecode::Constraints::Int::Linear do
       (sol.x.value + sol.y.value).should_not.send(relation, 1)
     end
   end
-  
-  it 'should not interfere with other defined multiplication methods' do
-    (@x * :foo).should be_nil
-  end
 end
