@@ -33,15 +33,8 @@ module Gecode::Constraints::Int
     
     alias_comparison_methods
     
-    # Adds a channel constraint on the integer variable and the variables in 
-    # the specifed enum of boolean variables. Beyond the common options the 
-    # channel constraint can also take the following option:
-    #
-    # [:offset]  Specifies an offset for the integer variable. If the offset is
-    #            set to k then the integer variable takes value i+k exactly 
-    #            when the variable at index i in the boolean enumration is true 
-    #            and the rest are false.
-#     provide_commutivity(:channel){ |rhs, _| rhs.respond_to? :to_bool_var_array }
+    # Provides commutativity with BoolEnumConstraintReceiver#channel .
+    provide_commutativity(:channel){ |rhs, _| rhs.respond_to? :to_bool_enum }
   end
   
   # A module that gathers the classes and modules used in channel constraints
