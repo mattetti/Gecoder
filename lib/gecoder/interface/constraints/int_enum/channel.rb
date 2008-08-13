@@ -69,7 +69,8 @@ module Gecode::Constraints::IntEnum
       @model.add_constraint Channel::ChannelConstraint.new(@model, @params)
     end
     
-#     provide_commutivity(:channel){ |rhs, _| rhs.respond_to? :to_set_enum }
+    # Provides commutativity with SetEnumConstraintReceiver#channel .
+    provide_commutativity(:channel){ |rhs, _| rhs.respond_to? :to_set_enum }
   end
   
   # A module that gathers the classes and modules used in channel constraints.
