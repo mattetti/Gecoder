@@ -1383,6 +1383,16 @@ Rust::Bindings::create_bindings Rust::Bindings::LangCxx, "gecode" do |b|
       func.add_parameter "Gecode::IntConLevel", "icl"
       func.add_parameter "Gecode::PropKind", "pk"
     end
+
+    ns.add_function "rel" do |func|
+      func.add_parameter "Gecode::MSpace*", "home"
+      func.add_parameter "Gecode::MIntVarArray *", "x" do |param|
+        param.custom_conversion = "*ruby2Gecode_MIntVarArrayPtr(argv[1], 2)->ptr()"
+      end
+      func.add_parameter "Gecode::IntRelType", "r"
+      func.add_parameter "Gecode::IntConLevel", "icl"
+      func.add_parameter "Gecode::PropKind", "pk"
+    end
     
     ns.add_function "rel" do |func|
       func.add_parameter "Gecode::MSpace*", "home"

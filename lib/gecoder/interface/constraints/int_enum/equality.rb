@@ -1,6 +1,12 @@
 module Gecode::Constraints::IntEnum
-  class Expression
-    # Posts an equality constraint on the variables in the enum.
+  class IntEnumConstraintReceiver
+    # Constrains all variables in the enumeration to be equal. 
+    # Neither negation nor reification is supported.
+    # 
+    # == Example
+    # 
+    #   # Constrains all variables in +int_enum+ to be equal.
+    #   int_enum.must_be.equal
     def equal(options = {})
       if @params[:negate]
         # The best we could implement it as from here would be a bunch of 
@@ -20,21 +26,11 @@ module Gecode::Constraints::IntEnum
   
   # A module that gathers the classes and modules used in equality constraints.
   module Equality #:nodoc:
-    # Describes an equality constraint, which constrains all variables in an
-    # integer enumeration to be equal. Neither negation nor reification is 
-    # supported.
-    # 
-    # == Example
-    # 
-    #   # Constrains all variables in +int_enum+ to be equal.
-    #   int_enum.must_be.equal
-    class EqualityConstraint < Gecode::Constraints::Constraint
+    class EqualityConstraint < Gecode::Constraints::Constraint #:nodoc:
       def post
-        # Bind lhs.
-        lhs = @params[:lhs].to_int_var_array
-        
-        # Fetch the parameters to Gecode.
-        Gecode::Raw::eq(@model.active_space, lhs, *propagation_options)
+        Gecode::Raw::rel(@model.active_space,
+          @params[:lhs].to_int_enum.bind_array, 
+          Gecode::Raw::IRT_EQ, *propagation_options)
       end
     end
   end

@@ -37,7 +37,7 @@ module Gecode::Constraints::IntEnum
 end
 
 require 'gecoder/interface/constraints/int_enum/distinct'
-#require 'gecoder/interface/constraints/int_enum/equality'
+require 'gecoder/interface/constraints/int_enum/equality'
 require 'gecoder/interface/constraints/int_enum/channel'
 require 'gecoder/interface/constraints/int_enum/element'
 require 'gecoder/interface/constraints/int_enum/count'
