@@ -1,21 +1,7 @@
-require File.dirname(__FILE__) + '/../spec_helper'
-require File.dirname(__FILE__) + '/constraint_helper'
+require File.dirname(__FILE__) + '/../constraint_helper'
 
 # Assumes that @variables, @expected_array and @tuples are defined.
 describe 'tuple constraint', :shared => true do
-  before do
-    @invoke_options = lambda do |hash| 
-      @variables.must_be.in(@tuples, hash) 
-      @model.solve!
-    end
-    @expect_options = option_expectation do |strength, kind, reif_var|
-      Gecode::Raw.should_receive(:extensional).once.with(
-        an_instance_of(Gecode::Raw::Space), 
-        @expected_array, 
-        an_instance_of(Gecode::Raw::TupleSet), strength, kind)
-    end
-  end
-  
   it 'should not allow negation' do
     lambda do 
       @variables.must_not_be.in @tuples
@@ -40,8 +26,6 @@ describe 'tuple constraint', :shared => true do
       @variables.must_be.in ['h'*size, 'i'*size] 
     end.should raise_error(TypeError)
   end
-  
-  it_should_behave_like 'non-reifiable constraint'
 end
 
 describe Gecode::Constraints::BoolEnum::Extensional, ' (tuple constraint)' do
@@ -51,7 +35,17 @@ describe Gecode::Constraints::BoolEnum::Extensional, ' (tuple constraint)' do
     @variables = @bools = @model.bool_var_array(3)
     @model.branch_on @bools
     
-    @expected_array = an_instance_of Gecode::Raw::BoolVarArray
+    @types = [:bool_enum]
+    @invoke = lambda do |receiver, hash| 
+      receiver.in([[true, false, true, false, true], 
+                  [false, true, true, true, true]], hash)
+      @model.solve!
+    end
+    @expect = lambda do |var, opts, reif_var|
+      Gecode::Raw.should_receive(:extensional).once.with(
+        an_instance_of(Gecode::Raw::Space), 
+        var, an_instance_of(Gecode::Raw::TupleSet), *opts)
+    end
   end
   
   it 'should constrain the domain of all variables' do
@@ -75,24 +69,13 @@ describe Gecode::Constraints::BoolEnum::Extensional, ' (tuple constraint)' do
   end
   
   it_should_behave_like 'tuple constraint'
+  it_should_behave_like 'non-reifiable constraint'
 end
+
 
 # Assumes that @variables, @expected_array, @value1, @value2 (must not
 # equal @value1) and @regexp are defined. 
 describe 'regular expression constraint', :shared => true do
-  before do
-    @invoke_options = lambda do |hash| 
-      @variables.must.match(@regexp, hash)
-      @model.solve!
-    end
-    @expect_options = option_expectation do |strength, kind, reif_var|
-      Gecode::Raw.should_receive(:extensional).once.with(
-        an_instance_of(Gecode::Raw::Space), 
-        @expected_array, 
-        an_instance_of(Gecode::Raw::REG), strength, kind)
-    end
-  end
-
   it 'should handle values grouped in a single array' do
     @variables.must.match [@value1, @value2, @value1]
     @model.solve!.should_not be_nil
@@ -198,8 +181,6 @@ describe 'regular expression constraint', :shared => true do
       @variables.must_not.match @regexp
     end.should raise_error(Gecode::MissingConstraintError)
   end
-
-  it_should_behave_like 'non-reifiable constraint'
 end
 
 describe Gecode::Constraints::BoolEnum::Extensional, ' (regexp constraint)' do
@@ -211,6 +192,17 @@ describe Gecode::Constraints::BoolEnum::Extensional, ' (regexp constraint)' do
     @value1 = true
     @value2 = false
     @regexp = [true, @model.any(true, false), @model.at_most_once(true)]
+
+    @types = [:bool_enum]
+    @invoke = lambda do |receiver, hash| 
+      receiver.match(@regexp, hash)
+      @model.solve!
+    end
+    @expect = lambda do |var, opts, reif_var|
+      Gecode::Raw.should_receive(:extensional).once.with(
+        an_instance_of(Gecode::Raw::Space), 
+        var, an_instance_of(Gecode::Raw::REG), *opts)
+    end
   end
 
   it 'should handle the any operation' do
