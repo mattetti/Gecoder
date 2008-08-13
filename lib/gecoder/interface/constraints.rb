@@ -70,9 +70,9 @@ module Gecode
         @model = model
         @params = params
       end
-      
+
       private
-      
+
       # Provides commutativity for the constraint with the specified
       # method name. If the method with the specified method name is
       # called with something that, when given to the block, evaluates
