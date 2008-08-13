@@ -19,8 +19,7 @@ describe Gecode::Constraints::IntEnum::Distinct do
     @expect = lambda do |var, opts, reif_var|
       Gecode::Raw.should_receive(:distinct).once.with(
         an_instance_of(Gecode::Raw::Space), 
-        var, #an_instance_of(Gecode::Raw::IntVarArray),
-        *opts)
+        var, *opts)
     end
   end
 

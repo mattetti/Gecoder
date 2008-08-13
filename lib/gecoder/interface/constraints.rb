@@ -73,14 +73,14 @@ module Gecode
       
       private
       
-      # Provides commutativity for the constraint with the specified method name.
-      # If the method with the specified method name is called with something 
-      # that, when given to the block, evaluates to true, then the constraint
-      # will be called on the right hand side with the left hand side as 
-      # argument.
+      # Provides commutativity for the constraint with the specified
+      # method name. If the method with the specified method name is
+      # called with something that, when given to the block, evaluates
+      # to true, then the constraint will be called on the right hand
+      # side with the left hand side as argument.
       #
-      # The original constraint method is assumed to take two arguments: a 
-      # right hand side and a hash of options.
+      # The original constraint method is assumed to take two arguments:
+      # a right hand side and a hash of options.
       def self.provide_commutativity(constraint_name, &block)
         unique_id = constraint_name.to_sym.to_i
         pre_alias_method_name = 'pre_commutivity_' << unique_id.to_s
