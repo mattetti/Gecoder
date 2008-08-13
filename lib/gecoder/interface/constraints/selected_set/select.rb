@@ -30,9 +30,7 @@ module Gecode::SetEnumMethods
   end
 end
 
-# A module that gathers the classes and modules used by selection constraints.
-module Gecode::Constraints::SetEnum::Selection #:nodoc:
-  # Describes an expression stub started with a set var enum followed with an
+# Describes an expression stub started with a set var enum followed with an
   # array access using a set variable.
   class SetAccessStub < Gecode::Constraints::ExpressionStub #:nodoc:
     include Gecode::Constraints::LeftHandSideMethods
@@ -70,7 +68,7 @@ module Gecode::Constraints::SetEnum::Selection #:nodoc:
       SetAccessExpression.new(@model, @params.update(params))
     end
   end
-  
+
   # Describes an expression that starts with an set variable enum followed with
   # an array access using a set variable followed by some form of must.
   class SetAccessExpression < Gecode::Constraints::Set::Expression #:nodoc:
@@ -85,36 +83,8 @@ module Gecode::Constraints::SetEnum::Selection #:nodoc:
     end
   end
 
-  # Describes a CompositeStub for the set select constraint, which constrains 
-  # the set in a position specified by an integer variable in an enumeration of 
-  # set variable.
-  # 
-  # == Examples
-  # 
-  #   # The set at the position described by the integer variable 
-  #   # +singleton_zero_position+ in the enumeration +sets+ of set variables 
-  #   # must equal [0].
-  #   sets[singleton_zero_position].must == 0
-  #   
-  #   # The set at the position described by the integer variable +position+ in 
-  #   # the enumeration +sets+ of set variables must be a subset of +set+.
-  #   sets[position].must_be.subset_of set
-  #   
-  #   # The same as above, but reified with the boolean variable +bool+.
-  #   sets[position].must_be.subset_of(set, :reify => bool)
-  class SelectExpressionStub < Gecode::Constraints::Set::CompositeStub
-    def constrain_equal(variable, params, constrain)
-      enum, index = @params.values_at(:lhs, :index)
-      if constrain
-        variable.must_be.subset_of enum.upper_bound_range
-      end
 
-      Gecode::Raw::selectSet(@model.active_space, enum.to_set_var_array, 
-        index.bind, variable.bind)
-    end
-  end
-  
-  # Describes a CompositeStub for the set union selection constraint, 
+# Describes a CompositeStub for the set union selection constraint, 
   # which constrains the union of sets located at the positions 
   # specified by a set variable in an enumeration of set variables.
   # 

@@ -37,5 +37,5 @@ end
 
 #require 'gecoder/interface/constraints/set_enum/channel'
 require 'gecoder/interface/constraints/set_enum/distinct'
-#require 'gecoder/interface/constraints/set_enum/selection'
+require 'gecoder/interface/constraints/set_enum/select'
 require 'gecoder/interface/constraints/set_enum/operation'
