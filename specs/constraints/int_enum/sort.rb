@@ -1,5 +1,4 @@
-require File.dirname(__FILE__) + '/../spec_helper'
-require File.dirname(__FILE__) + '/constraint_helper'
+require File.dirname(__FILE__) + '/../constraint_helper'
 
 class SortSampleProblem < Gecode::Model
   attr :vars
@@ -24,35 +23,31 @@ describe Gecode::Constraints::IntEnum::Sort, ' (without :as and :order)' do
     @vars = @model.vars
     @sorted = @model.sorted
     
-    @invoke_options = lambda do |hash| 
-      @vars.must_be.sorted(hash)
+    @types = [:int_enum]
+    @invoke = lambda do |receiver, hash| 
+      receiver.sorted(hash)
       @model.solve!
     end
-    @expect_options = option_expectation do |strength, kind, reif_var|
+    @expect = lambda do |var, opts, reif_var|
       if reif_var.nil?
-        Gecode::Raw.should_receive(:rel).exactly(@vars.size - 1).times.with(
+        Gecode::Raw.should_receive(:rel).exactly(var.size - 1).times.with(
           an_instance_of(Gecode::Raw::Space), 
           an_instance_of(Gecode::Raw::IntVar), Gecode::Raw::IRT_LQ,
-          an_instance_of(Gecode::Raw::IntVar), strength, kind)
+          an_instance_of(Gecode::Raw::IntVar), *opts)
       else
         Gecode::Raw.should_receive(:rel).once.with(
           an_instance_of(Gecode::Raw::Space), anything, 
           an_instance_of(Gecode::Raw::BoolVarArray), 
           anything, anything, anything)
-        Gecode::Raw.should_receive(:rel).exactly(@vars.size - 1).times.with(
+        Gecode::Raw.should_receive(:rel).exactly(var.size - 1).times.with(
           an_instance_of(Gecode::Raw::Space), 
           an_instance_of(Gecode::Raw::IntVar), Gecode::Raw::IRT_LQ,
-          an_instance_of(Gecode::Raw::IntVar), 
-          an_instance_of(Gecode::Raw::BoolVar), strength, kind)
+          an_instance_of(Gecode::Raw::IntVar),
+          an_instance_of(Gecode::Raw::BoolVar), *opts)
       end
     end
   end
   
-  it 'should translate into n relation constraints' do
-    @expect_options.call({})
-    @invoke_options.call({})
-  end
-
   it 'should constraint variables to be sorted' do
     @vars.must_be.sorted
     values = @model.solve!.vars.values
@@ -78,21 +73,16 @@ describe Gecode::Constraints::IntEnum::Sort, ' (with :as)' do
     # Make it a bit more interesting.
     @vars[0].must > @vars[3] + 1
     
-    @invoke_options = lambda do |hash| 
-      @vars.must_be.sorted hash.update(:as => @sorted) 
+    @types = [:int_enum, :int_enum]
+    @invoke = lambda do |receiver, int_enum, hash| 
+      receiver.sorted hash.update(:as => int_enum)
       @model.solve!
     end
-    @expect_options = option_expectation do |strength, kind, reif_var|
+    @expect = lambda do |var1, var2, opts, reif_var|
       Gecode::Raw.should_receive(:sorted).once.with(
         an_instance_of(Gecode::Raw::Space), 
-        an_instance_of(Gecode::Raw::IntVarArray), 
-        an_instance_of(Gecode::Raw::IntVarArray), strength, kind)
+        var1, var2, *opts)
     end
-  end
-  
-  it 'should translate into a sortedness constraints' do
-    @expect_options.call({})
-    @invoke_options.call({})
   end
   
   it 'should constraint variables to be sorted' do
@@ -101,17 +91,9 @@ describe Gecode::Constraints::IntEnum::Sort, ' (with :as)' do
     values = @sorted.values
     values.should == values.sort
   end
-  
-  it 'should not allow targets that are not int var enums' do
-    lambda{ @vars.must_be.sorted(:as => 'hello') }.should raise_error(TypeError) 
-  end
-  
-  it 'should not allow negation' do
-    lambda{ @vars.must_not_be.sorted(:as => @sorted) }.should raise_error(
-      Gecode::MissingConstraintError) 
-  end
-  
+   
   it_should_behave_like 'non-reifiable constraint'
+  it_should_behave_like 'non-negatable constraint'
 end
 
 describe Gecode::Constraints::IntEnum::Sort, ' (with :order)' do
@@ -124,28 +106,51 @@ describe Gecode::Constraints::IntEnum::Sort, ' (with :order)' do
     # Make it a bit more interesting.
     @vars[0].must > @vars[3] + 1
     
-    @invoke_options = lambda do |hash| 
-      @vars.must_be.sorted hash.update(:order => @indices, :as => @sorted) 
+    @types = [:int_enum, :int_enum]
+    @invoke = lambda do |receiver, int_enum, hash| 
+      receiver.sorted hash.update(:order => int_enum)
       @model.solve!
     end
-    @expect_options = option_expectation do |strength, kind, reif_var|
+    @expect = lambda do |var1, var2, opts, reif_var|
       Gecode::Raw.should_receive(:sorted).once.with(
         an_instance_of(Gecode::Raw::Space), 
-        an_instance_of(Gecode::Raw::IntVarArray), 
-        an_instance_of(Gecode::Raw::IntVarArray),
-        an_instance_of(Gecode::Raw::IntVarArray), strength, kind)
+        var1, an_instance_of(Gecode::Raw::IntVarArray), var2,
+        *opts)
     end
   end
   
-  it 'should translate into a sortedness constraints' do
-    @expect_options.call({})
-    @invoke_options.call({})
+  it 'should constraint variables to be sorted with the specified indices' do
+    @vars.must_be.sorted(:order => @indices)
+    @model.solve!
+    sorted_values = @vars.values.sort
+    expected_indices = @vars.map{ |v| sorted_values.index(v.value) }
+    @indices.values.should == expected_indices
   end
   
-  it 'should translate into a sortedness constraints, even without a target' do
-    @expect_options.call({})
-    @vars.must_be.sorted(:order => @indices) 
-    @model.solve!
+  it_should_behave_like 'non-reifiable constraint'
+  it_should_behave_like 'non-negatable constraint'
+end
+
+describe Gecode::Constraints::IntEnum::Sort, ' (with :order and :as)' do
+  before do
+    @model = SortSampleProblem.new
+    @vars = @model.vars
+    @sorted = @model.sorted
+    @indices = @model.indices
+    
+    # Make it a bit more interesting.
+    @vars[0].must > @vars[3] + 1
+    
+    @types = [:int_enum, :int_enum, :int_enum]
+    @invoke = lambda do |receiver, int_enum1, int_enum2, hash| 
+      receiver.sorted hash.update(:as => int_enum1, :order => int_enum2)
+      @model.solve!
+    end
+    @expect = lambda do |var1, var2, var3, opts, reif_var|
+      Gecode::Raw.should_receive(:sorted).once.with(
+        an_instance_of(Gecode::Raw::Space), 
+        var1, var2, var3, *opts)
+    end
   end
   
   it 'should constraint variables to be sorted with the specified indices' do
@@ -157,23 +162,6 @@ describe Gecode::Constraints::IntEnum::Sort, ' (with :order)' do
     @indices.values.should == expected_indices
   end
   
-  it 'should not allow targets that are not int var enums' do
-    lambda do
-      @vars.must_be.sorted(:as => 'hello', :order => @indices)
-    end.should raise_error(TypeError) 
-  end
-  
-  it 'should not allow order that are not int var enums' do
-    lambda do
-      @vars.must_be.sorted(:as => @sorted, :order => 'hello')
-    end.should raise_error(TypeError) 
-  end
-  
-  it 'should not allow negation' do
-    lambda do
-      @vars.must_not_be.sorted(:as => @sorted, :order => @indices)
-    end.should raise_error(Gecode::MissingConstraintError) 
-  end
-  
   it_should_behave_like 'non-reifiable constraint'
+  it_should_behave_like 'non-negatable constraint'
 end
