@@ -1,3 +1,5 @@
+require File.dirname(__FILE__) + '/../constraint_helper'
+
 describe Gecode::Constraints::Set::Connection, ' (include)' do
   before do
     @model = Gecode::Model.new
@@ -6,29 +8,21 @@ describe Gecode::Constraints::Set::Connection, ' (include)' do
     @array.must_be.distinct
     @model.branch_on @array
     #@model.branch_on @model.wrap_enum([@set])
-    
-    @expect = lambda do |rhs, strength, reif_var|
-      @model.allow_space_access do
-        Gecode::Raw.should_receive(:match).once.with(
-          an_instance_of(Gecode::Raw::Space), 
-          an_instance_of(Gecode::Raw::SetVar), 
-          an_instance_of(Gecode::Raw::IntVarArray))
+
+    @types = [:set, :int_enum]
+    @invoke = lambda do |receiver, int_enum, hash| 
+      if hash.empty?
+        receiver.include(int_enum)
+      else
+        receiver.include(int_enum, hash)
       end
-    end
-    
-    @expect_options = option_expectation do |strength, kind, reif_var|
-      @expect.call(@array, strength, reif_var)
-    end
-    @invoke_options = lambda do |hash|
-      @set.must.include(@array, hash)
       @model.solve!
     end
-  end
-  
-  it 'should translate to a match constraint' do
-    @expect_options.call({})
-    @set.must.include @array
-    @model.solve!
+    @expect = lambda do |var1, var2, opts, reif_var|
+      Gecode::Raw.should_receive(:match).once.with(
+        an_instance_of(Gecode::Raw::Space), 
+        var1, var2)
+    end
   end
   
   it 'should constrain the variables to be included in the set' do
@@ -36,15 +30,7 @@ describe Gecode::Constraints::Set::Connection, ' (include)' do
     @model.solve!.should_not be_nil
     @array.all?{ |x| @set.lower_bound.include? x.value }.should be_true
   end
-  
-  it 'should raise error if the right hand side is not an array of variables' do
-    lambda{ @set.must.include 'hello' }.should raise_error(TypeError)
-  end
-  
-  it 'should raise error if negated' do
-    lambda{ @set.must_not.include @array }.should raise_error(
-      Gecode::MissingConstraintError)
-  end
-  
+ 
   it_should_behave_like 'non-reifiable set constraint'
+  it_should_behave_like 'non-negatable constraint'
 end
