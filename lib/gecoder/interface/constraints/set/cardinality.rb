@@ -44,12 +44,14 @@ module Gecode::Constraints::Set
       alias_method :pre_cardinality_construct_receiver, :construct_receiver
       def construct_receiver(params)
         receiver = pre_cardinality_construct_receiver(params)
+        set = @set
+        receiver.instance_eval{ @set = set }
         class <<receiver 
-          alias_method :in_without_short_circut, :in
+          alias_method :in_without_short_circuit, :in
           def in(range, options = {})
             if range.kind_of?(Range) and !@params[:negate] and 
                 !options.has_key?(:reify)
-              @params.update(:range => range)
+              @params.update(:lhs => @set, :range => range)
               @model.add_constraint CardinalityConstraint.new(@model, @params)
             else
               in_without_short_circuit(range, options)

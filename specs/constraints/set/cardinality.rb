@@ -8,10 +8,6 @@ describe Gecode::Constraints::Set::Cardinality, ' (constraint)' do
     @range = 1..2
     @three_dot_range = 1...2
     
-    @invoke_options = lambda do |hash| 
-      @set.size.must_be.in(@range, hash) 
-    end
-    
     @invoke = lambda do |rhs| 
       @set.size.must_be.in(rhs) 
       @model.solve!
@@ -58,7 +54,5 @@ describe Gecode::Constraints::Set::Cardinality, ' (constraint)' do
     @set.size.must_not_be.in [1,3]
     @model.solve!
   end
-  
-  it_should_behave_like 'non-reifiable set constraint'
 end
 
