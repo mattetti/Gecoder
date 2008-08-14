@@ -1,0 +1,30 @@
+require File.dirname(__FILE__) + '/spec_helper'
+
+describe Gecode::Constraints::SelectedSet::SelectedSetOperand do
+  before do
+    @model = Gecode::Model.new
+    set = @model.set_var([], 0..4)
+    @operand = Gecode::Constraints::SetElements::SetElementsOperand.new(set)
+  end
+
+  it 'should implement #model' do
+    @operand.model.should be_kind_of(Gecode::Model)
+  end
+
+  it 'should implement #to_set_elements' do
+    set = @operand.to_set_elements
+    set.should be_respond_to(:to_set_var)
+    @model.solve!
+    set_var = set.to_set_var
+    ((set_var.lower_bound == []) && 
+     (set_var.upper_bound == Gecode::Model::LARGEST_SET_BOUND)).should_not(
+      be_true)
+  end
+
+  it 'should implement #must' do
+    receiver = @operand.must
+    receiver.should be_kind_of(
+      Gecode::Constraints::SetElements::SetElementsConstraintReceiver)
+  end
+end
+

@@ -39,9 +39,9 @@ module Gecode::Constraints::SelectedSet
     end
   end
 
-  # Describes a constraint receiver for selected set variables.
+  # Describes a constraint receiver for selected set operands.
   class SelectedSetConstraintReceiver < Gecode::Constraints::ConstraintReceiver
-    # Raises TypeError unless the left hand side is an set var operand.
+    # Raises TypeError unless the left hand side is a selected set operand.
     def initialize(model, params)
       super
 
