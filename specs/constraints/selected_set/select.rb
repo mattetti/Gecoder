@@ -1,4 +1,22 @@
-describe Gecode::Constraints::SetEnum::Selection, ' (disjoint)' do
+require File.dirname(__FILE__) + '/../constraint_helper'
+
+class SelectionSampleProblem < Gecode::Model
+  attr :sets
+  attr :set
+  attr :target
+  attr :index
+  
+  def initialize
+    @sets = set_var_array(3, [], 0..20)
+    @set = set_var([], 0...3)
+    @target = set_var([], 0..20)
+    @index = int_var(0...3)
+    branch_on wrap_enum([@index])
+    branch_on @sets
+  end
+end
+
+describe Gecode::Constraints::SetEnum::Select, ' (disjoint)' do
   include GecodeR::Specs::SetHelper
 
   before do
@@ -8,17 +26,16 @@ describe Gecode::Constraints::SetEnum::Selection, ' (disjoint)' do
     @target = @model.target
     @model.branch_on @model.wrap_enum([@target, @set])
     
-    @expect = lambda do |index|
-      Gecode::Raw.should_receive(:selectDisjoint)
-    end
-    
-    # For options spec.
-    @invoke_options = lambda do |hash|
-      @sets[@set].must_be.disjoint(hash)
+    @types = [:selected_set]
+    @invoke = lambda do |receiver, hash| 
+      receiver.disjoint(hash)
       @model.solve!
     end
-    @expect_options = option_expectation do |strength, kind, reif_var|
-      @expect.call(@set)
+    @expect = lambda do |var, opts, reif_var|
+      set_enum, set = var
+      Gecode::Raw.should_receive(:selectDisjoint).once.with(
+        an_instance_of(Gecode::Raw::Space), 
+        set_enum, set)
     end
   end
   
@@ -33,11 +50,7 @@ describe Gecode::Constraints::SetEnum::Selection, ' (disjoint)' do
     @set.value.to_a.sort.should == [1,2]
   end
   
-  it 'should not allow negation' do
-    lambda{ @sets[@set].must_not_be.disjoint }.should raise_error(
-      Gecode::MissingConstraintError) 
-  end
-  
   it_should_behave_like 'non-reifiable set constraint'
+  it_should_behave_like 'non-negatable constraint'
 end
 

@@ -40,6 +40,29 @@ module Gecode::Constraints::SelectedSet
     end
   end
 
+  class SelectedSetConstraintReceiver
+    # Constrains the selected sets to be pairwise disjoint.
+    #
+    # == Examples
+    #
+    #   # Constrains all sets selected by +set_enum[set]+ to be pairwise
+    #   # disjoint.
+    #   set_enum[set].must_be.disjoint 
+    def disjoint(options = {})
+      if @params[:negate]
+        raise Gecode::MissingConstraintError, 'A negated disjoint constraint ' + 
+          'is not implemented.'
+      end
+      if options.has_key? :reify
+        raise ArgumentError, 'The disjoint constraint does not support the ' + 
+          'reification option.'
+      end
+
+      @params.update Gecode::Constraints::Set::Util.decode_options(options)
+      @model.add_constraint Select::DisjointConstraint.new(@model, @params)
+    end
+  end
+
   module Select #:nodoc:
     class SelectedSetUnionOperand < Gecode::Constraints::Set::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, selected_set)
@@ -98,9 +121,9 @@ module Gecode::Constraints::SelectedSet
     #   sets[disjoint_set_positions].must_be.disjoint 
     class DisjointConstraint < Gecode::Constraints::Constraint
       def post
-        enum, indices = @params.values_at(:lhs, :indices)
-        Gecode::Raw.selectDisjoint(@model.active_space, enum.to_set_var_array,
-          indices.bind)
+        enum, indices = @params[:lhs].to_selected_set
+        Gecode::Raw.selectDisjoint(@model.active_space, 
+          enum.to_set_enum.bind_array, indices.to_set_var.bind)
       end
     end
   end
