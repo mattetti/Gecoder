@@ -1,16 +1,5 @@
 module Gecode::Constraints::Int
   class IntVarConstraintReceiver
-    # Add some relation selection based on whether the constraint is negated.
-    alias_method :pre_relation_initialize, :initialize
-    def initialize(model, params)
-      pre_relation_initialize(model, params)
-      unless params[:negate]
-        @method_relations = Gecode::Constraints::Util::RELATION_TYPES
-      else
-        @method_relations = Gecode::Constraints::Util::NEGATED_RELATION_TYPES
-      end
-    end
-    
     # Constrains the integer operand to equal +operand+ (either a
     # constant integer or an integer operand). Negation and reification
     # are supported.
@@ -119,10 +108,14 @@ module Gecode::Constraints::Int
           "#{operand.class}."
       end
 
+      unless @params[:negate]
+        relation_type = Gecode::Constraints::Util::RELATION_TYPES[name]
+      else
+        relation_type = Gecode::Constraints::Util::NEGATED_RELATION_TYPES[name]
+      end
       @params.update Gecode::Constraints::Util.decode_options(options)
       @model.add_constraint Relation::RelationConstraint.new(@model, 
-        @params.update(:relation_type => @method_relations[name], 
-                       :rhs => operand))
+        @params.update(:relation_type => relation_type, :rhs => operand))
     end
   end
 
