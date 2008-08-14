@@ -47,4 +47,19 @@ module Gecode::Constraints::SetElements
   end
 end
 
-# require 'gecoder/interface/constraints/selected_set/select'
+module Gecode::Constraints::Set
+  module SetVarOperand
+    # Produces a SetElementsOperand on which relation constraints can be placed that
+    # constrain all elements in the set.
+    #
+    # == Examples
+    #
+    #   # The elements of +set+.
+    #   set.elements
+    def elements
+      Gecode::Constraints::SetElements::SetElementsOperand.new(self)
+    end
+  end
+end
+
+require 'gecoder/interface/constraints/set_elements/relation.rb'

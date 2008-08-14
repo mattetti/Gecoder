@@ -3,8 +3,8 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe Gecode::Constraints::SelectedSet::SelectedSetOperand do
   before do
     @model = Gecode::Model.new
-    set = @model.set_var([], 0..4)
-    @operand = Gecode::Constraints::SetElements::SetElementsOperand.new(set)
+    @set = @model.set_var([], 0..4)
+    @operand = Gecode::Constraints::SetElements::SetElementsOperand.new(@set)
   end
 
   it 'should implement #model' do
@@ -25,6 +25,10 @@ describe Gecode::Constraints::SelectedSet::SelectedSetOperand do
     receiver = @operand.must
     receiver.should be_kind_of(
       Gecode::Constraints::SetElements::SetElementsConstraintReceiver)
+  end
+
+  it 'should be produces by SetOperand#elements' do
+    @set.elements.should be_respond_to(:to_set_elements)
   end
 end
 
