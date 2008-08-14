@@ -31,8 +31,11 @@ module Gecode::Constraints::SetEnum
                 # Hook in an element constraint if a variable is used for array 
                 # access.
                 if vars.first.respond_to? :to_int_var
-                  return Select::SelectSetOperand.new(
+                  Select::SelectSetOperand.new(
                     model, self, vars.first)
+                elsif vars.first.respond_to? :to_set_var
+                  Gecode::Constraints::SelectedSet::SelectedSetOperand.new(
+                    self, vars.first)
                 else
                   if respond_to? :pre_selection_access
                     pre_selection_access(*vars) 

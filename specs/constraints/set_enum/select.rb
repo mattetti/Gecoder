@@ -24,7 +24,7 @@ describe 'selection constraint', :shared => true do
   end
 end
 
-describe Gecode::Constraints::SetEnum::Select, ' (select)' do
+describe Gecode::Constraints::SetEnum::Select, ' (int operand)' do
   include GecodeR::Specs::SetHelper
 
   before do
@@ -58,4 +58,16 @@ describe Gecode::Constraints::SetEnum::Select, ' (select)' do
   it_should_behave_like 'selection constraint'
   it_should_behave_like(
     'property that produces set operand by short circuiting equality')
+end
+
+describe Gecode::Constraints::SetEnum::Select, ' (set operand)' do
+  before do
+    @model = SelectionSampleProblem.new
+    @sets = @model.sets
+    @set = @model.set
+  end
+  
+  it 'should produce a selected set operand' do
+    @sets[@set].should be_respond_to(:to_selected_set)
+  end
 end
