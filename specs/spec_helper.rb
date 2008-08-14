@@ -212,6 +212,17 @@ module GecodeR::Specs
       return op, set_enum
     end
 
+    # Produces a general selected set operand. The method returns two objects: 
+    # the operand itself and the array of variables it returns when 
+    # #to_selected_set is called.
+    def general_selected_set_operand(model)
+      set_enum, _ = general_set_enum_operand(model)
+      set, _ = general_set_operand(model)
+      op = Gecode::Constraints::SelectedSet::SelectedSetOperand.new(
+        set_enum, set)
+      return op, [set_enum, set]
+    end
+
     # Produces a general fixnum enum operand. The method returns two objects: 
     # the operand itself and the variable it returns when #to_fixnum_enum
     # is called.

@@ -51,3 +51,5 @@ module Gecode::Constraints::SelectedSet
     end
   end
 end
+
+require 'gecoder/interface/constraints/selected_set/select'
