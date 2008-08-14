@@ -41,7 +41,7 @@ module Gecode::Constraints::Int
       if fixnum.kind_of? Fixnum
         int_linear_expression_operation(:*, fixnum)
       else
-        if fixnum.respond_to? :pre_linear_mult
+        if respond_to? :pre_linear_mult
           pre_linear_mult(fixnum) 
         else
           raise TypeError, "Expected fixnum, got #{fixnum.class}."

@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/spec_helper'
-require File.dirname(__FILE__) + '/constraints/constraint_helper'
+require File.dirname(__FILE__) + '/constraints/property_helper'
 
 describe 'non-empty int variable', :shared => true do
   it 'should have min equal to the lower domain bound' do

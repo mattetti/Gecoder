@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../property_helper'
 
-class ElementSampleProblem < Gecode::Model
+class FixnumElementSampleProblem < Gecode::Model
   attr :prices
   attr :store
   attr :price
@@ -16,7 +16,7 @@ end
 
 describe Gecode::Constraints::FixnumEnum::Element do
   before do
-    @model = ElementSampleProblem.new
+    @model = FixnumElementSampleProblem.new
     @price = @model.price
     @store = @model.store
     @enum = @model.prices

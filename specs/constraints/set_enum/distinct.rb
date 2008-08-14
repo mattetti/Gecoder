@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../constraint_helper'
 
-class DistinctSampleProblem < Gecode::Model
+class SetEnumDistinctSampleProblem < Gecode::Model
   attr :vars
   attr :sets
   
@@ -13,7 +13,7 @@ end
 
 describe Gecode::Constraints::SetEnum::Distinct, ' (at most one)' do
   before do
-    @model = DistinctSampleProblem.new
+    @model = SetEnumDistinctSampleProblem.new
     @sets = @model.sets
     @size = 2
     

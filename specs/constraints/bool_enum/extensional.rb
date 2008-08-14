@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../constraint_helper'
 
 # Assumes that @variables, @expected_array and @tuples are defined.
-describe 'tuple constraint', :shared => true do
+describe 'bool tuple constraint', :shared => true do
   it 'should not allow negation' do
     lambda do 
       @variables.must_not_be.in @tuples
@@ -68,14 +68,14 @@ describe Gecode::Constraints::BoolEnum::Extensional, ' (tuple constraint)' do
     lambda{ @bools.must_be.in [true, false] }.should raise_error(TypeError)
   end
   
-  it_should_behave_like 'tuple constraint'
+  it_should_behave_like 'bool tuple constraint'
   it_should_behave_like 'non-reifiable constraint'
 end
 
 
 # Assumes that @variables, @expected_array, @value1, @value2 (must not
 # equal @value1) and @regexp are defined. 
-describe 'regular expression constraint', :shared => true do
+describe 'bool regular expression constraint', :shared => true do
   it 'should handle values grouped in a single array' do
     @variables.must.match [@value1, @value2, @value1]
     @model.solve!.should_not be_nil
@@ -220,5 +220,5 @@ describe Gecode::Constraints::BoolEnum::Extensional, ' (regexp constraint)' do
     @bools.values.should == [true, true, true]
   end
 
-  it_should_behave_like 'regular expression constraint'
+  it_should_behave_like 'bool regular expression constraint'
 end

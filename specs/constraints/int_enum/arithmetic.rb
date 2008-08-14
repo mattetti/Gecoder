@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../property_helper'
 
-class ArithmeticSampleProblem < Gecode::Model
+class IntEnumArithmeticSampleProblem < Gecode::Model
   attr :numbers
   attr :var
   
@@ -14,7 +14,7 @@ end
 
 describe Gecode::Constraints::IntEnum::Arithmetic, ' (max)' do
   before do
-    @model = ArithmeticSampleProblem.new
+    @model = IntEnumArithmeticSampleProblem.new
     @numbers = @model.numbers
     @var = @model.var
 
@@ -43,7 +43,7 @@ end
 
 describe Gecode::Constraints::IntEnum::Arithmetic, ' (min)' do
   before do
-    @model = ArithmeticSampleProblem.new
+    @model = IntEnumArithmeticSampleProblem.new
     @numbers = @model.numbers
     @var = @model.var
 

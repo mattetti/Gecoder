@@ -1,5 +1,5 @@
 require File.dirname(__FILE__) + '/spec_helper'
-require File.dirname(__FILE__) + '/constraints/constraint_helper'
+require File.dirname(__FILE__) + '/constraints/property_helper'
 
 describe 'non-empty bool variable', :shared => true do
   it 'should give a NoMethodError when calling a method that doesn\'t exist' do

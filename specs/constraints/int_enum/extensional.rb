@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../constraint_helper'
 
 # Assumes that @variables, @expected_array and @tuples are defined.
-describe 'tuple constraint', :shared => true do
+describe 'int tuple constraint', :shared => true do
   it 'should not allow negation' do
     lambda do 
       @variables.must_not_be.in @tuples
@@ -67,13 +67,13 @@ describe Gecode::Constraints::IntEnum::Extensional, ' (tuple constraint)' do
     lambda{ @digits.must_be.in [17, 4711] }.should raise_error(TypeError)
   end
   
-  it_should_behave_like 'tuple constraint'
+  it_should_behave_like 'int tuple constraint'
   it_should_behave_like 'non-reifiable constraint'
 end
 
 # Assumes that @variables, @expected_array, @value1, @value2 (must not
 # equal @value1) and @regexp are defined. 
-describe 'regular expression constraint', :shared => true do
+describe 'int regular expression constraint', :shared => true do
   it 'should handle values grouped in a single array' do
     @variables.must.match [@value1, @value2, @value1]
     @model.solve!.should_not be_nil
@@ -218,7 +218,7 @@ describe Gecode::Constraints::IntEnum::Extensional, ' (regexp constraint)' do
     @digits.values.should == [1,2,2]
   end
 
-  it_should_behave_like 'regular expression constraint'
+  it_should_behave_like 'int regular expression constraint'
   it_should_behave_like 'non-reifiable constraint'
 end
 
