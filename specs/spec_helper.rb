@@ -122,7 +122,7 @@ module GecodeR::Specs
     def general_int_operand(model)
       op = general_operand_base(model)
       
-      int_var = @model.int_var
+      int_var = model.int_var
       class <<op
         include Gecode::Constraints::Int::IntVarOperand
         attr :model
@@ -138,7 +138,7 @@ module GecodeR::Specs
     def general_bool_operand(model)
       op = general_operand_base(model)
 
-      bool_var = @model.bool_var
+      bool_var = model.bool_var
       class <<op
         include Gecode::Constraints::Bool::BoolVarOperand
         attr :model
@@ -154,7 +154,7 @@ module GecodeR::Specs
     def general_set_operand(model)
       op = general_operand_base(model)
 
-      set_var = @model.set_var
+      set_var = model.set_var
       class <<op
         include Gecode::Constraints::Set::SetVarOperand
         attr :model
@@ -170,7 +170,7 @@ module GecodeR::Specs
     def general_int_enum_operand(model)
       op = general_operand_base(model)
       
-      int_enum = @model.int_var_array(5)
+      int_enum = model.int_var_array(5)
       class <<op
         include Gecode::Constraints::IntEnum::IntEnumOperand
         attr :model
@@ -186,7 +186,7 @@ module GecodeR::Specs
     def general_bool_enum_operand(model)
       op = general_operand_base(model)
       
-      bool_enum = @model.bool_var_array(5)
+      bool_enum = model.bool_var_array(5)
       class <<op
         include Gecode::Constraints::BoolEnum::BoolEnumOperand
         attr :model
@@ -202,7 +202,7 @@ module GecodeR::Specs
     def general_set_enum_operand(model)
       op = general_operand_base(model)
       
-      set_enum = @model.set_var_array(5)
+      set_enum = model.set_var_array(5)
       class <<op
         include Gecode::Constraints::SetEnum::SetEnumOperand
         attr :model

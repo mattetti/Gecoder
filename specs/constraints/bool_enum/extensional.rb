@@ -221,4 +221,5 @@ describe Gecode::Constraints::BoolEnum::Extensional, ' (regexp constraint)' do
   end
 
   it_should_behave_like 'bool regular expression constraint'
+  it_should_behave_like 'non-reifiable constraint'
 end

@@ -34,7 +34,7 @@ module Gecode::Constraints::Int
     alias_method :square_root, :sqrt
 
 
-    alias_method :pre_arith_mult, :* if instance_methods.include? '*'
+    alias_method :pre_arith_mult, :* 
     
     # Produces a new integer operand representing this operand times
     # +int_operand+.
@@ -47,11 +47,7 @@ module Gecode::Constraints::Int
       if int_operand.respond_to? :to_int_var
         Arithmetic::IntMultOperand.new(@model, self, int_operand)
       else
-        if respond_to? :pre_arith_mult
-          pre_arith_mult(int_operand) 
-        else
-          raise TypeError, "Expected int operand, got #{int_operand.class}."
-        end
+        pre_arith_mult(int_operand) 
       end
     end
   end

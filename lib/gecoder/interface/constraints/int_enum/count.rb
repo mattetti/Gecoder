@@ -46,8 +46,8 @@ module Gecode::Constraints::IntEnum
     
     class CountConstraint < Gecode::Constraints::ReifiableConstraint #:nodoc:
       def post
-        enum, element, relation_type, rhs, reif_var = 
-          @params.values_at(:enum, :element, :relation_type, :rhs, :reif)
+        enum, element, relation_type, rhs = 
+          @params.values_at(:enum, :element, :relation_type, :rhs)
         
         # Bind variables if needed.
         unless element.kind_of? Fixnum
@@ -58,17 +58,8 @@ module Gecode::Constraints::IntEnum
         end
         
         # Post the constraint to gecode.
-        if reif_var.nil?
-          Gecode::Raw::count(@model.active_space, enum.to_int_enum.bind_array, 
-            element, relation_type, rhs, *propagation_options)
-        else
-          # We use a proxy int variable to get the reification.
-          proxy = @model.int_var(rhs.min..rhs.max)
-          rel = Gecode::Constraints::Util::RELATION_TYPES.invert[relation_type]
-          proxy.must.send(rel, @params[:rhs], :reify => reif_var)
-          Gecode::Raw::count(@model.active_space, enum.to_int_enum.bind_array,
-            element, Gecode::Raw::IRT_EQ, proxy.bind, *propagation_options)
-        end
+        Gecode::Raw::count(@model.active_space, enum.to_int_enum.bind_array, 
+          element, relation_type, rhs, *propagation_options)
       end
     end
   end

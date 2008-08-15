@@ -42,6 +42,26 @@ describe Gecode::Constraints::Int::Linear, '(with booleans)' do
     (x + y).should be_zero
   end
   
+  it 'should handle reification (1)' do
+    bool = @model.bool_var
+    (@x + @y).must.equal(0, :reify => bool)
+    bool.must_be.false
+    sol = @model.solve!
+    x = sol.x.value.to_i
+    y = sol.y.value.to_i
+    (x + y).should_not be_zero
+  end
+
+  it 'should handle reification (2)' do
+    bool = @model.bool_var
+    (@x + @y).must.equal(0, :reify => bool)
+    bool.must_be.true
+    sol = @model.solve!
+    x = sol.x.value.to_i
+    y = sol.y.value.to_i
+    (x + y).should be_zero
+  end
+  
   it 'should handle addition with multiple variables' do
     (@x + @y + @z).must == 0
     sol = @model.solve!
@@ -74,7 +94,27 @@ describe Gecode::Constraints::Int::Linear, '(with booleans)' do
     y = sol.y.value.to_i
     x.should equal(y + 1)
   end
-  
+
+  it 'should handle single booleans as left hand side (2)' do
+    @x.must == @y + @z 
+    sol = @model.solve!
+    x = sol.x.value.to_i
+    y = sol.y.value.to_i
+    z = sol.z.value.to_i
+    x.should equal(y + z)
+  end
+
+  it 'should handle single booleans as left hand side (3)' do
+    bool = @model.bool_var
+    @x.must.equal(@y + @z, :reify => bool)
+    bool.must_be.false
+    sol = @model.solve!
+    x = sol.x.value.to_i
+    y = sol.y.value.to_i
+    z = sol.z.value.to_i
+    x.should_not equal(y + z)
+  end
+
   it 'should handle variables as right hand side' do
     (@x + @y).must == @z
     sol = @model.solve!
@@ -94,7 +134,21 @@ describe Gecode::Constraints::Int::Linear, '(with booleans)' do
   end
   
   it 'should raise error on invalid right hand sides' do
-    lambda{ ((@x + @y).must == 'z') }.should raise_error(TypeError) 
+    lambda do 
+      (@x + @y).must == 'z'
+    end.should raise_error(TypeError) 
+  end
+
+  it 'should raise error if a fixnum is not used in multiplication' do
+    lambda do
+      (@x * @y).must == 0
+    end.should raise_error(TypeError) 
+  end
+
+  it 'should raise error if bools are combined with integer variables' do
+    lambda do
+      (@x + @model.int_var).must == 0
+    end.should raise_error(TypeError)
   end
   
   it 'should handle coefficients other than 1' do
@@ -127,7 +181,7 @@ describe Gecode::Constraints::Int::Linear, '(with booleans)' do
     z = sol.z.value.to_i
     (x - (y + z)).should equal(1)
   end
-  
+
   it 'should handle multiplication of parenthesis' do
     (((@x + @y*10)*10 + @z)*10).must == 0
     sol = @model.solve!
@@ -156,10 +210,4 @@ describe Gecode::Constraints::Int::Linear, '(with booleans)' do
       (sol.x.value.to_i + sol.y.value.to_i).should_not.send(relation, 1)
     end
   end
-  
-  it 'should not interfere with other defined multiplication methods' do
-    (@x * :foo).should be_nil
-  end
 end
-
-

@@ -14,6 +14,11 @@ describe Gecode::FreeSetVar, '(not assigned)' do
     @var.inspect.should include('lub-range')
     @var.inspect.should include('glb-range')
   end
+
+  it 'should allow inspection even when the bounds are too large to display' do
+    var = @model.set_var
+    var.inspect.should include('too large')
+  end
   
   it 'should report the correct bounds' do
     @var.lower_bound.sort.to_a.should == (1..3).to_a
@@ -66,6 +71,11 @@ describe Gecode::FreeSetVar, '(assigned)' do
     @var.upper_bound.to_a.should == [1]
     @var.lower_bound.to_a.should == [1]
     @var.value.to_a.should == [1]
+  end
+
+  it 'should allow inspection even when the bounds are too large to display' do
+    var = @model.set_var(0..10**4, 0..10**4)
+    var.inspect.should include('too large')
   end
 
   it_should_behave_like 'set var operand'

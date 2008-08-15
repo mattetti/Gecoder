@@ -68,6 +68,12 @@ describe Gecode::Constraints::IntEnum::Distinct, ' (with offsets)' do
     @model.vars.must_be.distinct
     lambda{ @model.solve! }.should raise_error(Gecode::NoSolutionError)
   end
+
+  it 'should raise error if the offsets are of an incorrect type' do
+    lambda do
+      @model.vars.must_be.distinct(:offsets => :foo)
+    end.should raise_error(TypeError)
+  end
   
   it_should_behave_like 'non-reifiable constraint'
   it_should_behave_like 'non-negatable constraint'

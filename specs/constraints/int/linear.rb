@@ -35,6 +35,26 @@ describe Gecode::Constraints::Int::Linear do
     y = sol.y.value
     (x + y).should be_zero
   end
+
+  it 'should handle reification (1)' do
+    bool = @model.bool_var
+    (@x + @y).must.equal(0, :reify => bool)
+    bool.must_be.false
+    sol = @model.solve!
+    x = sol.x.value
+    y = sol.y.value
+    (x + y).should_not be_zero
+  end
+
+  it 'should handle reification (2)' do
+    bool = @model.bool_var
+    (@x + @y).must.equal(0, :reify => bool)
+    bool.must_be.true
+    sol = @model.solve!
+    x = sol.x.value
+    y = sol.y.value
+    (x + y).should be_zero
+  end
   
   it 'should handle addition with multiple variables' do
     (@x + @y + @z).must == 0

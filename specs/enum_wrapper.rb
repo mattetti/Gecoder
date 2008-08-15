@@ -84,6 +84,11 @@ describe Gecode::IntEnumMethods do
     @int_enum.domain_range.should == (0..1)
     (@int_enum << @model.int_var(-4..4)).domain_range.should == (-4..4)
   end
+
+  it 'should define #to_int_enum' do
+    @int_enum.to_int_enum.should be_kind_of(
+      Gecode::Constraints::IntEnum::IntEnumOperand)
+  end
 end
 
 describe Gecode::BoolEnumMethods do
@@ -96,6 +101,11 @@ describe Gecode::BoolEnumMethods do
     @model.allow_space_access do
       @bool_enum.bind_array.should be_kind_of(Gecode::Raw::BoolVarArray)
     end
+  end
+  
+  it 'should define #to_bool_enum' do
+    @bool_enum.to_bool_enum.should be_kind_of(
+      Gecode::Constraints::BoolEnum::BoolEnumOperand)
   end
 end
 
@@ -115,6 +125,11 @@ describe Gecode::SetEnumMethods do
     @set_enum.upper_bound_range.should == (0..1)
     (@set_enum << @model.set_var([], -4..4)).upper_bound_range.should == (-4..4)
   end
+  
+  it 'should define #to_set_enum' do
+    @set_enum.to_set_enum.should be_kind_of(
+      Gecode::Constraints::SetEnum::SetEnumOperand)
+  end
 end
 
 describe Gecode::FixnumEnumMethods do
@@ -125,5 +140,10 @@ describe Gecode::FixnumEnumMethods do
   
   it 'should compute the smallest domain range' do
     @enum.domain_range.should == (7..4711)
+  end
+  
+  it 'should define #to_fixnum_enum' do
+    @enum.to_fixnum_enum.should be_kind_of(
+      Gecode::Constraints::FixnumEnum::FixnumEnumOperand)
   end
 end

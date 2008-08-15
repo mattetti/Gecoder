@@ -56,7 +56,7 @@ module Gecode::Constraints::BoolEnum
   # A module that gathers the classes and modules used in channel constraints
   # involving one boolean enum and one integer variable.
   module Channel #:nodoc:
-        class ChannelConstraint < Gecode::Constraints::Constraint
+    class ChannelConstraint < Gecode::Constraints::Constraint
       def post
         lhs, rhs, offset = @params.values_at(:lhs, :rhs, :offset)
         Gecode::Raw::channel(@model.active_space, 

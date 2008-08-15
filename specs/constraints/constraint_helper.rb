@@ -66,6 +66,7 @@ end
 describe 'reifiable constraint', :shared => true do
   it_should_behave_like 'constraint with default options'
   it_should_behave_like 'constraint with reification option'
+  it_should_behave_like 'constraint'
 end
 
 describe 'non-reifiable constraint', :shared => true do
@@ -77,6 +78,7 @@ describe 'non-reifiable constraint', :shared => true do
   end
 
   it_should_behave_like 'constraint with default options'
+  it_should_behave_like 'constraint'
 end
 
 describe 'non-negatable constraint', :shared => true do
@@ -85,6 +87,19 @@ describe 'non-negatable constraint', :shared => true do
     lambda do 
       invoke(operands, :negate => true)
     end.should raise_error(Gecode::MissingConstraintError)
+  end
+end
+
+describe 'constraint', :shared => true do
+  it 'should raise errors if parameters of the incorrect type are given' do
+    operands, variables = produce_general_arguments(@types)
+    (1...operands.size).each do |i|
+      bogus_operands = operands.clone
+      bogus_operands[i] = Object.new
+      lambda do
+        invoke(bogus_operands, {})
+      end.should raise_error(TypeError)
+    end
   end
 end
 
@@ -197,6 +212,8 @@ describe 'set constraint', :shared => true do
       invoke(operands, :does_not_exist => :foo) 
     end.should raise_error(ArgumentError)
   end
+
+  it_should_behave_like 'constraint'
 end
 
 describe 'non-reifiable set constraint', :shared => true do

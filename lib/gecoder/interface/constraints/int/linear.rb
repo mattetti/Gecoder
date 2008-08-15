@@ -28,8 +28,6 @@ module Gecode::Constraints::Int
       int_linear_expression_operation(:-, int_operand_or_fixnum)
     end
 
-    alias_method :pre_linear_mult, :* if instance_methods.include? '*'
-
     # Produces a new integer operand representing this operand times a 
     # constant. 
     #
@@ -41,11 +39,7 @@ module Gecode::Constraints::Int
       if fixnum.kind_of? Fixnum
         int_linear_expression_operation(:*, fixnum)
       else
-        if respond_to? :pre_linear_mult
-          pre_linear_mult(fixnum) 
-        else
-          raise TypeError, "Expected fixnum, got #{fixnum.class}."
-        end
+        raise TypeError, "Expected fixnum, got #{fixnum.class}."
       end
     end
 

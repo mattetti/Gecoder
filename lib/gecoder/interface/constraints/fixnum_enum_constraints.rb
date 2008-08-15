@@ -15,13 +15,9 @@ module Gecode::Constraints::FixnumEnum
       end
     end
 
-    def model
-      raise NotImplementedError, 'Fixnum enums are not connected to any model.'
-    end
-
     private
   
-    def constraint_receiver
+    def construct_receiver(params)
       raise NotImplementedError, 'Fixnum enums do not have constraints.'
     end
   end

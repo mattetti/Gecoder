@@ -99,13 +99,13 @@ describe Gecode::Constraints::Bool, " (equality)" do
     end
   end
 
-  it "should constrain variables to imply each other" do
+  it "should constrain variables to equal each other" do
     @b1.must == @b2
     @model.solve!
     @b1.value.should == @b2.value
   end
   
-  it "should, when negated, constrain variables to not imply each other" do
+  it "should, when negated, constrain variables to not equal each other" do
     @b1.must_not == @b2
     @model.solve!
     @b1.value.should_not == @b2.value

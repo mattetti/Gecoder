@@ -11,8 +11,6 @@ module Gecode::Constraints::Bool
       bool_linear_expression_operation(:+, op2)
     end
     
-    alias_method :pre_linear_mult, :* if instance_methods.include? '*'
-
     # Produces an integer operand representing the value of this boolean
     # operand (0 or 1) times a constant.
     #
@@ -24,7 +22,7 @@ module Gecode::Constraints::Bool
       if fixnum.kind_of? Fixnum
         bool_linear_expression_operation(:*, fixnum)
       else
-        pre_linear_mult(fixnum) if respond_to? :pre_linear_mult
+        raise TypeError, "Expected fixnum, got #{fixnum.class}."
       end
     end
     
@@ -108,7 +106,7 @@ module Gecode::Constraints::Bool
           alias_method :pre_bool_equality, :==
           def ==(op, options = {})
             if op.respond_to? :to_bool_var
-              (@lhs - op).must == 0
+              (@lhs - op).must.equal(0, options)
             else
               pre_bool_equality(op, options)
             end
