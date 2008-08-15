@@ -15,7 +15,7 @@ module Gecode::Constraints::SelectedSet
         raise TypeError, "Expected set enum operand, got #{set_enum.class}."
       end
       unless set.respond_to? :to_set_var
-        raise TypeError, "Expected set var operand, got #{set.class}."
+        raise TypeError, "Expected set operand, got #{set.class}."
       end
 
       @set_enum = set_enum

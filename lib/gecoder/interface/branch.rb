@@ -62,7 +62,9 @@ module Gecode
     # [:min]        Selects the smallest value in the unknown part of the set.
     # [:max]        Selects the largest value in the unknown part of the set.
     def branch_on(variables, options = {})
-      if variables.respond_to? :bind
+      if variables.respond_to?(:to_int_var) or 
+          variables.respond_to?(:to_bool_var) or 
+          variables.respond_to?(:to_set_var)
         variables = wrap_enum [variables]
       end
 

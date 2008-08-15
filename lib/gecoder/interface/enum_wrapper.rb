@@ -14,15 +14,18 @@ module Gecode
         raise ArgumentError, 'Enumerable must not be empty.'
       end
       
-      if elements.all?{ |var| var.kind_of? FreeIntVar }
+      if elements.all?{ |var| var.respond_to? :to_int_var }
+        elements.map!{ |var| var.to_int_var }
         class <<enum
           include Gecode::IntEnumMethods
         end
-      elsif elements.all?{ |var| var.kind_of? FreeBoolVar }
+      elsif elements.all?{ |var| var.respond_to? :to_bool_var }
+        elements.map!{ |var| var.to_bool_var }
         class <<enum
           include Gecode::BoolEnumMethods
         end
-      elsif elements.all?{ |var| var.kind_of? FreeSetVar }
+      elsif elements.all?{ |var| var.respond_to? :to_set_var }
+        elements.map!{ |var| var.to_set_var }
         class <<enum
           include Gecode::SetEnumMethods
         end

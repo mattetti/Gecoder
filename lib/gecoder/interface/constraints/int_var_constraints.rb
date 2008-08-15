@@ -133,12 +133,12 @@ module Gecode::Constraints::Int
 
   # Describes a constraint receiver for integer variables.
   class IntVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver
-    # Raises TypeError unless the left hand side is an int var operand.
+    # Raises TypeError unless the left hand side is an int operand.
     def initialize(model, params)
       super
 
       unless params[:lhs].respond_to? :to_int_var
-        raise TypeError, 'Must have int var operand as left hand side.'
+        raise TypeError, 'Must have int operand as left hand side.'
       end
     end
   end

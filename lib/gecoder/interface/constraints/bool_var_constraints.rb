@@ -24,12 +24,12 @@ module Gecode::Constraints::Bool
 
   # Describes a constraint receiver for boolean variables.
   class BoolVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver
-    # Raises TypeError unless the left hand side is an bool var operand.
+    # Raises TypeError unless the left hand side is an bool operand.
     def initialize(model, params)
       super
 
       unless params[:lhs].respond_to? :to_bool_var
-        raise TypeError, 'Must have bool var operand as left hand side.'
+        raise TypeError, 'Must have bool operand as left hand side.'
       end
     end
   end

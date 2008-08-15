@@ -5,6 +5,7 @@ describe Gecode::Model, ' (enum wrapping)' do
     @model = Gecode::Model.new
     @bool = @model.bool_var
     @int = @model.int_var(1..2)
+    @set = @model.set_var([], 1..2)
   end
 
   it 'should only allow enumerables to be wrapped' do
@@ -19,6 +20,13 @@ describe Gecode::Model, ' (enum wrapping)' do
       @model.wrap_enum(enum) 
     end.should_not raise_error
   end
+
+  it 'should allow enumerables of bool operands to be wrapped' do
+    lambda do
+      enum = [@bool & @bool]
+      @model.wrap_enum(enum) 
+    end.should_not raise_error
+  end
   
   it 'should allow enumerables of int variables to be wrapped' do
     lambda do
@@ -26,6 +34,28 @@ describe Gecode::Model, ' (enum wrapping)' do
       @model.wrap_enum(enum) 
     end.should_not raise_error
   end
+
+  it 'should allow enumerables of int operands to be wrapped' do
+    lambda do
+      enum = [@int + @int]
+      @model.wrap_enum(enum) 
+    end.should_not raise_error
+  end
+
+  it 'should allow enumerables of set variables to be wrapped' do
+    lambda do
+      enum = [@set]
+      @model.wrap_enum(enum) 
+    end.should_not raise_error
+  end
+
+  it 'should allow enumerables of set operands to be wrapped' do
+    lambda do
+      enum = [@set.union(@set)]
+      @model.wrap_enum(enum) 
+    end.should_not raise_error
+  end
+  
   
   it 'should allow enumerables of fixnums to be wrapped' do
     lambda do

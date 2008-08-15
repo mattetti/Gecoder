@@ -139,12 +139,12 @@ module Gecode::Constraints::Set
 
   # Describes a constraint receiver for set variables.
   class SetVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver
-    # Raises TypeError unless the left hand side is an set var operand.
+    # Raises TypeError unless the left hand side is a set operand.
     def initialize(model, params)
       super
 
       unless params[:lhs].respond_to? :to_set_var
-        raise TypeError, 'Must have set var operand as left hand side.'
+        raise TypeError, 'Must have set operand as left hand side.'
       end
     end
   end

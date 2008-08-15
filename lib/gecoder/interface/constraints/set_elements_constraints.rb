@@ -12,7 +12,7 @@ module Gecode::Constraints::SetElements
     # Constructs a new set elements operand +set+.
     def initialize(set)
       unless set.respond_to? :to_set_var
-        raise TypeError, "Expected set var operand, got #{set.class}."
+        raise TypeError, "Expected set operand, got #{set.class}."
       end
 
       @set = set
