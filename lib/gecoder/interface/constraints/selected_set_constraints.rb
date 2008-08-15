@@ -10,7 +10,7 @@ module Gecode::Constraints::SelectedSet #:nodoc:
     include Gecode::Constraints::Operand 
 
     # Constructs a new selected set operand from +set_enum+ and +set+.
-    def initialize(set_enum, set)
+    def initialize(set_enum, set) #:nodoc:
       unless set_enum.respond_to? :to_set_enum
         raise TypeError, "Expected set enum operand, got #{set_enum.class}."
       end
@@ -42,7 +42,7 @@ module Gecode::Constraints::SelectedSet #:nodoc:
   # Describes a constraint receiver for selected set operands.
   class SelectedSetConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is a selected set operand.
-    def initialize(model, params)
+    def initialize(model, params) #:nodoc:
       super
 
       unless params[:lhs].respond_to? :to_selected_set

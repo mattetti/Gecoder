@@ -3,12 +3,12 @@ module Gecode::Constraints::IntEnum
     # This adds the adder for the methods in the modules including it. The 
     # reason for doing it so indirect is that the first #[] won't be defined 
     # before the module that this is mixed into is mixed into an enum.
-    def self.included(enum_mod)
+    def self.included(enum_mod) #:nodoc:
       enum_mod.module_eval do
         # Now we enter the module IntEnumOperands is mixed into.
         class << self
           alias_method :pre_element_included, :included
-          def included(mod)
+          def included(mod) #:nodoc:
             mod.module_eval do
               if instance_methods.include? '[]'
                 alias_method :pre_element_access, :[]

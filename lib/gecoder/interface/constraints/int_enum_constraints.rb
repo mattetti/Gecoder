@@ -6,7 +6,7 @@ module Gecode::Constraints::IntEnum #:nodoc:
   module IntEnumOperand
     include Gecode::Constraints::Operand 
 
-    def method_missing(method, *args)
+    def method_missing(method, *args) #:nodoc:
       if Gecode::IntEnum.instance_methods.include? method.to_s
         # Delegate to the int enum.
         to_int_enum.method(method).call(*args)
@@ -26,7 +26,7 @@ module Gecode::Constraints::IntEnum #:nodoc:
   class IntEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is an int enum
     # operand.
-    def initialize(model, params)
+    def initialize(model, params) #:nodoc:
       super
 
       unless params[:lhs].respond_to? :to_int_enum

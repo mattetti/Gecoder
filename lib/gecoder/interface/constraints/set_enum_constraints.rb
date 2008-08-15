@@ -6,7 +6,7 @@ module Gecode::Constraints::SetEnum #:nodoc:
   module SetEnumOperand
     include Gecode::Constraints::Operand 
 
-    def method_missing(method, *args)
+    def method_missing(method, *args) #:nodoc:
       if Gecode::SetEnum.instance_methods.include? method.to_s
         # Delegate to the set enum.
         to_set_enum.method(method).call(*args)
@@ -25,7 +25,7 @@ module Gecode::Constraints::SetEnum #:nodoc:
   # Describes a constraint receiver for enumerations of set operands.
   class SetEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is a set enum operand.
-    def initialize(model, params)
+    def initialize(model, params) #:nodoc:
       super
       
       unless params[:lhs].respond_to? :to_set_enum

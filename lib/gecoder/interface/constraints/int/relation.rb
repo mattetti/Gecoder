@@ -1,8 +1,7 @@
 module Gecode::Constraints::Int
   class IntConstraintReceiver
-    # Constrains the integer operand to equal +operand+ (either a
-    # constant integer or an integer operand). Negation and reification
-    # are supported.
+    # Constrains the integer operand to equal +int_operand_or_fixnum+.
+    # Negation and reification are supported.
     #
     # === Examples
     #   
@@ -15,13 +14,12 @@ module Gecode::Constraints::Int
     #   # +int1+ must equal +int2+. We reify the constraint with 
     #   # +bool+ and select +domain+ as strength.
     #   int1.must.equal(int2, :reify => bool, :strength => :domain)
-    def ==(operand, options = {})
-      comparison(:==, operand, options)
+    def ==(int_operand_or_fixnum, options = {})
+      comparison(:==, int_operand_or_fixnum, options)
     end
 
     # Constrains the integer operand to be strictly greater than
-    # +operand+ (either a constant integer or an integer operand).
-    # Negation and reification are supported.
+    # +int_operand_or_fixnum+. Negation and reification are supported.
     #
     # === Examples
     #   
@@ -34,13 +32,12 @@ module Gecode::Constraints::Int
     #   # +int1+ must be strictly greater than +int2+. We reify the
     #   # constraint with +bool+ and select +domain+ as strength.
     #   int1.must_be.greater_than(int2, :reify => bool, :strength => :domain)
-    def >(operand, options = {})
-      comparison(:>, operand, options)
+    def >(int_operand_or_fixnum, options = {})
+      comparison(:>, int_operand_or_fixnum, options)
     end
     
     # Constrains the integer operand to be greater than or equal to
-    # +operand+ (either a constant integer or an integer operand).
-    # Negation and reification are supported.
+    # +int_operand_or_fixnum+. Negation and reification are supported.
     #
     # === Examples
     #   
@@ -53,13 +50,12 @@ module Gecode::Constraints::Int
     #   # +int1+ must be greater than or equal to +int2+. We reify the
     #   # constraint with +bool+ and select +domain+ as strength.
     #   int1.must.greater_or_equal(int2, :reify => bool, :strength => :domain)
-    def >=(operand, options = {})
-      comparison(:>=, operand, options)
+    def >=(int_operand_or_fixnum, options = {})
+      comparison(:>=, int_operand_or_fixnum, options)
     end
     
     # Constrains the integer operand to be strictly less than
-    # +operand+ (either a constant integer or an integer operand).
-    # Negation and reification are supported.
+    # +int_operand_or_fixnum+. Negation and reification are supported.
     #
     # === Examples
     #   
@@ -72,13 +68,12 @@ module Gecode::Constraints::Int
     #   # +int1+ must be strictly less than +int2+. We reify the
     #   # constraint with +bool+ and select +domain+ as strength.
     #   int1.must_be.less_than(int2, :reify => bool, :strength => :domain)
-    def <(operand, options = {})
-      comparison(:<, operand, options)
+    def <(int_operand_or_fixnum, options = {})
+      comparison(:<, int_operand_or_fixnum, options)
     end
     
     # Constrains the integer operand to be less than or equal to
-    # +operand+ (either a constant integer or an integer operand).
-    # Negation and reification are supported.
+    # +int_operand_or_fixnum+. Negation and reification are supported.
     #
     # === Examples
     #   
@@ -91,8 +86,8 @@ module Gecode::Constraints::Int
     #   # +int1+ must be less than or equal to +int2+. We reify the
     #   # constraint with +bool+ and select +domain+ as strength.
     #   int1.must.less_or_equal(int2, :reify => bool, :strength => :domain)
-    def <=(operand, options = {})
-      comparison(:<=, operand, options)
+    def <=(int_operand_or_fixnum, options = {})
+      comparison(:<=, int_operand_or_fixnum, options)
     end
     
     alias_comparison_methods
@@ -101,11 +96,11 @@ module Gecode::Constraints::Int
 
     # Helper for the comparison methods. The reason that they are not
     # generated in a loop is that it would mess up the RDoc.
-    def comparison(name, operand, options)
-      unless operand.respond_to?(:to_int_var) or 
-          operand.kind_of?(Fixnum)
+    def comparison(name, int_operand_or_fixnum, options)
+      unless int_operand_or_fixnum.respond_to?(:to_int_var) or 
+          int_operand_or_fixnum.kind_of?(Fixnum)
         raise TypeError, "Expected int operand or integer, got " + 
-          "#{operand.class}."
+          "#{int_operand_or_fixnum.class}."
       end
 
       unless @params[:negate]
@@ -115,7 +110,8 @@ module Gecode::Constraints::Int
       end
       @params.update Gecode::Constraints::Util.decode_options(options)
       @model.add_constraint Relation::RelationConstraint.new(@model, 
-        @params.update(:relation_type => relation_type, :rhs => operand))
+        @params.update(:relation_type => relation_type, 
+                       :rhs => int_operand_or_fixnum))
     end
   end
 

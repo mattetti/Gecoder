@@ -6,7 +6,7 @@ module Gecode::Constraints::FixnumEnum #:nodoc:
   module FixnumEnumOperand
     include Gecode::Constraints::Operand 
 
-    def method_missing(method, *args)
+    def method_missing(method, *args) #:nodoc:
       if Gecode::FixnumEnum.instance_methods.include? method.to_s
         # Delegate to the fixnum enum.
         to_fixnum_enum.method(method).call(*args)

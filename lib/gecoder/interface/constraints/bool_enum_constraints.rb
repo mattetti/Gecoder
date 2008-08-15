@@ -6,7 +6,7 @@ module Gecode::Constraints::BoolEnum #:nodoc:
   module BoolEnumOperand
     include Gecode::Constraints::Operand 
 
-    def method_missing(method, *args)
+    def method_missing(method, *args) #:nodoc:
       if Gecode::BoolEnum.instance_methods.include? method.to_s
         # Delegate to the bool enum.
         to_bool_enum.method(method).call(*args)
@@ -26,7 +26,7 @@ module Gecode::Constraints::BoolEnum #:nodoc:
   class BoolEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is an bool enum
     # operand.
-    def initialize(model, params)
+    def initialize(model, params) #:nodoc:
       super
 
       unless params[:lhs].respond_to? :to_bool_enum

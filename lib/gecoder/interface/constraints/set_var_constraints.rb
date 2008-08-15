@@ -6,7 +6,7 @@ module Gecode::Constraints::Set #:nodoc:
   module SetOperand  
     include Gecode::Constraints::Operand 
 
-    def method_missing(method, *args)
+    def method_missing(method, *args) #:nodoc:
       if Gecode::SetVar.instance_methods.include? method.to_s
         # Delegate to the set var.
         to_set_var.method(method).call(*args)
@@ -140,7 +140,7 @@ module Gecode::Constraints::Set #:nodoc:
   # Describes a constraint receiver for set variables.
   class SetConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is a set operand.
-    def initialize(model, params)
+    def initialize(model, params) #:nodoc:
       super
 
       unless params[:lhs].respond_to? :to_set_var

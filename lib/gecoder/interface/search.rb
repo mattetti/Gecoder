@@ -2,7 +2,7 @@ module Gecode
   # An exception raised when a search failed because there are no
   # solutions.
   class NoSolutionError < RuntimeError
-    def initialize
+    def initialize #:nodoc:
       super('No solution could be found.')
     end
   end

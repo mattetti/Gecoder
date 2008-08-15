@@ -71,7 +71,7 @@ module Gecode::Constraints::Bool #:nodoc:
   #   bool_enum.conjunction.must_not.imply bool_operand
   class BoolConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is an bool operand.
-    def initialize(model, params)
+    def initialize(model, params) #:nodoc:
       super
 
       unless params[:lhs].respond_to? :to_bool_var

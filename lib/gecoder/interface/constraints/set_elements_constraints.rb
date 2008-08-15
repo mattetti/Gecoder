@@ -10,7 +10,7 @@ module Gecode::Constraints::SetElements #:nodoc:
     include Gecode::Constraints::Operand 
 
     # Constructs a new set elements operand +set+.
-    def initialize(set)
+    def initialize(set) #:nodoc:
       unless set.respond_to? :to_set_var
         raise TypeError, "Expected set operand, got #{set.class}."
       end
@@ -37,7 +37,7 @@ module Gecode::Constraints::SetElements #:nodoc:
   # Describes a constraint receiver for set elements operands.
   class SetElementsConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is set elements operand.
-    def initialize(model, params)
+    def initialize(model, params) #:nodoc:
       super
 
       unless params[:lhs].respond_to? :to_set_elements

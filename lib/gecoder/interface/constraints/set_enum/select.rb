@@ -8,7 +8,7 @@ module Gecode::Constraints::SetEnum
         # Now we enter the module SetEnumOperands is mixed into.
         class << self
           alias_method :pre_selection_included, :included
-          def included(mod)
+          def included(mod) #:nodoc:
             mod.module_eval do
               # Now we enter the module that the module possibly defining #[] 
               # is mixed into.

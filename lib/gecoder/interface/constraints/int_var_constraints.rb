@@ -6,7 +6,7 @@ module Gecode::Constraints::Int #:nodoc:
   module IntOperand  
     include Gecode::Constraints::Operand 
 
-    def method_missing(method, *args)
+    def method_missing(method, *args) #:nodoc:
       if Gecode::IntVar.instance_methods.include? method.to_s
         # Delegate to the int var.
         to_int_var.method(method).call(*args)
@@ -134,7 +134,7 @@ module Gecode::Constraints::Int #:nodoc:
   # Describes a constraint receiver for integer variables.
   class IntConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is an int operand.
-    def initialize(model, params)
+    def initialize(model, params) #:nodoc:
       super
 
       unless params[:lhs].respond_to? :to_int_var
