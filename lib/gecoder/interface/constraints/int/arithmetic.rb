@@ -1,5 +1,5 @@
 module Gecode::Constraints::Int
-  module IntVarOperand
+  module IntOperand
     # Produces an integer operand representing the absolute value of this 
     # operand.
     #

@@ -27,7 +27,7 @@ module Gecode::Constraints::FixnumEnum
               # 
               def [](*vars)
                 if vars.first.respond_to? :to_int_var
-                  return Element::ElementIntVarOperand.new(
+                  return Element::ElementIntOperand.new(
                     self, vars.first, model)
                 else
                   pre_element_access(*vars) if respond_to? :pre_element_access
@@ -42,7 +42,7 @@ module Gecode::Constraints::FixnumEnum
   end
 
   module Element #:nodoc:
-    class ElementIntVarOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
+    class ElementIntOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
       def initialize(enum_op, position_int_var_op, model)
         super model
         @enum = enum_op

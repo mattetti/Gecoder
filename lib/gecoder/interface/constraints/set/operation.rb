@@ -1,5 +1,5 @@
 module Gecode::Constraints::Set
-  module SetVarOperand
+  module SetOperand
     # Produces a new set operand representing the union between this operand 
     # and +set_operand_or_constant_set+.
     #
@@ -68,14 +68,14 @@ module Gecode::Constraints::Set
               "operand, got \#{operand2.class}."
       end
 
-      return Operation::OperationSetVarOperand.new(model, self, operator, 
+      return Operation::OperationSetOperand.new(model, self, operator, 
         operand2)
     end
   end
 
   # A module that gathers the classes and modules used in operation constraints.
   module Operation #:nodoc:
-    class OperationSetVarOperand < Gecode::Constraints::Set::ShortCircuitRelationsOperand #:nodoc:
+    class OperationSetOperand < Gecode::Constraints::Set::ShortCircuitRelationsOperand #:nodoc:
       def initialize(model, op1, operator, op2)
         super model
         @op1 = op1

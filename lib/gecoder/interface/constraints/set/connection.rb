@@ -1,5 +1,5 @@
 module Gecode::Constraints::Set
-  module SetVarOperand
+  module SetOperand
     # Produces an integer operand representing the minimum of the set.
     #
     # == Examples

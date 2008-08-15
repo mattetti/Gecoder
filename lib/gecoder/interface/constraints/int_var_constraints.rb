@@ -2,12 +2,12 @@
 # integer variables.
 module Gecode::Constraints::Int #:nodoc:
   # Describes an integer variable operand. Classes that mixes in
-  # IntVarOperand must define the method #model and #to_int_var.
-  module IntVarOperand  
+  # IntOperand must define the method #model and #to_int_var.
+  module IntOperand  
     include Gecode::Constraints::Operand 
 
     def method_missing(method, *args)
-      if Gecode::FreeIntVar.instance_methods.include? method.to_s
+      if Gecode::IntVar.instance_methods.include? method.to_s
         # Delegate to the int var.
         to_int_var.method(method).call(*args)
       else
@@ -18,13 +18,13 @@ module Gecode::Constraints::Int #:nodoc:
     private
 
     def construct_receiver(params)
-      IntVarConstraintReceiver.new(model, params)
+      IntConstraintReceiver.new(model, params)
     end
   end
 
   # An operand that short circuits integer equality.
   class ShortCircuitEqualityOperand #:nodoc:
-    include Gecode::Constraints::Int::IntVarOperand
+    include Gecode::Constraints::Int::IntOperand
     attr :model
 
     def initialize(model)
@@ -33,7 +33,7 @@ module Gecode::Constraints::Int #:nodoc:
 
     def construct_receiver(params)
       params.update(:lhs => self)
-      receiver = IntVarConstraintReceiver.new(@model, params)
+      receiver = IntConstraintReceiver.new(@model, params)
       op = self
       receiver.instance_eval{ @short_circuit = op }
       class <<receiver
@@ -81,7 +81,7 @@ module Gecode::Constraints::Int #:nodoc:
 
   # An operand that short circuits integer relation constraints.
   class ShortCircuitRelationsOperand #:nodoc:
-    include Gecode::Constraints::Int::IntVarOperand
+    include Gecode::Constraints::Int::IntOperand
     attr :model
 
     def initialize(model)
@@ -89,7 +89,7 @@ module Gecode::Constraints::Int #:nodoc:
     end
 
     def construct_receiver(params)
-      receiver = IntVarConstraintReceiver.new(@model, params)
+      receiver = IntConstraintReceiver.new(@model, params)
       op = self
       receiver.instance_eval{ @short_circuit = op }
       class <<receiver
@@ -132,7 +132,7 @@ module Gecode::Constraints::Int #:nodoc:
   end
 
   # Describes a constraint receiver for integer variables.
-  class IntVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class IntConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is an int operand.
     def initialize(model, params)
       super

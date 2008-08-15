@@ -44,7 +44,7 @@ describe 'non-empty int variable', :shared => true do
   it_should_behave_like 'int var operand'
 end
 
-describe Gecode::FreeIntVar, ' (with range domain of size > 1)' do
+describe Gecode::IntVar, ' (with range domain of size > 1)' do
   before do
     @range = -4..3
     @domain = @range.to_a
@@ -67,7 +67,7 @@ describe Gecode::FreeIntVar, ' (with range domain of size > 1)' do
   it_should_behave_like 'non-empty int variable'
 end
 
-describe Gecode::FreeIntVar, ' (defined with three-dot range)' do
+describe Gecode::IntVar, ' (defined with three-dot range)' do
   before do
     @range = -4...3
     @domain = @range.to_a
@@ -78,7 +78,7 @@ describe Gecode::FreeIntVar, ' (defined with three-dot range)' do
   it_should_behave_like 'non-empty int variable'
 end
 
-describe Gecode::FreeIntVar, ' (with non-range domain of size > 1)' do
+describe Gecode::IntVar, ' (with non-range domain of size > 1)' do
   before do
     @domain = [-3, -2, -1, 1]
     @model = Gecode::Model.new
@@ -100,7 +100,7 @@ describe Gecode::FreeIntVar, ' (with non-range domain of size > 1)' do
   it_should_behave_like 'non-empty int variable'
 end
 
-describe Gecode::FreeIntVar, ' (with a domain of size 1)' do
+describe Gecode::IntVar, ' (with a domain of size 1)' do
   before do
     @domain = [1]
     @model = Gecode::Model.new
@@ -118,7 +118,7 @@ describe Gecode::FreeIntVar, ' (with a domain of size 1)' do
   it_should_behave_like 'non-empty int variable'
 end
 
-describe Gecode::FreeIntVar, ' (assigned)' do
+describe Gecode::IntVar, ' (assigned)' do
   before do
     @domain = 1
     @model = Gecode::Model.new
@@ -140,7 +140,7 @@ describe Gecode::FreeIntVar, ' (assigned)' do
   it_should_behave_like 'int var operand'
 end
 
-describe Gecode::FreeIntVar, ' (not assigned)' do
+describe Gecode::IntVar, ' (not assigned)' do
   before do
     @domain = 1..2
     @model = Gecode::Model.new
@@ -160,17 +160,4 @@ describe Gecode::FreeIntVar, ' (not assigned)' do
   end
 
   it_should_behave_like 'int var operand'
-end
-
-describe Gecode::Constraints::Int::IntVarOperand do
-  before do
-    @model = Gecode::Model.new
-    @operand = general_int_operand(@model)
-  end
-
-  it 'should fall back to int var' do
-    lambda do
-      @operand + @operand
-    end.should_not raise_error
-  end
 end

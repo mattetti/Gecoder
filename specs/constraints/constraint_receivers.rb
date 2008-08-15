@@ -30,10 +30,10 @@ describe Gecode::Constraints::ConstraintReceiver do
   end
 end
 
-describe Gecode::Constraints::Int::IntVarConstraintReceiver, ' (not subclassed)' do
+describe Gecode::Constraints::Int::IntConstraintReceiver, ' (not subclassed)' do
   before do
     @model = Gecode::Model.new
-    @receiver = Gecode::Constraints::Int::IntVarConstraintReceiver
+    @receiver = Gecode::Constraints::Int::IntConstraintReceiver
   end
 
   it_should_behave_like 'constraint receiver'
@@ -48,10 +48,10 @@ describe Gecode::Constraints::IntEnum::IntEnumConstraintReceiver do
   it_should_behave_like 'constraint receiver'
 end
 
-describe Gecode::Constraints::Bool::BoolVarConstraintReceiver do
+describe Gecode::Constraints::Bool::BoolConstraintReceiver do
   before do
     @model = Gecode::Model.new
-    @receiver = Gecode::Constraints::Bool::BoolVarConstraintReceiver
+    @receiver = Gecode::Constraints::Bool::BoolConstraintReceiver
   end
 
   it_should_behave_like 'constraint receiver'
@@ -66,10 +66,10 @@ describe Gecode::Constraints::BoolEnum::BoolEnumConstraintReceiver do
   it_should_behave_like 'constraint receiver'
 end
 
-describe Gecode::Constraints::Set::SetVarConstraintReceiver do
+describe Gecode::Constraints::Set::SetConstraintReceiver do
   before do
     @model = Gecode::Model.new
-    @receiver = Gecode::Constraints::Set::SetVarConstraintReceiver
+    @receiver = Gecode::Constraints::Set::SetConstraintReceiver
   end
 
   it_should_behave_like 'constraint receiver'

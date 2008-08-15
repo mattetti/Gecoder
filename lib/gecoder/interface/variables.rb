@@ -64,7 +64,7 @@ module Gecode
     return clazz
   end
   
-  FreeIntVar = FreeVar(Gecode::Raw::IntVar, :int_var)
+  IntVar = FreeVar(Gecode::Raw::IntVar, :int_var)
   # Describes an integer variable. 
   #
   # Each integer variable has a domain of several integers which
@@ -72,8 +72,8 @@ module Gecode
   # integer variable is said to be assigned once the domain only
   # contains a single element, at which point #value can be used to
   # retrieve the value.
-  class FreeIntVar
-    include Gecode::Constraints::Int::IntVarOperand
+  class IntVar
+    include Gecode::Constraints::Int::IntOperand
     attr :model
 
     # Gets the minimum value still in the domain of the variable.
@@ -132,11 +132,11 @@ module Gecode
     end
   end
   
-  FreeBoolVar = FreeVar(Gecode::Raw::BoolVar, :bool_var)
+  BoolVar = FreeVar(Gecode::Raw::BoolVar, :bool_var)
   # Describes a boolean variable. A boolean variable can be either true or 
   # false.
-  class FreeBoolVar
-    include Gecode::Constraints::Bool::BoolVarOperand
+  class BoolVar
+    include Gecode::Constraints::Bool::BoolOperand
     attr :model
 
     # Checks whether the variable has been assigned.
@@ -166,7 +166,7 @@ module Gecode
     end
   end
 
-  FreeSetVar = FreeVar(Gecode::Raw::SetVar, :set_var)
+  SetVar = FreeVar(Gecode::Raw::SetVar, :set_var)
   # Describes a set variable. 
   # 
   # A set variable's domain, i.e. possible values that it can take, are 
@@ -180,8 +180,8 @@ module Gecode
   # 
   # The domain of a set variable may also specify the cardinality of the set, 
   # i.e. the number of elements that the set may contains.
-  class FreeSetVar
-    include Gecode::Constraints::Set::SetVarOperand
+  class SetVar
+    include Gecode::Constraints::Set::SetOperand
     attr :model
 
     # Checks whether the variable has been assigned.

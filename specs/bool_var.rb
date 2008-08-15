@@ -7,7 +7,7 @@ describe 'non-empty bool variable', :shared => true do
   end
 end
 
-describe Gecode::FreeBoolVar, '(not assigned)' do
+describe Gecode::BoolVar, '(not assigned)' do
   before do
     @model = Gecode::Model.new
     @operand = @var = @model.bool_var
@@ -30,7 +30,7 @@ describe Gecode::FreeBoolVar, '(not assigned)' do
   it_should_behave_like 'bool var operand'
 end
 
-describe Gecode::FreeBoolVar, '(assigned true)' do
+describe Gecode::BoolVar, '(assigned true)' do
   before do
     @model = Gecode::Model.new
     @operand = @var = @model.bool_var
@@ -55,7 +55,7 @@ describe Gecode::FreeBoolVar, '(assigned true)' do
   it_should_behave_like 'bool var operand'
 end
 
-describe Gecode::FreeBoolVar, '(assigned false)' do
+describe Gecode::BoolVar, '(assigned false)' do
   before do
     @model = Gecode::Model.new
     @operand = @var = @model.bool_var

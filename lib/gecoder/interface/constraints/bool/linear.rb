@@ -54,7 +54,7 @@ module Gecode::Constraints::Bool
     end
   end
 
-  module BoolVarOperand
+  module BoolOperand
     # We include the operations and then redefine them so that they show
     # up in the documentation.
     include BoolLinearOperations

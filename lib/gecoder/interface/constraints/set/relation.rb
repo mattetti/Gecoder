@@ -1,5 +1,5 @@
 module Gecode::Constraints::Set
-  class SetVarConstraintReceiver
+  class SetConstraintReceiver
     alias_method :pre_relation_equality, :==
     # Constrains the set operand to equal +set_operand+.
     # 

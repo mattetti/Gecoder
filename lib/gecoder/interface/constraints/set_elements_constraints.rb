@@ -48,7 +48,7 @@ module Gecode::Constraints::SetElements #:nodoc:
 end
 
 module Gecode::Constraints::Set #:nodoc:
-  module SetVarOperand
+  module SetOperand
     # Produces a SetElementsOperand on which relation constraints can be placed that
     # constrain all elements in the set.
     #

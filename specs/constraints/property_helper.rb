@@ -35,7 +35,7 @@ describe 'int var operand', :shared => true do
 
   it 'should implement #to_int_var' do
     int_var = @operand.to_int_var
-    int_var.should be_kind_of(Gecode::FreeIntVar)
+    int_var.should be_kind_of(Gecode::IntVar)
     @model.solve!
     (int_var.min..int_var.max).should_not equal(Gecode::Model::LARGEST_INT_DOMAIN)
   end
@@ -43,7 +43,7 @@ describe 'int var operand', :shared => true do
   it 'should implement #must' do
     receiver = @operand.must
     receiver.should be_kind_of(
-      Gecode::Constraints::Int::IntVarConstraintReceiver)
+      Gecode::Constraints::Int::IntConstraintReceiver)
   end
 end
 
@@ -55,13 +55,13 @@ describe 'bool var operand', :shared => true do
 
   it 'should implement #to_bool_var' do
     bool_var = @operand.to_bool_var
-    bool_var.should be_kind_of(Gecode::FreeBoolVar)
+    bool_var.should be_kind_of(Gecode::BoolVar)
   end
 
   it 'should implement #must' do
     receiver = @operand.must
     receiver.should be_kind_of(
-      Gecode::Constraints::Bool::BoolVarConstraintReceiver)
+      Gecode::Constraints::Bool::BoolConstraintReceiver)
   end
 end
 
@@ -73,7 +73,7 @@ describe 'set var operand', :shared => true do
 
   it 'should implement #to_set_var' do
     set_var = @operand.to_set_var
-    set_var.should be_kind_of(Gecode::FreeSetVar)
+    set_var.should be_kind_of(Gecode::SetVar)
     @model.solve!
     ((set_var.lower_bound == []) && 
      (set_var.upper_bound == Gecode::Model::LARGEST_SET_BOUND)).should_not(
@@ -83,7 +83,7 @@ describe 'set var operand', :shared => true do
   it 'should implement #must' do
     receiver = @operand.must
     receiver.should be_kind_of(
-      Gecode::Constraints::Set::SetVarConstraintReceiver)
+      Gecode::Constraints::Set::SetConstraintReceiver)
   end
 end
 
@@ -111,11 +111,11 @@ describe 'property that produces int operand', :shared => true do
     operand.model.should be_kind_of(Gecode::Model)
 
     int_var = operand.to_int_var
-    int_var.should be_kind_of(Gecode::FreeIntVar)
+    int_var.should be_kind_of(Gecode::IntVar)
 
     receiver = operand.must
     receiver.should be_kind_of(
-      Gecode::Constraints::Int::IntVarConstraintReceiver)
+      Gecode::Constraints::Int::IntConstraintReceiver)
   end
 
   it_should_behave_like 'property that produces operand'
@@ -131,11 +131,11 @@ describe 'property that produces bool operand', :shared => true do
     operand.model.should be_kind_of(Gecode::Model)
 
     bool_var = operand.to_bool_var
-    bool_var.should be_kind_of(Gecode::FreeBoolVar)
+    bool_var.should be_kind_of(Gecode::BoolVar)
 
     receiver = operand.must
     receiver.should be_kind_of(
-      Gecode::Constraints::Bool::BoolVarConstraintReceiver)
+      Gecode::Constraints::Bool::BoolConstraintReceiver)
   end
 
   it_should_behave_like 'property that produces operand'
@@ -151,11 +151,11 @@ describe 'property that produces set operand', :shared => true do
     operand.model.should be_kind_of(Gecode::Model)
 
     set_var = operand.to_set_var
-    set_var.should be_kind_of(Gecode::FreeSetVar)
+    set_var.should be_kind_of(Gecode::SetVar)
 
     receiver = operand.must
     receiver.should be_kind_of(
-      Gecode::Constraints::Set::SetVarConstraintReceiver)
+      Gecode::Constraints::Set::SetConstraintReceiver)
   end
 
   it_should_behave_like 'property that produces operand'

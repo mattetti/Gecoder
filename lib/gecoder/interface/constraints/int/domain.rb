@@ -1,5 +1,5 @@
 module Gecode::Constraints::Int
-  class IntVarConstraintReceiver
+  class IntConstraintReceiver
     # Creates a domain constraint using the specified domain, specified
     # as an enumeration of integers. The integer variable is constrained
     # to take a value in the domain.  Domains should be specified as

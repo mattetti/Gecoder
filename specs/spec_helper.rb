@@ -124,7 +124,7 @@ module GecodeR::Specs
       
       int_var = model.int_var
       class <<op
-        include Gecode::Constraints::Int::IntVarOperand
+        include Gecode::Constraints::Int::IntOperand
         attr :model
       end
       op.stub!(:to_int_var).and_return int_var
@@ -140,7 +140,7 @@ module GecodeR::Specs
 
       bool_var = model.bool_var
       class <<op
-        include Gecode::Constraints::Bool::BoolVarOperand
+        include Gecode::Constraints::Bool::BoolOperand
         attr :model
       end
       op.stub!(:to_bool_var).and_return bool_var
@@ -156,7 +156,7 @@ module GecodeR::Specs
 
       set_var = model.set_var
       class <<op
-        include Gecode::Constraints::Set::SetVarOperand
+        include Gecode::Constraints::Set::SetOperand
         attr :model
       end
       op.stub!(:to_set_var).and_return set_var

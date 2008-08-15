@@ -1,5 +1,5 @@
 module Gecode::Constraints::Set
-  class SetVarConstraintReceiver
+  class SetConstraintReceiver
     # Constrains the set operand to have a domain equal to +constant_set+.
     # 
     # == Examples

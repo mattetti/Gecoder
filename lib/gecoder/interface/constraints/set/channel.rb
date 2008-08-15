@@ -1,5 +1,5 @@
 module Gecode::Constraints::Set
-  class SetVarConstraintReceiver
+  class SetConstraintReceiver
     # Constrains this set to channel +bool_enum+. The set is constrained
     # to include value i exactly when the variable at index i in the
     # boolean enumeration is true.

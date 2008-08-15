@@ -1,5 +1,5 @@
 module Gecode::Constraints::Bool
-  module BoolVarOperand  
+  module BoolOperand  
     # Produces a new boolean operand representing this operand OR +bool_op+.
     # 
     # == Examples
@@ -57,7 +57,7 @@ module Gecode::Constraints::Bool
     end
   end
   
-  class BoolVarConstraintReceiver
+  class BoolConstraintReceiver
     # Constrains the boolean operand to be equal to +bool_op+. Negation and 
     # reification are supported. Any of <tt>==</tt>, +equal+ and +equal_to+ may 
     # be used for equality.
@@ -179,7 +179,7 @@ module Gecode::Constraints::Bool
   # Describes a binary tree of expression nodes which together form a boolean 
   # expression.
   class ExpressionTree #:nodoc:
-    include BoolVarOperand
+    include BoolOperand
 
     private
   
@@ -227,10 +227,10 @@ module Gecode::Constraints::Bool
     
     private
 
-    # Produces a receiver (for the BoolVarOperand module).
+    # Produces a receiver (for the BoolOperand module).
     def construct_receiver(params)
       params.update(:lhs => self)
-      BoolVarConstraintReceiver.new(model, params)
+      BoolConstraintReceiver.new(model, params)
     end
   end
 

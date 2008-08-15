@@ -16,17 +16,17 @@ module Gecode
     # 
     #   operand.must.constraint_method(params)
     #
-    # See e.g. Gecode::Constraints::Int::IntVarOperand for concrete examples.
+    # See e.g. Gecode::Constraints::Int::IntOperand for concrete examples.
     # 
     # Classes that mix in Operand must define the methods #model
     # and #construct_receiver. They should also define a method that converts
     # the operand into a variable of the operand's type (e.g. int var
     # operands should define a method #to_int_var that returns an
-    # instance of Gecode::FreeIntVar that represents the operand). The
+    # instance of Gecode::IntVar that represents the operand). The
     # latter method should be used by constraints to fetch variables
     # needed when posting constraints. The presence of the method should
     # also be used for type checking (rather than e.g. checking whether
-    # a parameter is of type IntVarOperand). 
+    # a parameter is of type IntOperand). 
     module Operand 
       # Specifies that a constraint must hold for the left hand side.
       def must

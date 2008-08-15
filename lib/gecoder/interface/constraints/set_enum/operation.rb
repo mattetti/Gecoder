@@ -38,13 +38,13 @@ module Gecode::Constraints::SetEnum
     # Produces the set operand resulting from +operator+ applied to this
     # operand.
     def set_operation(operator)
-      Operation::OperationSetVarOperand.new(model, self, operator)
+      Operation::OperationSetOperand.new(model, self, operator)
     end
   end
 
   # A module that gathers the classes and modules used in operation constraints.
   module Operation #:nodoc:
-    class OperationSetVarOperand < Gecode::Constraints::Set::ShortCircuitEqualityOperand #:nodoc:
+    class OperationSetOperand < Gecode::Constraints::Set::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, enum, operator)
         super model
         @enum = enum

@@ -32,10 +32,10 @@ module Gecode
   #             it the name +variables+.
   #
   #             There are three types of variables: integer variables
-  #             (Gecode::FreeIntVar, can be assigned one of many
+  #             (Gecode::IntVar, can be assigned one of many
   #             possible integer values), boolean variables
-  #             (Gecode::FreeBoolVar, can be assigned either true or
-  #             false) and set variables (Gecode::FreeSetVar, can be
+  #             (Gecode::BoolVar, can be assigned either true or
+  #             false) and set variables (Gecode::SetVar, can be
   #             assigned a set of integers).  Variables of the different
   #             types are constructed using #int_var, #int_var_array,
   #             #int_var_matrix, #bool_var, #bool_var_array,
@@ -45,7 +45,7 @@ module Gecode
   #             The various variables all have the functionality of Operand 
   #             and have many properties depending on their type. For 
   #             instance integer variables have the properties defined
-  #             in Gecode::Constraints::Int::IntVarOperand and
+  #             in Gecode::Constraints::Int::IntOperand and
   #             enumerations of integer variables (such as the array
   #             +variables+ we used) have the properties defined in  
   #             Gecode::Constraints::IntEnum::IntEnumOperand .
@@ -60,7 +60,7 @@ module Gecode
   #               kinds of operands are found in the respective
   #               constraint receivers. For instance, the constraints
   #               that can be placed on integer operands are found in 
-  #               Gecode::Constraints::Int::IntVarConstraintReceiver and
+  #               Gecode::Constraints::Int::IntConstraintReceiver and
   #               the constraints that can be placed on enumerations of
   #               integer operands are found in 
   #               Gecode::Constraints::IntEnum::IntEnumConstraintReceiver .
@@ -115,7 +115,7 @@ module Gecode
     # domain is specified then the largest possible domain is used.
     def int_var(domain = LARGEST_INT_DOMAIN)
       args = domain_arguments(domain)
-      FreeIntVar.new(self, variable_creation_space.new_int_var(*args))
+      IntVar.new(self, variable_creation_space.new_int_var(*args))
     end
     
     # Creates an array containing the specified number of integer variables 
@@ -125,7 +125,7 @@ module Gecode
     def int_var_array(count, domain = LARGEST_INT_DOMAIN)
       args = domain_arguments(domain)
       build_var_array(count) do
-        FreeIntVar.new(self, variable_creation_space.new_int_var(*args))
+        IntVar.new(self, variable_creation_space.new_int_var(*args))
       end
     end
     
@@ -136,19 +136,19 @@ module Gecode
     def int_var_matrix(row_count, col_count, domain = LARGEST_INT_DOMAIN)
       args = domain_arguments(domain)
       build_var_matrix(row_count, col_count) do
-        FreeIntVar.new(self, variable_creation_space.new_int_var(*args))
+        IntVar.new(self, variable_creation_space.new_int_var(*args))
       end
     end
     
     # Creates a new boolean variable.
     def bool_var
-      FreeBoolVar.new(self, variable_creation_space.new_bool_var)
+      BoolVar.new(self, variable_creation_space.new_bool_var)
     end
     
     # Creates an array containing the specified number of boolean variables.
     def bool_var_array(count)
       build_var_array(count) do
-        FreeBoolVar.new(self, variable_creation_space.new_bool_var)
+        BoolVar.new(self, variable_creation_space.new_bool_var)
       end
     end
     
@@ -156,7 +156,7 @@ module Gecode
     # boolean variables.
     def bool_var_matrix(row_count, col_count)
       build_var_matrix(row_count, col_count) do
-        FreeBoolVar.new(self, variable_creation_space.new_bool_var)
+        BoolVar.new(self, variable_creation_space.new_bool_var)
       end
     end
     
@@ -172,7 +172,7 @@ module Gecode
     def set_var(glb_domain = [], lub_domain = LARGEST_SET_BOUND,
         cardinality_range = nil)
       args = set_bounds_to_parameters(glb_domain, lub_domain, cardinality_range)
-      FreeSetVar.new(self, variable_creation_space.new_set_var(*args))
+      SetVar.new(self, variable_creation_space.new_set_var(*args))
     end
     
     # Creates an array containing the specified number of set variables. The
@@ -181,7 +181,7 @@ module Gecode
         cardinality_range = nil)
       args = set_bounds_to_parameters(glb_domain, lub_domain, cardinality_range)
       build_var_array(count) do
-        FreeSetVar.new(self, variable_creation_space.new_set_var(*args))
+        SetVar.new(self, variable_creation_space.new_set_var(*args))
       end
     end
     
@@ -192,7 +192,7 @@ module Gecode
         lub_domain = LARGEST_SET_BOUND, cardinality_range = nil)
       args = set_bounds_to_parameters(glb_domain, lub_domain, cardinality_range)
       build_var_matrix(row_count, col_count) do
-        FreeSetVar.new(self, variable_creation_space.new_set_var(*args))
+        SetVar.new(self, variable_creation_space.new_set_var(*args))
       end
     end
     

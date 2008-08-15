@@ -50,7 +50,7 @@ describe Gecode::Constraints::Operand do
   end
 end
 
-describe Gecode::Constraints::Int::IntVarOperand do
+describe Gecode::Constraints::Int::IntOperand do
   before do
     model = Gecode::Model.new
     @operand, _ = general_int_operand(model)
@@ -96,7 +96,7 @@ describe Gecode::Constraints::IntEnum::IntEnumOperand do
   it_should_behave_like 'enum operand'
 end
 
-describe Gecode::Constraints::Bool::BoolVarOperand do
+describe Gecode::Constraints::Bool::BoolOperand do
   before do
     model = Gecode::Model.new
     @operand, _ = general_bool_operand(model)
@@ -128,7 +128,7 @@ describe Gecode::Constraints::BoolEnum::BoolEnumOperand do
   it_should_behave_like 'enum operand'
 end
 
-describe Gecode::Constraints::Set::SetVarOperand do
+describe Gecode::Constraints::Set::SetOperand do
   before do
     model = Gecode::Model.new
     @operand, _ = general_set_operand(model)

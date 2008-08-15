@@ -49,7 +49,7 @@ module Gecode::Constraints::BoolEnum
       @model.add_constraint Channel::ChannelConstraint.new(@model, @params)
     end
 
-    # Provides commutativity with SetVarConstraintReceiver#channel
+    # Provides commutativity with SetConstraintReceiver#channel
     provide_commutativity(:channel){ |rhs, _| rhs.respond_to? :to_set_var }
   end
   

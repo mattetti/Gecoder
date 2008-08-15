@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/constraints/property_helper'
 
-describe Gecode::FreeSetVar, '(not assigned)' do
+describe Gecode::SetVar, '(not assigned)' do
   before do
     @model = Gecode::Model.new
     @operand = @var = @model.set_var(1..3, 0..4)
@@ -51,7 +51,7 @@ describe Gecode::FreeSetVar, '(not assigned)' do
   it_should_behave_like 'set var operand'
 end
 
-describe Gecode::FreeSetVar, '(assigned)' do
+describe Gecode::SetVar, '(assigned)' do
   before do
     @model = Gecode::Model.new
     @operand = @var = @model.set_var(1, 1)

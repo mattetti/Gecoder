@@ -20,7 +20,7 @@ end
 # @stub and @expect_constrain_equal .
 describe 'selection constraint', :shared => true do
   it 'should not disturb normal array access' do
-    @sets[0].should be_kind_of(Gecode::FreeSetVar)
+    @sets[0].should be_kind_of(Gecode::SetVar)
   end
 end
 

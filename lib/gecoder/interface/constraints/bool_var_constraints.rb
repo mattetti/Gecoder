@@ -1,13 +1,13 @@
 # A module that deals with the operands, properties and constraints of
 # boolean variables.
 module Gecode::Constraints::Bool #:nodoc:
-  # A BoolVarOperand is a combination of variables on which the
-  # constraints defined in BoolVarConstraintReceiver can be placed.
+  # A BoolOperand is a combination of variables on which the
+  # constraints defined in BoolConstraintReceiver can be placed.
   #
   # Boolean operands can be created either by using
   # Gecode::Model#bool_var et al, or by using properties that produce
   # boolean operands. The operands, no matter how they were created, 
-  # all respond to the properties defined by BoolVarOperand.
+  # all respond to the properties defined by BoolOperand.
   #
   # == Examples
   #
@@ -16,7 +16,7 @@ module Gecode::Constraints::Bool #:nodoc:
   #
   #   bool_operand = bool_var
   #
-  # Uses the BoolVarOperand#& property to produce a new boolean
+  # Uses the BoolOperand#& property to produce a new boolean
   # operand representing +bool_operand1+ AND +bool_operand2+.
   #
   #   new_bool_operand = bool_operand1 & bool_operand2
@@ -26,11 +26,11 @@ module Gecode::Constraints::Bool #:nodoc:
   # in the enumeration +bool_enum+.
   # 
   #   new_bool_operand = bool_enum.conjunction
-  module BoolVarOperand  
+  module BoolOperand  
     include Gecode::Constraints::Operand 
 
     def method_missing(method, *args) #:nodoc:
-      if Gecode::FreeBoolVar.instance_methods.include? method.to_s
+      if Gecode::BoolVar.instance_methods.include? method.to_s
         # Delegate to the bool var.
         to_bool_var.method(method).call(*args)
       else
@@ -41,35 +41,35 @@ module Gecode::Constraints::Bool #:nodoc:
     private
 
     def construct_receiver(params)
-      BoolVarConstraintReceiver.new(@model, params)
+      BoolConstraintReceiver.new(@model, params)
     end
   end
 
-  # BoolVarConstraintReceiver contains all constraints that can be
-  # placed on a BoolVarOperand.
+  # BoolConstraintReceiver contains all constraints that can be
+  # placed on a BoolOperand.
   #
-  # Constraints are placed by calling BoolVarOperand#must (or any other
+  # Constraints are placed by calling BoolOperand#must (or any other
   # of the variations defined in Operand), which produces a 
-  # BoolVarConstraintReceiver from which the desired constraint can be used.
+  # BoolConstraintReceiver from which the desired constraint can be used.
   #
   # == Examples
   #
   # Constrains +bool_operand+ to be true using
-  # BoolVarConstraintReceiver#true .
+  # BoolConstraintReceiver#true .
   #
   #   bool_operand.must_be.true
   #
   # Constrains +bool_operand1+ AND +bool_operand2+ to be true using 
-  # the BoolVarOperand#& property and BoolVarConstraintReceiver#true .
+  # the BoolOperand#& property and BoolConstraintReceiver#true .
   #
   #   (bool_operand1 & bool_operand2).must_be.true
   #
   # Constrains the conjunction of all boolean operands in +bool_enum+ to
   # _not_ imply +bool_operand+ using the 
-  # BoolEnumOperand#conjunction property and BoolVarConstraintReceiver#imply .
+  # BoolEnumOperand#conjunction property and BoolConstraintReceiver#imply .
   #
   #   bool_enum.conjunction.must_not.imply bool_operand
-  class BoolVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class BoolConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is an bool operand.
     def initialize(model, params)
       super
@@ -82,7 +82,7 @@ module Gecode::Constraints::Bool #:nodoc:
 
   # An operand that short circuits boolean equality.
   class ShortCircuitEqualityOperand #:nodoc:
-    include Gecode::Constraints::Bool::BoolVarOperand
+    include Gecode::Constraints::Bool::BoolOperand
     attr :model
 
     def initialize(model)
@@ -91,7 +91,7 @@ module Gecode::Constraints::Bool #:nodoc:
 
     def construct_receiver(params)
       params.update(:lhs => self)
-      receiver = BoolVarConstraintReceiver.new(@model, params)
+      receiver = BoolConstraintReceiver.new(@model, params)
       op = self
       receiver.instance_eval{ @short_circuit = op }
       class <<receiver

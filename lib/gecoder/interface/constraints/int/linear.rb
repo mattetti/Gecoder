@@ -1,5 +1,5 @@
 module Gecode::Constraints::Int
-  module IntVarOperand
+  module IntOperand
     # Produces a new integer operand representing this operand plus 
     # +int_operand_or_fixnum+.
     #

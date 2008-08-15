@@ -1,5 +1,5 @@
 module Gecode::Constraints::Set
-  class SetVarConstraintReceiver
+  class SetConstraintReceiver
     # Constrains this set to include the values of +int_enum+.
     # 
     # The constraint has the side effect of sorting the integer variables in a 

@@ -2,12 +2,12 @@
 # (but not enumerations).
 module Gecode::Constraints::Set #:nodoc:
   # Describes a set variable operand. Classes that mix in
-  # SetVarOperand must define the method #model and #to_set_var.
-  module SetVarOperand  
+  # SetOperand must define the method #model and #to_set_var.
+  module SetOperand  
     include Gecode::Constraints::Operand 
 
     def method_missing(method, *args)
-      if Gecode::FreeSetVar.instance_methods.include? method.to_s
+      if Gecode::SetVar.instance_methods.include? method.to_s
         # Delegate to the set var.
         to_set_var.method(method).call(*args)
       else
@@ -18,13 +18,13 @@ module Gecode::Constraints::Set #:nodoc:
     private
 
     def construct_receiver(params)
-      SetVarConstraintReceiver.new(model, params)
+      SetConstraintReceiver.new(model, params)
     end
   end
 
   # An operand that short circuits set equality.
   class ShortCircuitEqualityOperand #:nodoc:
-    include Gecode::Constraints::Set::SetVarOperand
+    include Gecode::Constraints::Set::SetOperand
     attr :model
 
     def initialize(model)
@@ -33,7 +33,7 @@ module Gecode::Constraints::Set #:nodoc:
 
     def construct_receiver(params)
       params.update(:lhs => self)
-      receiver = SetVarConstraintReceiver.new(@model, params)
+      receiver = SetConstraintReceiver.new(@model, params)
       op = self
       receiver.instance_eval{ @short_circuit = op }
       class <<receiver
@@ -83,7 +83,7 @@ module Gecode::Constraints::Set #:nodoc:
   # An operand that short circuits set non-negated and non-reified versions 
   # of the relation constraints.
   class ShortCircuitRelationsOperand #:nodoc:
-    include Gecode::Constraints::Set::SetVarOperand
+    include Gecode::Constraints::Set::SetOperand
     attr :model
 
     def initialize(model)
@@ -92,7 +92,7 @@ module Gecode::Constraints::Set #:nodoc:
 
     def construct_receiver(params)
       params.update(:lhs => self)
-      receiver = SetVarConstraintReceiver.new(@model, params)
+      receiver = SetConstraintReceiver.new(@model, params)
       op = self
       receiver.instance_eval{ @short_circuit = op }
       class <<receiver
@@ -138,7 +138,7 @@ module Gecode::Constraints::Set #:nodoc:
   end
 
   # Describes a constraint receiver for set variables.
-  class SetVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class SetConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is a set operand.
     def initialize(model, params)
       super

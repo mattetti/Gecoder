@@ -56,7 +56,7 @@ module Gecode::Constraints::FixnumEnum
           "operand, got \#{operand2.class}."
       end
 
-      return Operation::OperationSetVarOperand.new(model, self, 
+      return Operation::OperationSetOperand.new(model, self, 
         operator, operand2)
     end
   end

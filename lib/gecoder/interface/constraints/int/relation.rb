@@ -1,5 +1,5 @@
 module Gecode::Constraints::Int
-  class IntVarConstraintReceiver
+  class IntConstraintReceiver
     # Constrains the integer operand to equal +operand+ (either a
     # constant integer or an integer operand). Negation and reification
     # are supported.

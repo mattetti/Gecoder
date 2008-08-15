@@ -1,5 +1,5 @@
 module Gecode::Constraints::Int
-  class IntVarConstraintReceiver
+  class IntConstraintReceiver
     alias_method :pre_channel_equals, :==
     
     # Constrains the integer variable to be equal to the specified boolean 
