@@ -5,7 +5,7 @@ module Gecode
   end
   
   # A module containing all the constraints.
-  module Constraints
+  module Constraints #:nodoc:
     # Describes an operand, something that can be converted into a
     # variable and/or used as left hand side operand to #must (and its
     # variants). 
@@ -134,7 +134,7 @@ module Gecode
     end
     
     # Base class for all constraints.
-    class Constraint
+    class Constraint #:nodoc:
       # Creates a constraint with the specified parameters, bound to the 
       # specified model. 
       def initialize(model, params)
@@ -160,7 +160,7 @@ module Gecode
 
     # A constraint that can be specified by providing a block containing the
     # post method.
-    class BlockConstraint < Constraint
+    class BlockConstraint < Constraint #:nodoc:
       def initialize(model, params, &block)
         super(model, params)
         @proc = block

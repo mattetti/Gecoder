@@ -1,6 +1,6 @@
 # A module containing constraints that have enumerations of integer 
 # operands as left hand side.
-module Gecode::Constraints::IntEnum
+module Gecode::Constraints::IntEnum #:nodoc:
   # Describes an integer variable enumeration operand. Classes that mix in
   # IntEnumOperand must define #model and #to_int_enum .
   module IntEnumOperand
@@ -23,7 +23,7 @@ module Gecode::Constraints::IntEnum
   end
 
   # Describes a constraint receiver for enumerations of integer operands.
-  class IntEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class IntEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver #:nodoc:
     # Raises TypeError unless the left hand side is an int enum
     # operand.
     def initialize(model, params)

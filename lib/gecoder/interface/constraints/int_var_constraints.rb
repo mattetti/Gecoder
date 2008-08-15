@@ -1,6 +1,6 @@
 # A module that deals with the operands, properties and constraints of
 # integer variables.
-module Gecode::Constraints::Int
+module Gecode::Constraints::Int #:nodoc:
   # Describes an integer variable operand. Classes that mixes in
   # IntVarOperand must define the method #model and #to_int_var.
   module IntVarOperand  
@@ -23,7 +23,7 @@ module Gecode::Constraints::Int
   end
 
   # An operand that short circuits integer equality.
-  class ShortCircuitEqualityOperand
+  class ShortCircuitEqualityOperand #:nodoc:
     include Gecode::Constraints::Int::IntVarOperand
     attr :model
 
@@ -80,7 +80,7 @@ module Gecode::Constraints::Int
   end
 
   # An operand that short circuits integer relation constraints.
-  class ShortCircuitRelationsOperand
+  class ShortCircuitRelationsOperand #:nodoc:
     include Gecode::Constraints::Int::IntVarOperand
     attr :model
 
@@ -132,7 +132,7 @@ module Gecode::Constraints::Int
   end
 
   # Describes a constraint receiver for integer variables.
-  class IntVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class IntVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver #:nodoc:
     # Raises TypeError unless the left hand side is an int operand.
     def initialize(model, params)
       super

@@ -109,17 +109,7 @@ module Gecode::Constraints::SelectedSet
       end
     end
     
-    # Describes a disjoint constraint, which constrains all set variable is an
-    # enumeration, at the position specified by a set variable, to be disjoint.
-    # 
-    # Does not support negation nor reification.
-    # 
-    # == Examples
-    # 
-    #   # The set variable located in the enumeration +sets+ at positions 
-    #   # described by +disjoint_set_positions+ must be disjoint.
-    #   sets[disjoint_set_positions].must_be.disjoint 
-    class DisjointConstraint < Gecode::Constraints::Constraint
+    class DisjointConstraint < Gecode::Constraints::Constraint #:nodoc:
       def post
         enum, indices = @params[:lhs].to_selected_set
         Gecode::Raw.selectDisjoint(@model.active_space, 

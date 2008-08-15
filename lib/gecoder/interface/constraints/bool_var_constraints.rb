@@ -1,8 +1,8 @@
 # A module that deals with the operands, properties and constraints of
 # boolean variables.
-module Gecode::Constraints::Bool
-  # Describes an integer variable operand. Classes that mixes in
-  # IntVarOperand must define the method #model and #to_bool_var.
+module Gecode::Constraints::Bool #:nodoc:
+  # Describes a boolean variable operand. Classes that mixes in
+  # BoolVarOperand must define the method #model and #to_bool_var.
   module BoolVarOperand  
     include Gecode::Constraints::Operand 
 
@@ -23,8 +23,8 @@ module Gecode::Constraints::Bool
   end
 
   # Describes a constraint receiver for boolean variables.
-  class BoolVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver
-    # Raises TypeError unless the left hand side is an bool operand.
+  class BoolVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver #:nodoc:
+    # Raises TypeError unless the left hand side is an BoolVarOperand.
     def initialize(model, params)
       super
 
@@ -35,7 +35,7 @@ module Gecode::Constraints::Bool
   end
 
   # An operand that short circuits boolean equality.
-  class ShortCircuitEqualityOperand
+  class ShortCircuitEqualityOperand #:nodoc:
     include Gecode::Constraints::Bool::BoolVarOperand
     attr :model
 

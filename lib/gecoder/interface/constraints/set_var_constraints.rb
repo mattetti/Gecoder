@@ -1,6 +1,6 @@
 # A module containing constraints that have set variables as left hand side
 # (but not enumerations).
-module Gecode::Constraints::Set
+module Gecode::Constraints::Set #:nodoc:
   # Describes a set variable operand. Classes that mix in
   # SetVarOperand must define the method #model and #to_set_var.
   module SetVarOperand  
@@ -23,7 +23,7 @@ module Gecode::Constraints::Set
   end
 
   # An operand that short circuits set equality.
-  class ShortCircuitEqualityOperand
+  class ShortCircuitEqualityOperand #:nodoc:
     include Gecode::Constraints::Set::SetVarOperand
     attr :model
 
@@ -82,7 +82,7 @@ module Gecode::Constraints::Set
 
   # An operand that short circuits set non-negated and non-reified versions 
   # of the relation constraints.
-  class ShortCircuitRelationsOperand
+  class ShortCircuitRelationsOperand #:nodoc:
     include Gecode::Constraints::Set::SetVarOperand
     attr :model
 
@@ -138,7 +138,7 @@ module Gecode::Constraints::Set
   end
 
   # Describes a constraint receiver for set variables.
-  class SetVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class SetVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver #:nodoc:
     # Raises TypeError unless the left hand side is a set operand.
     def initialize(model, params)
       super

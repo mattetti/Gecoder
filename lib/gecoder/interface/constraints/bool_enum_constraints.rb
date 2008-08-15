@@ -1,6 +1,6 @@
 # A module containing constraints that have enumerations of boolean 
 # operands as left hand side.
-module Gecode::Constraints::BoolEnum
+module Gecode::Constraints::BoolEnum #:nodoc:
   # Describes an boolean variable enumeration operand. Classes that mix in
   # BoolEnumOperand must define #model and #to_bool_enum .
   module BoolEnumOperand
@@ -23,7 +23,7 @@ module Gecode::Constraints::BoolEnum
   end
 
   # Describes a constraint receiver for enumerations of boolean operands.
-  class BoolEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class BoolEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver #:nodoc:
     # Raises TypeError unless the left hand side is an bool enum
     # operand.
     def initialize(model, params)

@@ -1,8 +1,8 @@
 # A module containing constraints that have enumerations of set variables as 
 # left hand side.
-module Gecode::Constraints::SetEnum
+module Gecode::Constraints::SetEnum #:nodoc:
   # Describes a set variable enumeration operand. Classes that mix in
-  # IntEnumOperand must define #model and #to_set_enum .
+  # SetEnumOperand must define #model and #to_set_enum .
   module SetEnumOperand
     include Gecode::Constraints::Operand 
 
@@ -23,7 +23,7 @@ module Gecode::Constraints::SetEnum
   end
 
   # Describes a constraint receiver for enumerations of set operands.
-  class SetEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class SetEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver #:nodoc:
     # Raises TypeError unless the left hand side is a set enum operand.
     def initialize(model, params)
       super

@@ -24,8 +24,8 @@ module Gecode::Constraints::Set
     end
   end
 
-  module Connection
-    class IncludeConstraint < Gecode::Constraints::Constraint
+  module Connection #:nodoc:
+    class IncludeConstraint < Gecode::Constraints::Constraint #:nodoc:
       def post
         set, variables = @params.values_at(:lhs, :variables)
         Gecode::Raw::match(@model.active_space, set.to_set_var.bind, 

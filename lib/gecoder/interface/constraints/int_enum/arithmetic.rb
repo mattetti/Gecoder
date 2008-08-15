@@ -25,7 +25,7 @@ module Gecode::Constraints::IntEnum
 
   # A module that gathers the classes and modules used by arithmetic 
   # constraints.
-  module Arithmetic
+  module Arithmetic #:nodoc:
     class IntEnumMaxOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, int_enum)
         super model

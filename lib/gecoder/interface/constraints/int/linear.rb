@@ -61,7 +61,7 @@ module Gecode::Constraints::Int
 
   # A module that gathers the classes and modules used in linear constraints.
   module Linear #:nodoc:
-    class LinearRelationConstraint < Gecode::Constraints::ReifiableConstraint
+    class LinearRelationConstraint < Gecode::Constraints::ReifiableConstraint #:nodoc:
       def post
         lhs, rhs, relation_type, reif_var = 
           @params.values_at(:lhs, :rhs, :relation_type, :reif)

@@ -1,12 +1,12 @@
 # A module containing constraints that have set.elements as left hand
 # side.
-module Gecode::Constraints::SetElements
+module Gecode::Constraints::SetElements #:nodoc:
   # Describes a selected set operand. The operand is produced using the
   # set property #elements . I.e. the following produces a set elements
   # operand.
   # 
   #   set.elements
-  class SetElementsOperand
+  class SetElementsOperand 
     include Gecode::Constraints::Operand 
 
     # Constructs a new set elements operand +set+.
@@ -35,7 +35,7 @@ module Gecode::Constraints::SetElements
   end
 
   # Describes a constraint receiver for set elements operands.
-  class SetElementsConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class SetElementsConstraintReceiver < Gecode::Constraints::ConstraintReceiver #:nodoc:
     # Raises TypeError unless the left hand side is set elements operand.
     def initialize(model, params)
       super
@@ -47,7 +47,7 @@ module Gecode::Constraints::SetElements
   end
 end
 
-module Gecode::Constraints::Set
+module Gecode::Constraints::Set #:nodoc:
   module SetVarOperand
     # Produces a SetElementsOperand on which relation constraints can be placed that
     # constrain all elements in the set.

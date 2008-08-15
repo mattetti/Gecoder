@@ -1,6 +1,6 @@
 # A module containing constraints that have enumerations of instances of
 # Fixnum as left hand side.
-module Gecode::Constraints::FixnumEnum
+module Gecode::Constraints::FixnumEnum #:nodoc:
   # Describes a fixnum enumeration operand. Classes that mix in
   # FixnumEnumOperand must define #to_fixnum_enum .
   module FixnumEnumOperand

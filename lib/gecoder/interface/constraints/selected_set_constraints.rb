@@ -1,6 +1,6 @@
 # A module containing constraints that have set_enum[set] as left hand
 # side.
-module Gecode::Constraints::SelectedSet
+module Gecode::Constraints::SelectedSet #:nodoc:
   # Describes a selected set operand. The operand is produced when the
   # indexing operation of a set enum operand is given a set operand.
   # I.e. the following produces a selected set operand:
@@ -40,7 +40,7 @@ module Gecode::Constraints::SelectedSet
   end
 
   # Describes a constraint receiver for selected set operands.
-  class SelectedSetConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class SelectedSetConstraintReceiver < Gecode::Constraints::ConstraintReceiver #:nodoc:
     # Raises TypeError unless the left hand side is a selected set operand.
     def initialize(model, params)
       super

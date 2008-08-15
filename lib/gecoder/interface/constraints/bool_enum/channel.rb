@@ -1,7 +1,7 @@
 module Gecode::Constraints::BoolEnum
   class BoolEnumConstraintReceiver
     # Constraints this enumeration to "channel" +integer_operand+. This 
-    # constrains the integer variable to take value i exactly when the 
+    # constrains the integer operand to take value i exactly when the 
     # variable at index i in the boolean enumeration is true and the others 
     # are false.
     # 
@@ -56,7 +56,7 @@ module Gecode::Constraints::BoolEnum
   # A module that gathers the classes and modules used in channel constraints
   # involving one boolean enum and one integer variable.
   module Channel #:nodoc:
-    class ChannelConstraint < Gecode::Constraints::Constraint
+    class ChannelConstraint < Gecode::Constraints::Constraint #:nodoc:
       def post
         lhs, rhs, offset = @params.values_at(:lhs, :rhs, :offset)
         Gecode::Raw::channel(@model.active_space, 

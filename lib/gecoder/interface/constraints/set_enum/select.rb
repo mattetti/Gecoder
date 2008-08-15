@@ -50,7 +50,7 @@ module Gecode::Constraints::SetEnum
     end
   end
 
-  module Select
+  module Select #:nodoc:
     class SelectSetOperand < Gecode::Constraints::Set::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, enum_op, position_int_op)
         super model
