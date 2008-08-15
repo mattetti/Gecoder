@@ -1,12 +1,35 @@
 # A module that deals with the operands, properties and constraints of
 # boolean variables.
 module Gecode::Constraints::Bool #:nodoc:
-  # Describes a boolean variable operand. Classes that mixes in
-  # BoolVarOperand must define the method #model and #to_bool_var.
+  # A BoolVarOperand is a combination of variables on which the
+  # constraints defined in BoolVarConstraintReceiver can be placed.
+  #
+  # Boolean operands can be created either by using
+  # Gecode::Model#bool_var et al, or by using properties that produce
+  # boolean operands. The operands, no matter how they were created, 
+  # all respond to the properties defined by BoolVarOperand.
+  #
+  # == Examples
+  #
+  # Produces a single boolean operand inside a problem formulation,
+  # using Gecode::Model#bool_var .
+  #
+  #   bool_operand = bool_var
+  #
+  # Uses the BoolVarOperand#& property to produce a new boolean
+  # operand representing +bool_operand1+ AND +bool_operand2+.
+  #
+  #   new_bool_operand = bool_operand1 & bool_operand2
+  #
+  # Uses the BoolEnumOperand#conjunction property to produce a new
+  # boolean operand representing the conjunction of all boolean operands
+  # in the enumeration +bool_enum+.
+  # 
+  #   new_bool_operand = bool_enum.conjunction
   module BoolVarOperand  
     include Gecode::Constraints::Operand 
 
-    def method_missing(method, *args)
+    def method_missing(method, *args) #:nodoc:
       if Gecode::FreeBoolVar.instance_methods.include? method.to_s
         # Delegate to the bool var.
         to_bool_var.method(method).call(*args)
@@ -22,9 +45,32 @@ module Gecode::Constraints::Bool #:nodoc:
     end
   end
 
-  # Describes a constraint receiver for boolean variables.
-  class BoolVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver #:nodoc:
-    # Raises TypeError unless the left hand side is an BoolVarOperand.
+  # BoolVarConstraintReceiver contains all constraints that can be
+  # placed on a BoolVarOperand.
+  #
+  # Constraints are placed by calling BoolVarOperand#must (or any other
+  # of the variations defined in Operand), which produces a 
+  # BoolVarConstraintReceiver from which the desired constraint can be used.
+  #
+  # == Examples
+  #
+  # Constrains +bool_operand+ to be true using
+  # BoolVarConstraintReceiver#true .
+  #
+  #   bool_operand.must_be.true
+  #
+  # Constrains +bool_operand1+ AND +bool_operand2+ to be true using 
+  # the BoolVarOperand#& property and BoolVarConstraintReceiver#true .
+  #
+  #   (bool_operand1 & bool_operand2).must_be.true
+  #
+  # Constrains the conjunction of all boolean operands in +bool_enum+ to
+  # _not_ imply +bool_operand+ using the 
+  # BoolEnumOperand#conjunction property and BoolVarConstraintReceiver#imply .
+  #
+  #   bool_enum.conjunction.must_not.imply bool_operand
+  class BoolVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+    # Raises TypeError unless the left hand side is an bool operand.
     def initialize(model, params)
       super
 

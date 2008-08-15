@@ -16,7 +16,7 @@ module Gecode::Util #:nodoc:
   end
 
   # Extends Matrix so that it's an enumerable.
-  class EnumMatrix < Matrix
+  class EnumMatrix < Matrix #:nodoc:
     include MatrixEnumMethods
     
     def row(i)

@@ -36,7 +36,7 @@ module Gecode
   
   # Creates a class for a free variable that can be bound into the specified
   # class using the specified method in a space.
-  def Gecode::FreeVar(bound_class, space_bind_method)
+  def Gecode::FreeVar(bound_class, space_bind_method) #:nodoc:
     clazz = Class.new(FreeVarBase)
     clazz.class_eval <<-"end_method_definitions"      
       # Binds the variable to the currently active space of the model, 
@@ -65,10 +65,13 @@ module Gecode
   end
   
   FreeIntVar = FreeVar(Gecode::Raw::IntVar, :int_var)
-  # Describes an integer variable. Each integer variable has a domain of several
-  # integers which represent the possible values that the variable may take. 
-  # An integer variable is said to be assigned once the domain only contains a
-  # single element, at which point #value can be used to retrieve the value.
+  # Describes an integer variable. 
+  #
+  # Each integer variable has a domain of several integers which
+  # represent the possible values that the variable may take. An
+  # integer variable is said to be assigned once the domain only
+  # contains a single element, at which point #value can be used to
+  # retrieve the value.
   class FreeIntVar
     include Gecode::Constraints::Int::IntVarOperand
     attr :model

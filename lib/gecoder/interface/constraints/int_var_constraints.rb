@@ -132,7 +132,7 @@ module Gecode::Constraints::Int #:nodoc:
   end
 
   # Describes a constraint receiver for integer variables.
-  class IntVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver #:nodoc:
+  class IntVarConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is an int operand.
     def initialize(model, params)
       super

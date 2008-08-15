@@ -23,7 +23,7 @@ module Gecode::Constraints::BoolEnum #:nodoc:
   end
 
   # Describes a constraint receiver for enumerations of boolean operands.
-  class BoolEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver #:nodoc:
+  class BoolEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is an bool enum
     # operand.
     def initialize(model, params)

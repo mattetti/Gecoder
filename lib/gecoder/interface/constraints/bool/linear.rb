@@ -55,7 +55,46 @@ module Gecode::Constraints::Bool
   end
 
   module BoolVarOperand
+    # We include the operations and then redefine them so that they show
+    # up in the documentation.
     include BoolLinearOperations
+
+    # Produces an integer operand representing the value of this boolean
+    # operand (0 or 1) plus +op2+.
+    #
+    # == Examples
+    #
+    #   # +bool1+ plus +bool2+
+    #   bool1 + bool2
+    def +(op2)
+      bool_linear_expression_operation(:+, op2)
+    end
+    
+    # Produces an integer operand representing the value of this boolean
+    # operand (0 or 1) times a constant.
+    #
+    # == Examples
+    #
+    #   # +bool+ times 17
+    #   bool * 17
+    def *(fixnum)
+      if fixnum.kind_of? Fixnum
+        bool_linear_expression_operation(:*, fixnum)
+      else
+        raise TypeError, "Expected fixnum, got #{fixnum.class}."
+      end
+    end
+    
+    # Produces an integer operand representing the value of this boolean
+    # operand (0 or 1) minus +op2+.
+    #
+    # == Examples
+    #
+    #   # +bool1+ minus +bool2+
+    #   bool1 - bool2
+    def -(op2)
+      bool_linear_expression_operation(:-, op2)
+    end
   end
 
   # A module that gathers the classes and modules used in linear constraints.

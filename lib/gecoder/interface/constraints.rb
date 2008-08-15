@@ -6,11 +6,19 @@ module Gecode
   
   # A module containing all the constraints.
   module Constraints #:nodoc:
-    # Describes an operand, something that can be converted into a
-    # variable and/or used as left hand side operand to #must (and its
-    # variants). 
+    # Describes an operand, something that a constraint can be placed
+    # on. Constraints are placed by calling #must or #must_not (the
+    # latter negates the constraint). This produces a
+    # ConstraintReceiver, which defines methods that places constraints
+    # on the operand.
     #
-    # Classes that mixes in Operand must define the methods #model
+    # In general this produces something like the following.
+    # 
+    #   operand.must.constraint_method(params)
+    #
+    # See e.g. Gecode::Constraints::Int::IntVarOperand for concrete examples.
+    # 
+    # Classes that mix in Operand must define the methods #model
     # and #construct_receiver. They should also define a method that converts
     # the operand into a variable of the operand's type (e.g. int var
     # operands should define a method #to_int_var that returns an
@@ -19,7 +27,7 @@ module Gecode
     # needed when posting constraints. The presence of the method should
     # also be used for type checking (rather than e.g. checking whether
     # a parameter is of type IntVarOperand). 
-    module Operand #:nodoc:
+    module Operand 
       # Specifies that a constraint must hold for the left hand side.
       def must
         construct_receiver :lhs => self, :negate => false

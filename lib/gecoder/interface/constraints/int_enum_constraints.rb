@@ -23,7 +23,7 @@ module Gecode::Constraints::IntEnum #:nodoc:
   end
 
   # Describes a constraint receiver for enumerations of integer operands.
-  class IntEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver #:nodoc:
+  class IntEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is an int enum
     # operand.
     def initialize(model, params)

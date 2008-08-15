@@ -40,7 +40,7 @@ module Gecode::Constraints::SelectedSet #:nodoc:
   end
 
   # Describes a constraint receiver for selected set operands.
-  class SelectedSetConstraintReceiver < Gecode::Constraints::ConstraintReceiver #:nodoc:
+  class SelectedSetConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is a selected set operand.
     def initialize(model, params)
       super

@@ -23,7 +23,7 @@ module Gecode::Constraints::SetEnum #:nodoc:
   end
 
   # Describes a constraint receiver for enumerations of set operands.
-  class SetEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver #:nodoc:
+  class SetEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is a set enum operand.
     def initialize(model, params)
       super

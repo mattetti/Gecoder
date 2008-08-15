@@ -35,7 +35,7 @@ module Gecode::Constraints::SetElements #:nodoc:
   end
 
   # Describes a constraint receiver for set elements operands.
-  class SetElementsConstraintReceiver < Gecode::Constraints::ConstraintReceiver #:nodoc:
+  class SetElementsConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is set elements operand.
     def initialize(model, params)
       super

@@ -1,5 +1,95 @@
 module Gecode
   # Model is the base class that all models must inherit from.
+  #
+  # == Formulating problems
+  #
+  # Models are used to formulate the problems that Gecode should solve.
+  # Below is an example of a model that formulates the problem of finding
+  # a solution to the following equation system.
+  #
+  # Equation system:
+  #   x + y = z
+  #   x = y - 3
+  #   0 <= x,y,z <= 9
+  #
+  # Model:
+  #   class EquationProblem < Gecode::Model
+  #     def initialize
+  #       variables_is_an int_var_array(3, 0..9)
+  #       x, y, z = variables
+  #
+  #       (x + y).must == z
+  #       x.must == y - 3
+  #
+  #       branch_on variables
+  #     end
+  #   end
+  # 
+  # A model typically consists of three main parts:
+  # [Variables] Variables specify how to view the problem. A solution is an 
+  #             assignment of the variables. In the example above we created 
+  #             an array of three integer variables with domains 0..9 and gave 
+  #             it the name +variables+.
+  #
+  #             There are three types of variables: integer variables
+  #             (Gecode::FreeIntVar, can be assigned one of many
+  #             possible integer values), boolean variables
+  #             (Gecode::FreeBoolVar, can be assigned either true or
+  #             false) and set variables (Gecode::FreeSetVar, can be
+  #             assigned a set of integers).  Variables of the different
+  #             types are constructed using #int_var, #int_var_array,
+  #             #int_var_matrix, #bool_var, #bool_var_array,
+  #             #bool_var_matrix, #set_var, #set_var_array and
+  #             #set_var_matrix .
+  #
+  #             The various variables all have the functionality of Operand 
+  #             and have many properties depending on their type. For 
+  #             instance integer variables have the properties defined
+  #             in Gecode::Constraints::Int::IntVarOperand and
+  #             enumerations of integer variables (such as the array
+  #             +variables+ we used) have the properties defined in  
+  #             Gecode::Constraints::IntEnum::IntEnumOperand .
+  #             
+  # [Constraints] Constraints are placed on the variables to ensure that a 
+  #               valid assignment of the variables must also be a solution.
+  #               In the example above we constrained the variables so
+  #               that all equations were satisfied (which is exactly when
+  #               we have found a solution).
+  #
+  #               The various constraints that can be placed on the various
+  #               kinds of operands are found in the respective
+  #               constraint receivers. For instance, the constraints
+  #               that can be placed on integer operands are found in 
+  #               Gecode::Constraints::Int::IntVarConstraintReceiver and
+  #               the constraints that can be placed on enumerations of
+  #               integer operands are found in 
+  #               Gecode::Constraints::IntEnum::IntEnumConstraintReceiver .
+  #
+  # [Branching] "branch_on variables" in the example tells Gecode that
+  #             it should explore the search space until it has assigned
+  #             +variables+ (or exhausted the search space). It also
+  #             tells Gecode in what order the search space should be
+  #             explore, which can have a big effect on the search
+  #             performance. See #branch_on for details.
+  #
+  # Problems can also be formulated without defining a new class by
+  # using Gecode#solve et al.
+  #
+  # == Finding solutions
+  #
+  # Solutions to a formulated problem are found are found by using
+  # methods such as #solve!, #solution, #each_solution . If one wants to
+  # find a solution that optimizes a certain quantity (i.e. maximizes a
+  # certain variable) then one should have a look at #maximize!,
+  # #minimize! and #optimize! .
+  #
+  # The first solution to the example above could for instance be found
+  # using
+  #
+  #   puts EquationProblem.solve!.variables.values.join(', ')
+  #
+  # which would find the first solution to the problem, access the
+  # assigned values of +variables+ and print them.
   class Model
     # The largest integer allowed in the domain of an integer variable.
     MAX_INT = Gecode::Raw::IntLimits::MAX
