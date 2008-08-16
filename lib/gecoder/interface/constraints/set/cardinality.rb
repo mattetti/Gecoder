@@ -1,6 +1,6 @@
 module Gecode::Set
   module SetOperand
-    # Produces an integer operand representing the size of the set.
+    # Produces an IntOperand representing the size of the set.
     #
     # ==== Examples 
     #

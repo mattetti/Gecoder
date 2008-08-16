@@ -1,6 +1,6 @@
 module Gecode::IntEnum
   module IntEnumOperand
-    # Produces an integer operand representing the maximum value of the 
+    # Produces an IntOperand representing the maximum value of the 
     # integer operands in this enumeration.
     #
     # ==== Examples 
@@ -11,7 +11,7 @@ module Gecode::IntEnum
       Arithmetic::IntEnumMaxOperand.new(@model, self)
     end
     
-    # Produces an integer operand representing the minimum value of the 
+    # Produces an IntOperand representing the minimum value of the 
     # integer operands in this enumeration.
     #
     # ==== Examples 

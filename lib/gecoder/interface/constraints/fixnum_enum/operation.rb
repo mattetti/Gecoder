@@ -1,6 +1,6 @@
 module Gecode::FixnumEnum
   module FixnumEnumOperand
-    # Produces a new set operand representing the union between this operand, 
+    # Produces a new SetOperand representing the union between this operand, 
     # interpreted as a constant set, and +set_operand+.
     #
     # ==== Examples 
@@ -11,7 +11,7 @@ module Gecode::FixnumEnum
       set_operation(:union, set_operand)
     end
 
-    # Produces a new set operand representing the disjoint union between
+    # Produces a new SetOperand representing the disjoint union between
     # this operand, interpreted as a constant set, and
     # +set_operand+. The disjoint union is the union of
     # the disjoint parts of the sets.
@@ -24,7 +24,7 @@ module Gecode::FixnumEnum
       set_operation(:disjoint_union, set_operand)
     end
 
-    # Produces a new set operand representing the intersection between
+    # Produces a new SetOperand representing the intersection between
     # this operand, interpreted as a constant set, and
     # +set_operand+. 
     #
@@ -36,7 +36,7 @@ module Gecode::FixnumEnum
       set_operation(:intersection, set_operand)
     end
 
-    # Produces a new set operand representing this operand, interpreted
+    # Produces a new SetOperand representing this operand, interpreted
     # as a constant set, minus +set_operand+. 
     #
     # ==== Examples 

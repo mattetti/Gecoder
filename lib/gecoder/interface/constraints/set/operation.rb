@@ -1,6 +1,6 @@
 module Gecode::Set
   module SetOperand
-    # Produces a new set operand representing the union between this operand 
+    # Produces a new SetOperand representing the union between this operand 
     # and +set_operand_or_constant_set+.
     #
     # ==== Examples 
@@ -14,7 +14,7 @@ module Gecode::Set
       set_operation(:union, set_operand_or_constant_set)
     end
 
-    # Produces a new set operand representing the disjoint union between
+    # Produces a new SetOperand representing the disjoint union between
     # this operand and +set_operand_or_constant_set+. The disjoint union
     # is the union of the disjoint parts of the sets.
     #
@@ -29,7 +29,7 @@ module Gecode::Set
       set_operation(:disjoint_union, set_operand_or_constant_set)
     end
 
-    # Produces a new set operand representing the intersection between
+    # Produces a new SetOperand representing the intersection between
     # this operand and +set_operand_or_constant_set+. 
     #
     # ==== Examples 
@@ -43,7 +43,7 @@ module Gecode::Set
       set_operation(:intersection, set_operand_or_constant_set)
     end
 
-    # Produces a new set operand representing this operand minus 
+    # Produces a new SetOperand representing this operand minus 
     # +set_operand_or_constant_set+. 
     #
     # ==== Examples 
@@ -59,7 +59,7 @@ module Gecode::Set
 
     private 
 
-    # Produces the set operand resulting from +operator+ applied to this
+    # Produces the SetOperand resulting from +operator+ applied to this
     # operand and +operand2+.
     def set_operation(operator, operand2)
       unless operand2.respond_to? :to_set_var or 

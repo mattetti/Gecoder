@@ -14,7 +14,7 @@ module Gecode::IntEnum
                 alias_method :pre_element_access, :[]
               end
           
-              # Produces an integer operand representing the
+              # Produces an IntOperand representing the
               # i:th integer operand in the enumeration, where i is the
               # value of the integer operand used as index. Think of it
               # as array access in the world of constraint programming.

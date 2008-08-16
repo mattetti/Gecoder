@@ -1,6 +1,6 @@
 module Gecode::Int
   module IntOperand
-    # Produces a new integer operand representing this operand plus 
+    # Produces a new IntOperand representing this operand plus 
     # +int_operand_or_fixnum+.
     #
     # ==== Examples 
@@ -14,7 +14,7 @@ module Gecode::Int
       int_linear_expression_operation(:+, int_operand_or_fixnum)
     end
     
-    # Produces a new integer operand representing this operand minus 
+    # Produces a new IntOperand representing this operand minus 
     # +int_operand_or_fixnum+. 
     #
     # ==== Examples 
@@ -28,7 +28,7 @@ module Gecode::Int
       int_linear_expression_operation(:-, int_operand_or_fixnum)
     end
 
-    # Produces a new integer operand representing this operand times a 
+    # Produces a new IntOperand representing this operand times a 
     # constant. 
     #
     # ==== Examples 

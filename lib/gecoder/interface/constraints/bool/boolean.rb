@@ -1,6 +1,6 @@
 module Gecode::Bool
   module BoolOperand  
-    # Produces a new boolean operand representing this operand OR +bool_op+.
+    # Produces a new BoolOperand representing this operand OR +bool_op+.
     # 
     # ==== Examples 
     #
@@ -10,7 +10,7 @@ module Gecode::Bool
       bool_expression_operation(:|, bool_op)
     end
     
-    # Produces a new boolean operand representing this operand AND +bool_op+.
+    # Produces a new BoolOperand representing this operand AND +bool_op+.
     #
     # ==== Examples 
     #
@@ -20,7 +20,7 @@ module Gecode::Bool
       bool_expression_operation(:&, bool_op)
     end
     
-    # Produces a new boolean operand representing this operand XOR +bool_op+.
+    # Produces a new BoolOperand representing this operand XOR +bool_op+.
     #
     # ==== Examples 
     #
@@ -30,7 +30,7 @@ module Gecode::Bool
       bool_expression_operation(:^, bool_op)
     end
     
-    # Produces a new boolean operand representing that this operand implies
+    # Produces a new BoolOperand representing that this operand implies
     # +bool_op+.
     #
     # ==== Examples 

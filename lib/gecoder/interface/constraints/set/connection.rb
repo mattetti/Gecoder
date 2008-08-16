@@ -1,6 +1,6 @@
 module Gecode::Set
   module SetOperand
-    # Produces an integer operand representing the minimum of the set.
+    # Produces an IntOperand representing the minimum of the set.
     #
     # ==== Examples 
     #
@@ -10,7 +10,7 @@ module Gecode::Set
       Connection::SetMinOperand.new(@model, self)
     end
     
-    # Produces an integer operand representing the maximum of the set.
+    # Produces an IntOperand representing the maximum of the set.
     #
     # ==== Examples 
     #
@@ -20,7 +20,7 @@ module Gecode::Set
       Connection::SetMaxOperand.new(@model, self)
     end
     
-    # Produces an integer operand representing the sum of the values in the
+    # Produces an IntOperand representing the sum of the values in the
     # set. One of the following options may also be given:
     # [:weights]       Produces the weighted sum using the specified hash 
     #                  of weights. The hash should map each value to 

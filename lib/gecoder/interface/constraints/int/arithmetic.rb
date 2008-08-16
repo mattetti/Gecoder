@@ -1,6 +1,6 @@
 module Gecode::Int
   module IntOperand
-    # Produces an integer operand representing the absolute value of this 
+    # Produces an IntOperand representing the absolute value of this 
     # operand.
     #
     # ==== Examples 
@@ -11,7 +11,7 @@ module Gecode::Int
       Arithmetic::IntAbsOperand.new(@model, self)
     end
     
-    # Produces an integer operand representing this operand squared.
+    # Produces an IntOperand representing this operand squared.
     #
     # ==== Examples 
     #   
@@ -21,7 +21,7 @@ module Gecode::Int
       Arithmetic::IntSquaredOperand.new(@model, self)
     end
 
-    # Produces an integer operand representing the square root of this 
+    # Produces an IntOperand representing the square root of this 
     # operand rounded down.
     #
     # ==== Examples 
@@ -36,7 +36,7 @@ module Gecode::Int
 
     alias_method :pre_arith_mult, :* 
     
-    # Produces a new integer operand representing this operand times
+    # Produces a new IntOperand representing this operand times
     # +int_operand+.
     #
     # ==== Examples 

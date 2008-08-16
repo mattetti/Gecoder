@@ -1,6 +1,6 @@
 module Gecode::Bool
   module BoolLinearOperations #:nodoc:
-    # Produces an integer operand representing the value of this boolean
+    # Produces an IntOperand representing the value of this boolean
     # operand (0 or 1) plus +op2+.
     #
     # ==== Examples 
@@ -11,7 +11,7 @@ module Gecode::Bool
       bool_linear_expression_operation(:+, op2)
     end
     
-    # Produces an integer operand representing the value of this boolean
+    # Produces an IntOperand representing the value of this boolean
     # operand (0 or 1) times a constant.
     #
     # ==== Examples 
@@ -26,7 +26,7 @@ module Gecode::Bool
       end
     end
     
-    # Produces an integer operand representing the value of this boolean
+    # Produces an IntOperand representing the value of this boolean
     # operand (0 or 1) minus +op2+.
     #
     # ==== Examples 
@@ -59,7 +59,7 @@ module Gecode::Bool
     # up in the documentation.
     include BoolLinearOperations
 
-    # Produces an integer operand representing the value of this boolean
+    # Produces an IntOperand representing the value of this boolean
     # operand (0 or 1) plus +op2+.
     #
     # ==== Examples 
@@ -70,7 +70,7 @@ module Gecode::Bool
       bool_linear_expression_operation(:+, op2)
     end
     
-    # Produces an integer operand representing the value of this boolean
+    # Produces an IntOperand representing the value of this boolean
     # operand (0 or 1) times a constant.
     #
     # ==== Examples 
@@ -85,7 +85,7 @@ module Gecode::Bool
       end
     end
     
-    # Produces an integer operand representing the value of this boolean
+    # Produces an IntOperand representing the value of this boolean
     # operand (0 or 1) minus +op2+.
     #
     # ==== Examples 

@@ -17,7 +17,7 @@ module Gecode::SetEnum
                 alias_method :pre_selection_access, :[]
               end
             
-              # Produces a set operand representing the i:th set
+              # Produces a SetOperand representing the i:th set
               # operand in the enumeration, where i is the value of the
               # int operand used as index. 
               #

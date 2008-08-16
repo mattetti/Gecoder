@@ -1,6 +1,6 @@
 module Gecode::SelectedSet
   class SelectedSetOperand
-    # Produces a set operand representing the selected sets' union.
+    # Produces a SetOperand representing the selected sets' union.
     #
     # ==== Examples 
     #
@@ -10,7 +10,7 @@ module Gecode::SelectedSet
       Select::SelectedSetUnionOperand.new(model, self)
     end
      
-    # Produces a set operand representing the selected sets' intersection.
+    # Produces a SetOperand representing the selected sets' intersection.
     # The option :with can be used to enumerate the elements in the
     # universe.
     #

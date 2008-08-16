@@ -1,6 +1,6 @@
 module Gecode::BoolEnum
   module BoolEnumOperand
-    # Produces a boolean operand that represents the conjunction (AND) of all
+    # Produces a BoolOperand that represents the conjunction (AND) of all
     # boolean operands in this enumeration.
     #
     # ==== Examples 
@@ -11,7 +11,7 @@ module Gecode::BoolEnum
       Relation::BoolEnumConjunctionOperand.new(@model, self)
     end
     
-    # Produces a boolean operand that represents the disjunction (OR) of all
+    # Produces a BoolOperand that represents the disjunction (OR) of all
     # boolean operands in this enumeration.
     #
     # ==== Examples 

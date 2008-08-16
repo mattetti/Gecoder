@@ -1,6 +1,6 @@
 module Gecode::IntEnum
   module IntEnumOperand
-    # Produces a new integer operand representing the number of times
+    # Produces a new IntOperand representing the number of times
     # +int_operand_or_fixnum+ is present in this enumeration.
     #
     # ==== Examples 

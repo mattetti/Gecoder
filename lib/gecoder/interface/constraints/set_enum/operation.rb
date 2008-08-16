@@ -1,6 +1,6 @@
 module Gecode::SetEnum
   module SetEnumOperand
-    # Produces a set operand representing the union of all sets in this
+    # Produces a SetOperand representing the union of all sets in this
     # enumeration.
     #
     # ==== Examples 
@@ -11,7 +11,7 @@ module Gecode::SetEnum
       set_operation(:union)
     end
     
-    # Produces a set operand representing the intersection of all sets in this
+    # Produces a SetOperand representing the intersection of all sets in this
     # enumeration.
     #
     # ==== Examples 
@@ -22,7 +22,7 @@ module Gecode::SetEnum
       set_operation(:intersection)
     end
 
-    # Produces a set operand representing the disjoint union of all sets 
+    # Produces a SetOperand representing the disjoint union of all sets 
     # in this enumeration.
     #
     # ==== Examples 
@@ -35,7 +35,7 @@ module Gecode::SetEnum
 
     private
 
-    # Produces the set operand resulting from +operator+ applied to this
+    # Produces the SetOperand resulting from +operator+ applied to this
     # operand.
     def set_operation(operator)
       Operation::OperationSetOperand.new(model, self, operator)
