@@ -70,6 +70,20 @@ body, td, p {
   color: #FFF;
 }
 
+h1.project-header {
+  color: #000;
+  background: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  font-size: small;
+  font-weight: normal;
+}
+
+h1.project-header a {
+  color: #FF0;
+}
+
 .banner {
   background: #005;
   color: #FFF;
@@ -281,6 +295,10 @@ CLASS_PAGE = <<HTML
   <td class="file-title"><span class="file-title-prefix">%classmod%</span><br />%full_name%</td>
   <td align="right">
     <table cellspacing="0" cellpadding="2">
+      <tr valign="top">
+        <td>Project:</td> 
+        <td><h1 class="project-header"><a href="http://gecoder.rubyforge.org/">Gecode/R - Constraint Programming in Ruby</a></h1></td>
+      </tr>
       <tr valign="top">
         <td>In:</td>
         <td>
