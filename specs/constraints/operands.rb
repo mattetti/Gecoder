@@ -225,3 +225,40 @@ describe Gecode::FixnumEnum::FixnumEnumOperand do
 
   it_should_behave_like 'enum operand'
 end
+
+# High level sanity check.
+describe 'operand combination' do
+  it 'should allow placing constraints on complicated combinations of operands' do
+    model = Gecode::Model.new
+    sets = model.set_var_array(2, [], 0..9)
+    set1, set2 = sets
+    (set1.size + set2.size).must == 5
+    set1.size.must > 1
+    set2.size.must > 1
+    model.branch_on sets
+
+    model.solve!
+
+    (set1.value.size + set2.value.size).should == 5
+    set1.value.size.should > 1
+    set2.value.size.should > 1
+  end
+
+  it 'should allow placing constraints on complicated combinations of operands (2)' do
+    model = Gecode::Model.new
+    sets = model.set_var_array(3, [], 0..9)
+    set1, set2, set3 = sets
+    (set1.size + set2.size).must == (set3.size - set1.max)
+    set3.size.must > 3
+    set2.size.must < 3
+    set1.size.must > 0
+    model.branch_on sets
+
+    model.solve!
+
+    (set1.value.size + set2.value.size).should == (set3.value.size - set1.value.max)
+    set3.value.size.should > 3
+    set2.value.size.should < 3
+    set1.value.size.should > 0
+  end
+end
