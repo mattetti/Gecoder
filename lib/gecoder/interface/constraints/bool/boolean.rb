@@ -2,7 +2,7 @@ module Gecode::Constraints::Bool
   module BoolOperand  
     # Produces a new boolean operand representing this operand OR +bool_op+.
     # 
-    # == Examples
+    # ==== Examples 
     #
     #  # +b1+ and +b2+
     #  b1 & b2
@@ -12,7 +12,7 @@ module Gecode::Constraints::Bool
     
     # Produces a new boolean operand representing this operand AND +bool_op+.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # (+b1+ and +b2+) or +b3+ 
     #   (b1 & b1) | b3
@@ -22,7 +22,7 @@ module Gecode::Constraints::Bool
     
     # Produces a new boolean operand representing this operand XOR +bool_op+.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # (+b1+ and +b2+) or (+b3+ exclusive or +b1+)
     #   (b1 & b2) | (b3 ^ b1)
@@ -33,7 +33,7 @@ module Gecode::Constraints::Bool
     # Produces a new boolean operand representing that this operand implies
     # +bool_op+.
     #
-    # == Examples
+    # ==== Examples 
     #   
     #   # (+b1+ implies +b2+) and (+b3+ implies +b2+)
     #   (b1.implies b2) & (b3.implies b2)
@@ -62,7 +62,7 @@ module Gecode::Constraints::Bool
     # reification are supported. Any of <tt>==</tt>, +equal+ and +equal_to+ may 
     # be used for equality.
     # 
-    # === Examples
+    # ==== Examples 
     # 
     #   # +b1+ and +b2+ must equal +b1+ or +b2+.
     #   (b1 & b2).must == (b1 | b2)
@@ -83,7 +83,7 @@ module Gecode::Constraints::Bool
     # Constrains the boolean operand to imply +bool_op+. Negation and
     # reification are supported.
     # 
-    # === Examples
+    # ==== Examples 
     #   
     #   # +b1+ must imply +b2+
     #   b1.must.imply b2
@@ -100,7 +100,7 @@ module Gecode::Constraints::Bool
     # Constrains the boolean operand to be true. Negation and reification are 
     # supported.
     # 
-    # === Examples
+    # ==== Examples 
     # 
     #   # +b1+ and +b2+ must be true.
     #   (b1 & b2).must_be.true
@@ -120,7 +120,7 @@ module Gecode::Constraints::Bool
     # Constrains the boolean operand to be false. Negation and reification are 
     # supported.
     #
-    # === Examples
+    # ==== Examples 
     # 
     #   # +b1+ and +b2+ must be false.
     #   (b1 & b2).must_be.false

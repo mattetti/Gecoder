@@ -3,7 +3,7 @@ module Gecode::Constraints::Set
     alias_method :pre_relation_equality, :==
     # Constrains the set operand to equal +set_operand+.
     # 
-    # == Examples
+    # ==== Examples 
     # 
     #   # +set1+ must equal +set2+
     #   set1.must == set2
@@ -22,7 +22,7 @@ module Gecode::Constraints::Set
     alias_method :pre_relation_superset, :superset
     # Constrains the set operand to be a superset of +set_operand+.
     # 
-    # == Examples
+    # ==== Examples 
     # 
     #   # +set1+ must be a superset of +set2+
     #   set1.must_be.superset_of set2
@@ -41,7 +41,7 @@ module Gecode::Constraints::Set
     alias_method :pre_relation_subset, :subset
     # Constrains the set operand to be a subeset of +set_operand+.
     # 
-    # == Examples
+    # ==== Examples 
     # 
     #   # +set1+ must be a subset of +set2+
     #   set1.must_be.subset_of == set2
@@ -60,7 +60,7 @@ module Gecode::Constraints::Set
     alias_method :pre_relation_disjoint, :disjoint
     # Constrains the set operand to be disjoint with +set_operand+.
     # 
-    # == Examples
+    # ==== Examples 
     # 
     #   # +set1+ must be disjoint with +set2+
     #   set1.must_be.disjoint_with set2
@@ -79,7 +79,7 @@ module Gecode::Constraints::Set
     alias_method :pre_relation_complement, :complement
     # Constrains the set operand to be the complement of +set_operand+.
     # 
-    # == Examples
+    # ==== Examples 
     # 
     #   # +set1+ must be the complement of +set2+
     #   set1.must_be.complement_of set2

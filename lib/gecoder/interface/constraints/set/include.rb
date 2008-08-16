@@ -5,7 +5,7 @@ module Gecode::Constraints::Set
     # The constraint has the side effect of sorting the integer variables in a 
     # non-descending order. It does not support reification nor negation.
     # 
-    # == Examples
+    # ==== Examples 
     # 
     #   # Constrain +set+ to include the values of all variables in 
     #   # +int_enum+.

@@ -3,7 +3,7 @@ module Gecode::Constraints::BoolEnum
     # Produces a boolean operand that represents the conjunction (AND) of all
     # boolean variables in this enumeration.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # Conjunction of all elements in +bool_enum+.
     #   bool_enum.conjunction
@@ -14,7 +14,7 @@ module Gecode::Constraints::BoolEnum
     # Produces a boolean operand that represents the disjunction (OR) of all
     # boolean variables in this enumeration.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # Disjunction of all elements in +bool_enum+.
     #   bool_enum.disjunction

@@ -19,7 +19,7 @@ module Gecode::Constraints::IntEnum
               # value of the integer variable used as index. Think of it
               # as array access in the world of constraint programming.
               # 
-              # == Example
+              # ==== Examples 
               # 
               #   # The variable at the +x+:th position in +int_enum+,
               #   # where +x+ is an integer variable.  

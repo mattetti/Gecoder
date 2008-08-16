@@ -5,7 +5,7 @@ module Gecode::Constraints::SetElements #:nodoc:
   # SetOperand#elements. It facilitates placing the constraints defined
   # in SetElementsConstraintReceiver
   #
-  # == Examples
+  # ==== Examples 
   #
   # Producing a SetElementsOperand from +set_operand+:
   #
@@ -50,7 +50,7 @@ module Gecode::Constraints::SetElements #:nodoc:
   # Each constraint accepts a number of options. See ConstraintReceiver
   # for more information.
   #
-  # == Examples
+  # ==== Examples 
   #
   # Constrains all elements in +set_operand+ to be strictly greater than 17
   # using SetOperand#elements and SetElementsConstraintReceiver#>: 
@@ -84,7 +84,7 @@ module Gecode::Constraints::Set #:nodoc:
     # Produces a SetElementsOperand on which relation constraints can be placed that
     # constrain all elements in the set.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The elements of +set+.
     #   set.elements

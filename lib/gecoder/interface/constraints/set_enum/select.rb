@@ -24,7 +24,7 @@ module Gecode::Constraints::SetEnum
               # A set can also be used as index, in which case a
               # SelectedSetOperand is produced.
               #
-              # == Examples
+              # ==== Examples 
               # 
               #   # The set operand at the +x+:th position in +set_enum+,
               #   # where +x+ is a int operand.  

@@ -5,7 +5,7 @@ module Gecode::Constraints::Int
     # to take a value in the domain.  Domains should be specified as
     # ranges if possible.
     # 
-    # == Examples
+    # ==== Examples 
     # 
     #   # +x+ must be in the range 1..10
     #   x.must_be.in 1..10

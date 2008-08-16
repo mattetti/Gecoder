@@ -3,7 +3,7 @@ module Gecode::Constraints::Bool
     # Produces an integer operand representing the value of this boolean
     # operand (0 or 1) plus +op2+.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # +bool1+ plus +bool2+
     #   bool1 + bool2
@@ -14,7 +14,7 @@ module Gecode::Constraints::Bool
     # Produces an integer operand representing the value of this boolean
     # operand (0 or 1) times a constant.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # +bool+ times 17
     #   bool * 17
@@ -29,7 +29,7 @@ module Gecode::Constraints::Bool
     # Produces an integer operand representing the value of this boolean
     # operand (0 or 1) minus +op2+.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # +bool1+ minus +bool2+
     #   bool1 - bool2
@@ -62,7 +62,7 @@ module Gecode::Constraints::Bool
     # Produces an integer operand representing the value of this boolean
     # operand (0 or 1) plus +op2+.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # +bool1+ plus +bool2+
     #   bool1 + bool2
@@ -73,7 +73,7 @@ module Gecode::Constraints::Bool
     # Produces an integer operand representing the value of this boolean
     # operand (0 or 1) times a constant.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # +bool+ times 17
     #   bool * 17
@@ -88,7 +88,7 @@ module Gecode::Constraints::Bool
     # Produces an integer operand representing the value of this boolean
     # operand (0 or 1) minus +op2+.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # +bool1+ minus +bool2+
     #   bool1 - bool2

@@ -6,7 +6,7 @@ module Gecode::Constraints::SetEnum
     #
     # Neither reification nor negation is supported.
     #
-    # == Examples
+    # ==== Examples 
     # 
     #   # +set_enum+ is constrained to channel +int_enum+.
     #   int_enum.must.channel set_enum

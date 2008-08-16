@@ -19,7 +19,7 @@ module Gecode::Constraints::FixnumEnum
               # value of the integer variable used as index. Think of it
               # as array access in the world of constraint programming.
               # 
-              # == Example
+              # ==== Examples 
               # 
               #   # The price of +selected_item+ as described by +prices+ .
               #   prices = wrap_enum([500, 24, 4711, 412, 24])

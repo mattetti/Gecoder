@@ -6,7 +6,7 @@ module Gecode::Constraints::SetEnum
     # 
     # Neither negation nor reification is supported.
     # 
-    # == Examples
+    # ==== Examples 
     # 
     #   # All set variables in +sets+ must have cardinality 17 and no pair may
     #   # have more than one element in common.

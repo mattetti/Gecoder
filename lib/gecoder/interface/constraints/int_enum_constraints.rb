@@ -10,7 +10,7 @@ module Gecode::Constraints::IntEnum #:nodoc:
   # Gecode::Model#wrap_enum. The enumerations, no matter how they were
   # created, all respond to the properties defined by IntEnumOperand.
   #
-  # == Examples
+  # ==== Examples 
   #
   # Produces an array of five int operands with domain 0..9 inside a 
   # problem formulation using Gecode::Model#int_var_array:
@@ -55,7 +55,7 @@ module Gecode::Constraints::IntEnum #:nodoc:
   # Some constraint accepts a number of options. See ConstraintReceiver
   # for more information.
   #
-  # == Examples
+  # ==== Examples 
   #
   # Constrains the integer operands in +int_enum+ to take on different
   # values by using IntEnumConstraintReceiver#distinct:

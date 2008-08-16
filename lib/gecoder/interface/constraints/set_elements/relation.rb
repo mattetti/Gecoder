@@ -3,7 +3,7 @@ module Gecode::Constraints::SetElements
     # Constrains the set elements to equal +operand+ (either a
     # constant integer or an integer operand).
     #
-    # === Examples
+    # ==== Examples 
     #   
     #   # The elements of +set+ must equal +int+
     #   set.elements.must == int
@@ -17,7 +17,7 @@ module Gecode::Constraints::SetElements
     # Constrains the set elements to be strictly greater than
     # +operand+ (either a constant integer or an integer operand).
     #
-    # === Examples
+    # ==== Examples 
     #   
     #   # The elements of +set+ must be strictly greater than +int+
     #   set.elements.must > int
@@ -31,7 +31,7 @@ module Gecode::Constraints::SetElements
     # Constrains the set elements to be greater than or equal to
     # +operand+ (either a constant integer or an integer operand).
     #
-    # === Examples
+    # ==== Examples 
     #   
     #   # The elements of +set+ must be greater than or equal to +int+
     #   set.elements.must >= int
@@ -45,7 +45,7 @@ module Gecode::Constraints::SetElements
     # Constrains the set elements to be strictly less than
     # +operand+ (either a constant integer or an integer operand).
     #
-    # === Examples
+    # ==== Examples 
     #   
     #   # The elements of +set+ must be strictly less than +int+
     #   set.elements.must < int
@@ -59,7 +59,7 @@ module Gecode::Constraints::SetElements
     # Constrains the set elements to be less than or equal to
     # +operand+ (either a constant integer or an integer operand).
     #
-    # === Examples
+    # ==== Examples 
     #   
     #   # The elements of +set+ must be less than or equal to +int+
     #   set.elements.must <= int

@@ -3,7 +3,7 @@ module Gecode::Constraints::IntEnum
     # Produces a new integer operand representing the number of times
     # +int_operand_or_fixnum+ is present in this enumeration.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The number of times 17 occurs in +int_enum+.
     #   int_enum.count(17)

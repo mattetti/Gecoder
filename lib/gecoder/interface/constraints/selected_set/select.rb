@@ -2,7 +2,7 @@ module Gecode::Constraints::SelectedSet
   class SelectedSetOperand
     # Produces a set operand representing the selected sets' union.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The union of all sets selected by +set_enum[set]+.
     #   set_enum[set].union
@@ -14,7 +14,7 @@ module Gecode::Constraints::SelectedSet
     # The option :with can be used to enumerate the elements in the
     # universe.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The intersection of all sets selected by +set_enum[set]+.
     #   set_enum[set].intersection
@@ -43,7 +43,7 @@ module Gecode::Constraints::SelectedSet
   class SelectedSetConstraintReceiver
     # Constrains the selected sets to be pairwise disjoint.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # Constrains all sets selected by +set_enum[set]+ to be pairwise
     #   # disjoint.

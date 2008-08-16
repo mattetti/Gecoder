@@ -4,7 +4,7 @@ module Gecode::Constraints::IntEnum
     # one of the specified tuples. Neither negation nor reification is
     # supported.
     # 
-    # == Example
+    # ==== Examples 
     # 
     #   # Constrains the two integer variables in +numbers+ to either have 
     #   # values 1 and 7, or values 47 and 11.
@@ -69,7 +69,7 @@ module Gecode::Constraints::IntEnum
     # Additionally Model#at_least_once and Model#at_most_once are
     # provided as convenience methods.
     #
-    # === Examples
+    # ==== Examples 
     #
     #   # Matches 1 followed by any number of 2s.
     #   [1, repeat(2)]
@@ -121,7 +121,7 @@ module Gecode::Constraints::IntEnum
     #   # Exactly the same as the above.
     #   [0, repeat(1, 0, 1)]
     #
-    # == Example
+    # ==== Examples 
     #
     #   # Constrains the two integer variables in +numbers+ to have
     #   # values 1 and 7.

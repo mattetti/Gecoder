@@ -2,7 +2,7 @@ module Gecode::Constraints::Set
   module SetOperand
     # Produces an integer operand representing the size of the set.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The size of +set+.
     #   set.size

@@ -4,7 +4,7 @@ module Gecode::Constraints::BoolEnum
     # one of the specified tuples. Neither negation nor reification is
     # supported.
     #
-    # == Example
+    # ==== Examples 
     # 
     #   # Constrains the three boolean variables in +bools+ to either
     #   # be true, false, true, or false, false, true.
@@ -46,7 +46,7 @@ module Gecode::Constraints::BoolEnum
     # IntEnumConstraintReceiver#match but true and false can be
     # used instead of integers.
     #
-    # == Example
+    # ==== Examples 
     #
     #   # Constrains the two boolean variables in +bools+ to be false
     #   # and true respectively.

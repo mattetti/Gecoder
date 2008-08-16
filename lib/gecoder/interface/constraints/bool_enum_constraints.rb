@@ -10,7 +10,7 @@ module Gecode::Constraints::BoolEnum #:nodoc:
   # Gecode::Model#wrap_enum. The enumerations, no matter how they were
   # created, all respond to the properties defined by BoolEnumOperand.
   #
-  # == Examples
+  # ==== Examples 
   #
   # Produces an array of five boolean operands inside a problem formulation
   # using Gecode::Model#bool_var_array:
@@ -53,7 +53,7 @@ module Gecode::Constraints::BoolEnum #:nodoc:
   # BoolEnumConstraintReceiver from which the desired constraint can be
   # used.
   #
-  # == Examples
+  # ==== Examples 
   #
   # Constrains +bool_enum+, with three boolean variables, to take the 
   # value of the tuples [false, true, false] or [true, false, true] 

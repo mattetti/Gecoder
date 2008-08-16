@@ -3,7 +3,7 @@ module Gecode::Constraints::Set
     # Produces a new set operand representing the union between this operand 
     # and +set_operand_or_constant_set+.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The union between +set1+ and +set2+.
     #   set1.union set2
@@ -18,7 +18,7 @@ module Gecode::Constraints::Set
     # this operand and +set_operand_or_constant_set+. The disjoint union
     # is the union of the disjoint parts of the sets.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The disjoint union between +set1+ and +set2+.
     #   set1.disjoint_union set2
@@ -32,7 +32,7 @@ module Gecode::Constraints::Set
     # Produces a new set operand representing the intersection between
     # this operand and +set_operand_or_constant_set+. 
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The intersection between +set1+ and +set2+.
     #   set1.intersection set2
@@ -46,7 +46,7 @@ module Gecode::Constraints::Set
     # Produces a new set operand representing this operand minus 
     # +set_operand_or_constant_set+. 
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # +set1+ minus +set2+.
     #   set1.minus set2

@@ -3,7 +3,7 @@ module Gecode::Constraints::IntEnum
     # Produces an integer operand representing the maximum value of the 
     # integer variables in this operand.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The maximum of +int_enum+.
     #   int_enum.max
@@ -14,7 +14,7 @@ module Gecode::Constraints::IntEnum
     # Produces an integer operand representing the minimum value of the 
     # integer variables in this operand.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The minimum of +int_enum+.
     #   int_enum.min

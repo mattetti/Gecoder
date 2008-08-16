@@ -9,7 +9,7 @@ module Gecode::Constraints::Int #:nodoc:
   # integer operands. The operands, no matter how they were created, 
   # all respond to the properties defined by IntOperand.
   #
-  # == Examples
+  # ==== Examples 
   #
   # Produces a single integer operand (more specifically an IntVar) with
   # domain 0..9 inside a problem formulation, using
@@ -180,7 +180,7 @@ module Gecode::Constraints::Int #:nodoc:
   # Each constraint accepts a number of options. See ConstraintReceiver
   # for more information.
   #
-  # == Examples
+  # ==== Examples 
   #
   # Constrains +int_operand+ to be strictly greater than 5 using
   # IntConstraintReceiver#>:

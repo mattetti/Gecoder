@@ -2,7 +2,7 @@ module Gecode::Constraints::Set
   class SetConstraintReceiver
     # Constrains the set operand to have a domain equal to +constant_set+.
     # 
-    # == Examples
+    # ==== Examples 
     # 
     #   # +set+ must equal [1,2,5]
     #   set.must == [1,2,5]
@@ -19,7 +19,7 @@ module Gecode::Constraints::Set
 
     # Constrains the set operand to be a superset of +constant_set+.
     #
-    # == Examples
+    # ==== Examples 
     # 
     #   # +set+ must be a superset of [1,2,5]
     #   set.must_be.superset_of [1,2,5]
@@ -39,7 +39,7 @@ module Gecode::Constraints::Set
 
     # Constrains the set operand to be a subset of +constant_set+.
     # 
-    # == Examples
+    # ==== Examples 
     # 
     #   # +set+ must be a subset of [1,2,5]
     #   set.must_be.subset_of [1,2,5]
@@ -59,7 +59,7 @@ module Gecode::Constraints::Set
 
     # Constrains the set operand to be disjoint with +constant_set+.
     # 
-    # == Examples
+    # ==== Examples 
     # 
     #   # +set+ must be disjoint with [1,2,5]
     #   set.must_be.disjoint_with [1,2,5]
@@ -79,7 +79,7 @@ module Gecode::Constraints::Set
 
     # Constrains the set operand to be the complement of +constant_set+.
     #
-    # == Examples
+    # ==== Examples 
     # 
     #   # +set+ must be the complement of [1,2,5]
     #   set.must_be.complement_of [1,2,5]

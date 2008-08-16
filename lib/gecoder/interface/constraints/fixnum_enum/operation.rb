@@ -3,7 +3,7 @@ module Gecode::Constraints::FixnumEnum
     # Produces a new set operand representing the union between this operand, 
     # interpreted as a constant set, and +set_operand+.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The union between +fixnum_enum+ and +set+.
     #   fixnum_enum.union set
@@ -16,7 +16,7 @@ module Gecode::Constraints::FixnumEnum
     # +set_operand+. The disjoint union is the union of
     # the disjoint parts of the sets.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The disjoint union between +fixnum_enum+ and +set+.
     #   fixnum_enum.disjoint_union set
@@ -28,7 +28,7 @@ module Gecode::Constraints::FixnumEnum
     # this operand, interpreted as a constant set, and
     # +set_operand+. 
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The intersection between +fixnum_enum+ and +set+.
     #   fixnum_enum.intersection set
@@ -39,7 +39,7 @@ module Gecode::Constraints::FixnumEnum
     # Produces a new set operand representing this operand, interpreted
     # as a constant set, minus +set_operand+. 
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # +fixnum_enum+ minus +set+.
     #   fixnum_enum.minus set

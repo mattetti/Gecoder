@@ -5,7 +5,7 @@ module Gecode::Constraints::SelectedSet #:nodoc:
   # SetEnumOperand#[] with a SetOperand. It facilitates placing the 
   # constraints defined in SelectedSetConstraintReceiver
   #
-  # == Examples
+  # ==== Examples 
   #
   # Producing a SelectedSetOperand from +set_enum+ and +set_operand+:
   #
@@ -52,7 +52,7 @@ module Gecode::Constraints::SelectedSet #:nodoc:
   # SelectedSetConstraintReceiver from which the desired constraint can 
   # be used.
   #
-  # == Examples
+  # ==== Examples 
   #
   # Constrains the sets in +set_enum+ that are selected by +set_operand+ to be
   # disjoint. This uses SetEnumOperand#[] and

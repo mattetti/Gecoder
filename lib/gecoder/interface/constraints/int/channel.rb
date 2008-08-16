@@ -6,7 +6,7 @@ module Gecode::Constraints::Int
     # variable. I.e. constrains the integer variable to be 1 when the boolean
     # variable is true and 0 if the boolean variable is false.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The integer variable +int+ must be one exactly when the boolean 
     #   # variable +bool+ is true.

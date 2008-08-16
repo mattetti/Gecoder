@@ -10,7 +10,7 @@ module Gecode::Constraints::SetEnum #:nodoc:
   # Gecode::Model#wrap_enum. The enumerations, no matter how they were
   # created, all respond to the properties defined by SetEnumOperand.
   #
-  # == Examples
+  # ==== Examples 
   #
   # Produces an array of five set operands, with greatest lower bound
   # {0} and least upper bound {0, 1, 2}, inside a problem formulation
@@ -53,7 +53,7 @@ module Gecode::Constraints::SetEnum #:nodoc:
   # of the variations defined in Operand), which produces a 
   # SetEnumConstraintReceiver from which the desired constraint can be used.
   #
-  # == Examples
+  # ==== Examples 
   #
   # Constrains +set_enum+ to channel +int_enum+ by using 
   # SetEnumConstraintReceiver#channel:

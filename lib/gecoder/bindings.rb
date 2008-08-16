@@ -2,7 +2,7 @@
 # class that inherits from Gecode::Model or by using Gecode#solve et al.
 # Gecode::Model describes how to formulate problems.
 #
-# == Examples
+# ==== Examples 
 #
 # The following two examples show how to solve the following equation 
 # system, using both ways to define and solve a problem.

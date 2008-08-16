@@ -3,7 +3,7 @@ module Gecode::Constraints::IntEnum
     # Constrains all variables in the enumeration to be equal. 
     # Neither negation nor reification is supported.
     # 
-    # == Example
+    # ==== Examples 
     # 
     #   # Constrains all variables in +int_enum+ to be equal.
     #   int_enum.must_be.equal

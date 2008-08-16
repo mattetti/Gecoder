@@ -7,7 +7,7 @@ module Gecode::Constraints::IntEnum
     # 
     # The constraint does not support negation nor reification.
     # 
-    # == Examples
+    # ==== Examples 
     # 
     #   # Constrains all variables in +int_enum+ to be assigned different 
     #   # values.

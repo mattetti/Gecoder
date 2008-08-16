@@ -3,7 +3,7 @@ module Gecode::Constraints::Int
     # Constrains the integer operand to equal +int_operand_or_fixnum+.
     # Negation and reification are supported.
     #
-    # === Examples
+    # ==== Examples 
     #   
     #   # +int1+ must equal +int2+
     #   int1.must == int2
@@ -21,7 +21,7 @@ module Gecode::Constraints::Int
     # Constrains the integer operand to be strictly greater than
     # +int_operand_or_fixnum+. Negation and reification are supported.
     #
-    # === Examples
+    # ==== Examples 
     #   
     #   # +int1+ must be strictly greater than +int2+
     #   int1.must > int2
@@ -39,7 +39,7 @@ module Gecode::Constraints::Int
     # Constrains the integer operand to be greater than or equal to
     # +int_operand_or_fixnum+. Negation and reification are supported.
     #
-    # === Examples
+    # ==== Examples 
     #   
     #   # +int1+ must be greater than or equal to +int2+
     #   int1.must >= int2
@@ -57,7 +57,7 @@ module Gecode::Constraints::Int
     # Constrains the integer operand to be strictly less than
     # +int_operand_or_fixnum+. Negation and reification are supported.
     #
-    # === Examples
+    # ==== Examples 
     #   
     #   # +int1+ must be strictly less than +int2+
     #   int1.must < int2
@@ -75,7 +75,7 @@ module Gecode::Constraints::Int
     # Constrains the integer operand to be less than or equal to
     # +int_operand_or_fixnum+. Negation and reification are supported.
     #
-    # === Examples
+    # ==== Examples 
     #   
     #   # +int1+ must be less than or equal to +int2+
     #   int1.must <= int2

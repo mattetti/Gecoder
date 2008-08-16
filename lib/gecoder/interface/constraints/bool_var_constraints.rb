@@ -9,7 +9,7 @@ module Gecode::Constraints::Bool #:nodoc:
   # boolean operands. The operands, no matter how they were created, 
   # all respond to the properties defined by BoolOperand.
   #
-  # == Examples
+  # ==== Examples 
   #
   # Produces a single boolean operand (more specifically a BoolVar)
   # inside a problem formulation, using Gecode::Model#bool_var:
@@ -58,7 +58,7 @@ module Gecode::Constraints::Bool #:nodoc:
   # Each constraint accepts a number of options. See ConstraintReceiver
   # for more information.
   #
-  # == Examples
+  # ==== Examples 
   #
   # Constrains +bool_operand+ to be true using
   # BoolConstraintReceiver#true:

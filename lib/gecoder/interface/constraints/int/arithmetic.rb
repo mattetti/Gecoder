@@ -3,7 +3,7 @@ module Gecode::Constraints::Int
     # Produces an integer operand representing the absolute value of this 
     # operand.
     #
-    # == Examples
+    # ==== Examples 
     #   
     #   # The absolute value of +int_op+.
     #   int_op.abs
@@ -13,7 +13,7 @@ module Gecode::Constraints::Int
     
     # Produces an integer operand representing this operand squared.
     #
-    # == Examples
+    # ==== Examples 
     #   
     #   # The value of +int_op*int_op+.
     #   int_op.squared
@@ -24,7 +24,7 @@ module Gecode::Constraints::Int
     # Produces an integer operand representing the square root of this 
     # operand rounded down.
     #
-    # == Examples
+    # ==== Examples 
     #   
     #   # The square root of +int_op+, rounded down.
     #   int_op.square_root
@@ -39,7 +39,7 @@ module Gecode::Constraints::Int
     # Produces a new integer operand representing this operand times
     # +int_operand+.
     #
-    # == Examples
+    # ==== Examples 
     #   
     #   # The value of +int_op1+ times +int_op2+.
     #   int_op1 * int_op2

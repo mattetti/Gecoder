@@ -9,7 +9,7 @@ module Gecode::Constraints::Set #:nodoc:
   # no matter how they were created, all respond to the properties
   # defined by SetOperand.
   #
-  # == Examples
+  # ==== Examples 
   #
   # Produces a single set operand (more specifically a SetVar), with
   # greatest lower bound {0} and least upper bound {0, 1, 2}, inside a
@@ -181,7 +181,7 @@ module Gecode::Constraints::Set #:nodoc:
   # Most constraint accept :reify option. See ConstraintReceiver for
   # more information.
   #
-  # == Examples
+  # ==== Examples 
   #
   # Constrains +set_operand+ to be a subset of {0, 1, 2} using
   # an alias of SetConstraintReceiver#subset:

@@ -3,7 +3,7 @@ module Gecode::Constraints::SetEnum
     # Produces a set operand representing the union of all sets in this
     # enumeration.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The union of all sets in +set_enum+.
     #   set_enum.union
@@ -14,7 +14,7 @@ module Gecode::Constraints::SetEnum
     # Produces a set operand representing the intersection of all sets in this
     # enumeration.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The intersection of all sets in +set_enum+.
     #   set_enum.intersection
@@ -25,7 +25,7 @@ module Gecode::Constraints::SetEnum
     # Produces a set operand representing the disjoint union of all sets 
     # in this enumeration.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The disjoint union of all sets in +set_enum+.
     #   set_enum.disjoint_union

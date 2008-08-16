@@ -17,7 +17,7 @@ module Gecode::Constraints::IntEnum
     # will be constrained to be sorted (otherwise not). Sort constraints with
     # options do not allow negation.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # Constrain +numbers+ to be sorted.
     #   numbers.must_be.sorted

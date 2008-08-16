@@ -9,7 +9,7 @@ module Gecode::Constraints::FixnumEnum #:nodoc:
   # of fixnum Gecode::Model#wrap_enum. The enumerations created that way
   # all respond to the properties defined by FixnumEnumOperand.
   #
-  # == Examples
+  # ==== Examples 
   #
   # Uses Gecode::Model#wrap_enum inside a problem formulation to create
   # a FixnumEnumOperand from an existing enumeration of Fixnum:

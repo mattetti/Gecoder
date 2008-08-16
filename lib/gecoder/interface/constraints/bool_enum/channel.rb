@@ -16,7 +16,7 @@ module Gecode::Constraints::BoolEnum
     # Neither reification nor negation is supported. The int variable
     # and the enumeration can be interchanged.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # Constrains the enumeration called +option_is_selected+ to be false 
     #   # in the first four positions and have exactly one true variable in 

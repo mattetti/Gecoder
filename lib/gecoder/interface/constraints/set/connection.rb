@@ -2,7 +2,7 @@ module Gecode::Constraints::Set
   module SetOperand
     # Produces an integer operand representing the minimum of the set.
     #
-    # == Examples
+    # ==== Examples 
     #
     #  # The minimum of +set+.
     #  set.min
@@ -12,7 +12,7 @@ module Gecode::Constraints::Set
     
     # Produces an integer operand representing the maximum of the set.
     #
-    # == Examples
+    # ==== Examples 
     #
     #  # The maximum of +set+.
     #  set.max
@@ -31,7 +31,7 @@ module Gecode::Constraints::Set
     # Elements not included in the weights or substitutions hash are 
     # removed from the upper bound of the set.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # The sum of +set+.
     #   set.sum

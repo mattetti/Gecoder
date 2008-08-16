@@ -7,7 +7,7 @@ module Gecode::Constraints::Set
     # Neither reification nor negation is supported. The boolean enum and set
     # can be interchanged.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # Constrains the enumeration of boolean variables called +bools+ to at
     #   # least have the first and third variables set to true 

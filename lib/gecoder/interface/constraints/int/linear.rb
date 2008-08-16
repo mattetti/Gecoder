@@ -3,7 +3,7 @@ module Gecode::Constraints::Int
     # Produces a new integer operand representing this operand plus 
     # +int_operand_or_fixnum+.
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # +int1+ plus +int2+
     #   int1 + int2
@@ -17,7 +17,7 @@ module Gecode::Constraints::Int
     # Produces a new integer operand representing this operand minus 
     # +int_operand_or_fixnum+. 
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # +int1+ minus +int2+
     #   int1 - int2
@@ -31,7 +31,7 @@ module Gecode::Constraints::Int
     # Produces a new integer operand representing this operand times a 
     # constant. 
     #
-    # == Examples
+    # ==== Examples 
     #
     #   # +int+ times 17
     #   int * 17
