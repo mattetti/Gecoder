@@ -174,12 +174,12 @@ describe 'property that produces int operand by short circuiting equality', :sha
   it 'should give the same solution regardless of whether short circuit was used' do
     int_operand = @selected_property
     direct_int_var = int_operand.to_int_var
-    indirect_int_var = @model.int_var
-    @selected_property.must == indirect_int_var
+    indirect_int_op, _ = general_int_operand(@model)
+    @selected_property.must == indirect_int_op
     @model.solve!
 
     direct_int_var.should_not have_domain(Gecode::Model::LARGEST_INT_DOMAIN)
-    direct_int_var.should have_domain(indirect_int_var.domain)
+    direct_int_var.should have_domain(indirect_int_op.domain)
   end
 
   it 'should short circuit equality' do

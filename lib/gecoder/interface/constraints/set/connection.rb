@@ -108,7 +108,7 @@ module Gecode::Set
         @subs = subs
       end
 
-      def constrain_equal(variable, params, constrain)
+      def constrain_equal(int_operand, constrain, propagation_options)
         set = @set.to_set_var
         lub = set.upper_bound.to_a
         lub.delete_if{ |e| @subs[e].nil? }
@@ -119,11 +119,11 @@ module Gecode::Set
           # bound.
           min = substituted_lub.find_all{ |e| e < 0}.inject(0){ |x, y| x + y }
           max = substituted_lub.find_all{ |e| e > 0}.inject(0){ |x, y| x + y }
-          variable.must_be.in min..max
+          int_operand.must_be.in min..max
         end
 
         Gecode::Raw::weights(@model.active_space, lub, substituted_lub, 
-          set.bind, variable.bind)
+          set.bind, int_operand.to_int_var.bind)
       end
     end
   end
