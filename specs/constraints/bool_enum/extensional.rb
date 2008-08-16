@@ -28,7 +28,7 @@ describe 'bool tuple constraint', :shared => true do
   end
 end
 
-describe Gecode::Constraints::BoolEnum::Extensional, ' (tuple constraint)' do
+describe Gecode::BoolEnum::Extensional, ' (tuple constraint)' do
   before do
     @model = Gecode::Model.new
     @tuples = [[true, false, true], [false, false, true]]
@@ -183,7 +183,7 @@ describe 'bool regular expression constraint', :shared => true do
   end
 end
 
-describe Gecode::Constraints::BoolEnum::Extensional, ' (regexp constraint)' do
+describe Gecode::BoolEnum::Extensional, ' (regexp constraint)' do
   before do
     @model = Gecode::Model.new
     @variables = @bools = @model.bool_var_array(3)

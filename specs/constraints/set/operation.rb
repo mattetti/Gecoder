@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../property_helper'
 
-Gecode::Constraints::Util::SET_OPERATION_TYPES.each_pair do |operation, type|
-  describe Gecode::Constraints::Set::Operation, " (#{operation} with set variable)" do
+Gecode::Util::SET_OPERATION_TYPES.each_pair do |operation, type|
+  describe Gecode::Set::Operation, " (#{operation} with set variable)" do
     before do
       @model = Gecode::Model.new
       @set1 = @model.set_var([0], 0..20)
@@ -16,7 +16,7 @@ Gecode::Constraints::Util::SET_OPERATION_TYPES.each_pair do |operation, type|
       end
       @selected_property = @set1.method(operation).call(@set2)
       @constraint_class = 
-        Gecode::Constraints::Set::Operation::OperationConstraint
+        Gecode::Set::Operation::OperationConstraint
     end
 
     it "should translate #{operation} into an operation constraint" do
@@ -75,8 +75,8 @@ Gecode::Constraints::Util::SET_OPERATION_TYPES.each_pair do |operation, type|
   end
 end
 
-Gecode::Constraints::Util::SET_OPERATION_TYPES.each_pair do |operation, type|
-  describe Gecode::Constraints::Set::Operation, " (#{operation} with constant set)" do
+Gecode::Util::SET_OPERATION_TYPES.each_pair do |operation, type|
+  describe Gecode::Set::Operation, " (#{operation} with constant set)" do
     before do
       @model = Gecode::Model.new
       @set = @model.set_var([0], 0..20)
@@ -90,7 +90,7 @@ Gecode::Constraints::Util::SET_OPERATION_TYPES.each_pair do |operation, type|
       end
       @selected_property = @set.method(operation).call(@constant_set)
       @constraint_class = 
-        Gecode::Constraints::Set::Operation::OperationConstraint
+        Gecode::Set::Operation::OperationConstraint
     end
 
     it "should translate #{operation} into an operation constraint" do

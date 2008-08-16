@@ -11,7 +11,7 @@ class SetEnumDistinctSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::SetEnum::Distinct, ' (at most one)' do
+describe Gecode::SetEnum::Distinct, ' (at most one)' do
   before do
     @model = SetEnumDistinctSampleProblem.new
     @sets = @model.sets

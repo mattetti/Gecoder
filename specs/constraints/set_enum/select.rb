@@ -24,7 +24,7 @@ describe 'selection constraint', :shared => true do
   end
 end
 
-describe Gecode::Constraints::SetEnum::Select, ' (int operand)' do
+describe Gecode::SetEnum::Select, ' (int operand)' do
   include GecodeR::Specs::SetHelper
 
   before do
@@ -40,7 +40,7 @@ describe Gecode::Constraints::SetEnum::Select, ' (int operand)' do
       set_enum[int]
     end
     @selected_property = @sets[@index]
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the specified element of an enum of sets' do
@@ -60,7 +60,7 @@ describe Gecode::Constraints::SetEnum::Select, ' (int operand)' do
     'property that produces set operand by short circuiting equality')
 end
 
-describe Gecode::Constraints::SetEnum::Select, ' (set operand)' do
+describe Gecode::SetEnum::Select, ' (set operand)' do
   before do
     @model = SelectionSampleProblem.new
     @sets = @model.sets

@@ -124,7 +124,7 @@ module GecodeR::Specs
       
       int_var = model.int_var
       class <<op
-        include Gecode::Constraints::Int::IntOperand
+        include Gecode::Int::IntOperand
         attr :model
       end
       op.stub!(:to_int_var).and_return int_var
@@ -140,7 +140,7 @@ module GecodeR::Specs
 
       bool_var = model.bool_var
       class <<op
-        include Gecode::Constraints::Bool::BoolOperand
+        include Gecode::Bool::BoolOperand
         attr :model
       end
       op.stub!(:to_bool_var).and_return bool_var
@@ -156,7 +156,7 @@ module GecodeR::Specs
 
       set_var = model.set_var
       class <<op
-        include Gecode::Constraints::Set::SetOperand
+        include Gecode::Set::SetOperand
         attr :model
       end
       op.stub!(:to_set_var).and_return set_var
@@ -172,7 +172,7 @@ module GecodeR::Specs
       
       int_enum = model.int_var_array(5)
       class <<op
-        include Gecode::Constraints::IntEnum::IntEnumOperand
+        include Gecode::IntEnum::IntEnumOperand
         attr :model
       end
       op.stub!(:to_int_enum).and_return int_enum
@@ -188,7 +188,7 @@ module GecodeR::Specs
       
       bool_enum = model.bool_var_array(5)
       class <<op
-        include Gecode::Constraints::BoolEnum::BoolEnumOperand
+        include Gecode::BoolEnum::BoolEnumOperand
         attr :model
       end
       op.stub!(:to_bool_enum).and_return bool_enum
@@ -204,7 +204,7 @@ module GecodeR::Specs
       
       set_enum = model.set_var_array(5)
       class <<op
-        include Gecode::Constraints::SetEnum::SetEnumOperand
+        include Gecode::SetEnum::SetEnumOperand
         attr :model
       end
       op.stub!(:to_set_enum).and_return set_enum
@@ -218,7 +218,7 @@ module GecodeR::Specs
     def general_selected_set_operand(model)
       set_enum, set_enum_var = general_set_enum_operand(model)
       set, set_var = general_set_operand(model)
-      op = Gecode::Constraints::SelectedSet::SelectedSetOperand.new(
+      op = Gecode::SelectedSet::SelectedSetOperand.new(
         set_enum, set)
       return op, [set_enum_var, set_var]
     end
@@ -228,7 +228,7 @@ module GecodeR::Specs
     # operands it returns when # #to_selected_set is called.
     def general_set_elements_operand(model)
       set, set_var = general_set_operand(model)
-      op = Gecode::Constraints::SetElements::SetElementsOperand.new(set)
+      op = Gecode::SetElements::SetElementsOperand.new(set)
       return op, set_var
     end
 
@@ -240,7 +240,7 @@ module GecodeR::Specs
       
       fixnum_enum = model.wrap_enum([1, -4, 9, 4, 0])
       class <<op
-        include Gecode::Constraints::FixnumEnum::FixnumEnumOperand
+        include Gecode::FixnumEnum::FixnumEnumOperand
         attr :model
       end
       op.stub!(:to_fixnum_enum).and_return fixnum_enum

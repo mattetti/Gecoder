@@ -1,4 +1,4 @@
-module Gecode::Constraints::IntEnum
+module Gecode::IntEnum
   module IntEnumOperand
     # This adds the adder for the methods in the modules including it. The 
     # reason for doing it so indirect is that the first #[] won't be defined 
@@ -42,7 +42,7 @@ module Gecode::Constraints::IntEnum
   end
 
   module Element #:nodoc:
-    class ElementIntOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
+    class ElementIntOperand < Gecode::Int::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, enum_op, position_int_var_op)
         super model
         @enum = enum_op

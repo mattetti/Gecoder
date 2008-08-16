@@ -117,7 +117,7 @@ describe Gecode::IntEnumMethods do
 
   it 'should define #to_int_enum' do
     @int_enum.to_int_enum.should be_kind_of(
-      Gecode::Constraints::IntEnum::IntEnumOperand)
+      Gecode::IntEnum::IntEnumOperand)
   end
 end
 
@@ -135,7 +135,7 @@ describe Gecode::BoolEnumMethods do
   
   it 'should define #to_bool_enum' do
     @bool_enum.to_bool_enum.should be_kind_of(
-      Gecode::Constraints::BoolEnum::BoolEnumOperand)
+      Gecode::BoolEnum::BoolEnumOperand)
   end
 end
 
@@ -158,7 +158,7 @@ describe Gecode::SetEnumMethods do
   
   it 'should define #to_set_enum' do
     @set_enum.to_set_enum.should be_kind_of(
-      Gecode::Constraints::SetEnum::SetEnumOperand)
+      Gecode::SetEnum::SetEnumOperand)
   end
 end
 
@@ -174,6 +174,6 @@ describe Gecode::FixnumEnumMethods do
   
   it 'should define #to_fixnum_enum' do
     @enum.to_fixnum_enum.should be_kind_of(
-      Gecode::Constraints::FixnumEnum::FixnumEnumOperand)
+      Gecode::FixnumEnum::FixnumEnumOperand)
   end
 end

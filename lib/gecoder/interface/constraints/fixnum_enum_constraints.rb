@@ -1,6 +1,6 @@
 # A module containing constraints that have enumerations of instances of
 # Fixnum as left hand side.
-module Gecode::Constraints::FixnumEnum #:nodoc:
+module Gecode::FixnumEnum #:nodoc:
   # A FixnumEnumOperand is a enumeration of Fixnum on which the
   # constraints defined in FixnumEnumConstraintReceiver can be placed.
   # They typically service as constant arrays or constant sets.
@@ -19,10 +19,10 @@ module Gecode::Constraints::FixnumEnum #:nodoc:
   #--
   # Classes that mix in FixnumEnumOperand must define #model.
   module FixnumEnumOperand
-    include Gecode::Constraints::Operand 
+    include Gecode::Operand 
 
     def method_missing(method, *args) #:nodoc:
-      if Gecode::FixnumEnum.instance_methods.include? method.to_s
+      if Gecode::FixnumEnum::Dummy.instance_methods.include? method.to_s
         # Delegate to the fixnum enum.
         to_fixnum_enum.method(method).call(*args)
       else

@@ -1,4 +1,4 @@
-module Gecode::Constraints::Set
+module Gecode::Set
   class SetConstraintReceiver
     alias_method :pre_relation_equality, :==
     # Constrains the set operand to equal +set_operand+.
@@ -104,7 +104,7 @@ module Gecode::Constraints::Set
     def add_relation_constraint(relation_name, set, options)
       @params[:rhs] = set
       @params[:relation] = relation_name
-      @params.update Gecode::Constraints::Set::Util.decode_options(options)
+      @params.update Gecode::Set::Util.decode_options(options)
       if relation_name == :==
         @model.add_constraint Relation::EqualityRelationConstraint.new(@model, 
           @params)
@@ -116,14 +116,14 @@ module Gecode::Constraints::Set
   
   # A module that gathers the classes and modules used in relation constraints.
   module Relation #:nodoc:
-    class EqualityRelationConstraint < Gecode::Constraints::ReifiableConstraint #:nodoc:
+    class EqualityRelationConstraint < Gecode::ReifiableConstraint #:nodoc:
       def post
         lhs, rhs, reif_var, negate = @params.values_at(:lhs, :rhs, :reif, 
           :negate)
         if negate
-          rel_type = Gecode::Constraints::Util::NEGATED_SET_RELATION_TYPES[:==]
+          rel_type = Gecode::Util::NEGATED_SET_RELATION_TYPES[:==]
         else
-          rel_type = Gecode::Constraints::Util::SET_RELATION_TYPES[:==]
+          rel_type = Gecode::Util::SET_RELATION_TYPES[:==]
         end
         
         (params = []) << lhs.to_set_var.bind
@@ -136,13 +136,13 @@ module Gecode::Constraints::Set
       end
     end
   
-    class RelationConstraint < Gecode::Constraints::ReifiableConstraint #:nodoc:
+    class RelationConstraint < Gecode::ReifiableConstraint #:nodoc:
       def post
         lhs, rhs, reif_var, relation = @params.values_at(:lhs, :rhs, :reif, 
           :relation)
         
         (params = []) << lhs.to_set_var.bind
-        params << Gecode::Constraints::Util::SET_RELATION_TYPES[relation]
+        params << Gecode::Util::SET_RELATION_TYPES[relation]
         params << rhs.to_set_var.bind
         if reif_var.respond_to? :to_bool_var
           params << reif_var.to_bool_var.bind 

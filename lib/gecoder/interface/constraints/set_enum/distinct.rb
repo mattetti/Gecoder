@@ -1,6 +1,6 @@
-module Gecode::Constraints::SetEnum
+module Gecode::SetEnum
   class SetEnumConstraintReceiver
-    # Constraints all pairs of set variables in the enumeration to at
+    # Constrains all pairs of set variables in the enumeration to at
     # most have one element in common and be of a specified size.
     # Providing a size is not optional.
     # 
@@ -32,7 +32,7 @@ module Gecode::Constraints::SetEnum
   
   # A module that gathers the classes and modules used in distinct constraints.
   module Distinct #:nodoc:
-    class AtMostOneConstraint < Gecode::Constraints::Constraint #:nodoc:
+    class AtMostOneConstraint < Gecode::Constraint #:nodoc:
       def post
         sets, size = @params.values_at(:lhs, :size)
         Gecode::Raw::atmostOne(@model.active_space, 

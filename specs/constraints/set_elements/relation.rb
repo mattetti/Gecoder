@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../constraint_helper'
 
-Gecode::Constraints::Util::RELATION_TYPES.each_pair do |relation, rel_value|
-  describe Gecode::Constraints::SetElements::Relation, " (#{relation} with int op)" do
+Gecode::Util::RELATION_TYPES.each_pair do |relation, rel_value|
+  describe Gecode::SetElements::Relation, " (#{relation} with int op)" do
     before do
       @model = Gecode::Model.new
       @set = @model.set_var([0], 0..2)
@@ -42,8 +42,8 @@ Gecode::Constraints::Util::RELATION_TYPES.each_pair do |relation, rel_value|
   end
 end
 
-Gecode::Constraints::Util::RELATION_TYPES.each_pair do |relation, rel_value|
-  describe Gecode::Constraints::SetElements::Relation, " (#{relation} with fixnum)" do
+Gecode::Util::RELATION_TYPES.each_pair do |relation, rel_value|
+  describe Gecode::SetElements::Relation, " (#{relation} with fixnum)" do
     before do
       @model = Gecode::Model.new
       @set = @model.set_var([], 0..2)

@@ -9,11 +9,11 @@ describe 'set enum operation property', :shared => true do
     end
     @selected_property = @set_enum.method(@operation).call
 
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
 
   it "should translate #{@operation} into an operand constraint" do
-    operation_type = Gecode::Constraints::Util::SET_OPERATION_TYPES[@operation]
+    operation_type = Gecode::Util::SET_OPERATION_TYPES[@operation]
     @model.allow_space_access do
       Gecode::Raw.should_receive(:rel).with(
         an_instance_of(Gecode::Raw::Space), operation_type, 
@@ -27,7 +27,7 @@ describe 'set enum operation property', :shared => true do
     'property that produces set operand by short circuiting equality')
 end
 
-describe Gecode::Constraints::SetEnum::Operation, ' (union)' do
+describe Gecode::SetEnum::Operation, ' (union)' do
   before do
     @model = Gecode::Model.new
     @set_enum = @sets = @model.set_var_array(10, [], 0..20)
@@ -49,7 +49,7 @@ describe Gecode::Constraints::SetEnum::Operation, ' (union)' do
   it_should_behave_like 'set enum operation property'
 end
 
-describe Gecode::Constraints::SetEnum::Operation, ' (intersection)' do
+describe Gecode::SetEnum::Operation, ' (intersection)' do
   before do
     @model = Gecode::Model.new
     @set_enum = @sets = @model.set_var_array(10, [], 0..20)
@@ -74,7 +74,7 @@ describe Gecode::Constraints::SetEnum::Operation, ' (intersection)' do
   it_should_behave_like 'set enum operation property'
 end
 
-describe Gecode::Constraints::SetEnum::Operation, ' (disjoint union)' do
+describe Gecode::SetEnum::Operation, ' (disjoint union)' do
   before do
     @model = Gecode::Model.new
     @set_enum = @sets = @model.set_var_array(10, [], 0..20)

@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../property_helper'
 
-Gecode::Constraints::Util::SET_OPERATION_TYPES.each_pair do |operation, type|
-  describe Gecode::Constraints::FixnumEnum::Operation, " (#{operation} with set variable)" do
+Gecode::Util::SET_OPERATION_TYPES.each_pair do |operation, type|
+  describe Gecode::FixnumEnum::Operation, " (#{operation} with set variable)" do
     before do
       @model = Gecode::Model.new
       @constant_lhs = @model.wrap_enum [0, 4, 7]
@@ -16,7 +16,7 @@ Gecode::Constraints::Util::SET_OPERATION_TYPES.each_pair do |operation, type|
       end
       @selected_property = @constant_lhs.method(operation).call(@set)
       @constraint_class = 
-        Gecode::Constraints::Set::Operation::OperationConstraint
+        Gecode::Set::Operation::OperationConstraint
     end
 
     it "should translate #{operation} into an operation constraint" do

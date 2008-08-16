@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../property_helper'
 
-describe Gecode::Constraints::Set::Connection, ' (min)' do
+describe Gecode::Set::Connection, ' (min)' do
   before do
     @model = Gecode::Model.new
     @set = @model.set_var([], 0..9)
@@ -12,7 +12,7 @@ describe Gecode::Constraints::Set::Connection, ' (min)' do
       set.min
     end
     @selected_property = @set.min
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the min of a set' do
@@ -31,7 +31,7 @@ describe Gecode::Constraints::Set::Connection, ' (min)' do
     'property that produces int operand by short circuiting equality')
 end
 
-describe Gecode::Constraints::Set::Connection, ' (max)' do
+describe Gecode::Set::Connection, ' (max)' do
   before do
     @model = Gecode::Model.new
     @set = @model.set_var([], 0..9)
@@ -43,7 +43,7 @@ describe Gecode::Constraints::Set::Connection, ' (max)' do
       set.max
     end
     @selected_property = @set.max
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the max of a set' do
@@ -62,7 +62,7 @@ describe Gecode::Constraints::Set::Connection, ' (max)' do
     'property that produces int operand by short circuiting equality')
 end
 
-describe Gecode::Constraints::Set::Connection, ' (sum)' do
+describe Gecode::Set::Connection, ' (sum)' do
   before do
     @model = Gecode::Model.new
     @set = @model.set_var([], 0..9)
@@ -74,7 +74,7 @@ describe Gecode::Constraints::Set::Connection, ' (sum)' do
       set.sum
     end
     @selected_property = @set.sum
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the sum of a set' do
@@ -105,7 +105,7 @@ describe Gecode::Constraints::Set::Connection, ' (sum)' do
     'property that produces int operand by short circuiting equality')
 end
 
-describe Gecode::Constraints::Set::Connection, ' (sum with weights)' do
+describe Gecode::Set::Connection, ' (sum with weights)' do
   before do
     @model = Gecode::Model.new
     @set = @model.set_var([], 0..9)
@@ -118,7 +118,7 @@ describe Gecode::Constraints::Set::Connection, ' (sum with weights)' do
       set.sum(:weights => @weights)
     end
     @selected_property = @set.sum(:weights => @weights)
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the sum of a set' do
@@ -141,7 +141,7 @@ describe Gecode::Constraints::Set::Connection, ' (sum with weights)' do
     'property that produces int operand by short circuiting equality')
 end
 
-describe Gecode::Constraints::Set::Connection, ' (sum with substitutions)' do
+describe Gecode::Set::Connection, ' (sum with substitutions)' do
   before do
     @model = Gecode::Model.new
     @set = @model.set_var([], 0..9)
@@ -154,7 +154,7 @@ describe Gecode::Constraints::Set::Connection, ' (sum with substitutions)' do
       set.sum(:substitutions => @subs)
     end
     @selected_property = @set.sum(:substitutions => @subs)
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the sum of a set' do

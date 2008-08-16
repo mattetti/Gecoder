@@ -1,4 +1,4 @@
-module Gecode::Constraints::Set
+module Gecode::Set
   class SetConstraintReceiver
     # Constrains the set operand to have a domain equal to +constant_set+.
     # 
@@ -104,12 +104,12 @@ module Gecode::Constraints::Set
     # Adds a domain constraint for the specified relation name, constant set
     # and options.
     def add_domain_constraint(relation_name, constant_set, options)
-      unless Gecode::Constraints::Util.constant_set? constant_set
+      unless Gecode::Util.constant_set? constant_set
         raise TypeError, "Expected constant set, got #{constant_set.class}."
       end
       @params[:rhs] = constant_set
       @params[:relation] = relation_name
-      @params.update Gecode::Constraints::Set::Util.decode_options(options)
+      @params.update Gecode::Set::Util.decode_options(options)
       if relation_name == :==
         @model.add_constraint Domain::EqualityDomainConstraint.new(@model, 
           @params)
@@ -121,32 +121,32 @@ module Gecode::Constraints::Set
   
   # A module that gathers the classes and modules used in domain constraints.
   module Domain #:nodoc:
-    class EqualityDomainConstraint < Gecode::Constraints::ReifiableConstraint #:nodoc:
+    class EqualityDomainConstraint < Gecode::ReifiableConstraint #:nodoc:
       def post
         var, domain, reif_var, negate = @params.values_at(:lhs, :rhs, :reif, 
           :negate)
         if negate
-          rel_type = Gecode::Constraints::Util::NEGATED_SET_RELATION_TYPES[:==]
+          rel_type = Gecode::Util::NEGATED_SET_RELATION_TYPES[:==]
         else
-          rel_type = Gecode::Constraints::Util::SET_RELATION_TYPES[:==]
+          rel_type = Gecode::Util::SET_RELATION_TYPES[:==]
         end
         
         (params = []) << var.to_set_var.bind
         params << rel_type
-        params << Gecode::Constraints::Util.constant_set_to_params(domain)
+        params << Gecode::Util.constant_set_to_params(domain)
         params << reif_var.to_bool_var.bind if reif_var.respond_to? :to_bool_var
         Gecode::Raw::dom(@model.active_space, *params.flatten)
       end
     end
   
-    class DomainConstraint < Gecode::Constraints::ReifiableConstraint #:nodoc:
+    class DomainConstraint < Gecode::ReifiableConstraint #:nodoc:
       def post
         var, domain, reif_var, relation = @params.values_at(:lhs, :rhs, :reif, 
           :relation)
         
         (params = []) << var.to_set_var.bind
-        params << Gecode::Constraints::Util::SET_RELATION_TYPES[relation]
-        params << Gecode::Constraints::Util.constant_set_to_params(domain)
+        params << Gecode::Util::SET_RELATION_TYPES[relation]
+        params << Gecode::Util.constant_set_to_params(domain)
         params << reif_var.to_bool_var.bind if reif_var.respond_to? :to_bool_var
         Gecode::Raw::dom(@model.active_space, *params.flatten)
       end

@@ -1,4 +1,4 @@
-module Gecode::Constraints::Bool
+module Gecode::Bool
   module BoolLinearOperations #:nodoc:
     # Produces an integer operand representing the value of this boolean
     # operand (0 or 1) plus +op2+.
@@ -99,7 +99,7 @@ module Gecode::Constraints::Bool
 
   # A module that gathers the classes and modules used in linear constraints.
   module Linear #:nodoc:
-    class LinearRelationConstraint < Gecode::Constraints::ReifiableConstraint #:nodoc:
+    class LinearRelationConstraint < Gecode::ReifiableConstraint #:nodoc:
       def post
         lhs, rhs, relation_type, reif_var = 
           @params.values_at(:lhs, :rhs, :relation_type, :reif)
@@ -117,8 +117,8 @@ module Gecode::Constraints::Bool
 
     # Describes a binary tree of expression nodes which together form a linear 
     # expression.
-    class ExpressionTree < Gecode::Constraints::Int::ShortCircuitRelationsOperand #:nodoc:
-      include Gecode::Constraints::Bool::BoolLinearOperations
+    class ExpressionTree < Gecode::Int::ShortCircuitRelationsOperand #:nodoc:
+      include Gecode::Bool::BoolLinearOperations
       attr :model
 
       # Constructs a new expression with the specified variable
@@ -158,10 +158,10 @@ module Gecode::Constraints::Bool
       def relation_constraint(relation, bool_operand_or_fix, params)
         unless params[:negate]
           relation_type = 
-            Gecode::Constraints::Util::RELATION_TYPES[relation]
+            Gecode::Util::RELATION_TYPES[relation]
         else
           relation_type = 
-            Gecode::Constraints::Util::NEGATED_RELATION_TYPES[relation]
+            Gecode::Util::NEGATED_RELATION_TYPES[relation]
         end
 
         unless bool_operand_or_fix.respond_to? :to_minimodel_lin_exp

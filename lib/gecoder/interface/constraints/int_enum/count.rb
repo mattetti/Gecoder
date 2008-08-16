@@ -1,4 +1,4 @@
-module Gecode::Constraints::IntEnum
+module Gecode::IntEnum
   module IntEnumOperand
     # Produces a new integer operand representing the number of times
     # +int_operand_or_fixnum+ is present in this enumeration.
@@ -22,7 +22,7 @@ module Gecode::Constraints::IntEnum
 
   # A module that gathers the classes and modules used in count constraints.
   module Count #:nodoc:
-    class IntEnumCountOperand < Gecode::Constraints::Int::ShortCircuitRelationsOperand #:nodoc:
+    class IntEnumCountOperand < Gecode::Int::ShortCircuitRelationsOperand #:nodoc:
       def initialize(model, int_enum, element)
         super model
         @enum = int_enum
@@ -32,10 +32,10 @@ module Gecode::Constraints::IntEnum
       def relation_constraint(relation, int_operand_or_fix, params)
         unless params[:negate]
           relation_type = 
-            Gecode::Constraints::Util::RELATION_TYPES[relation]
+            Gecode::Util::RELATION_TYPES[relation]
         else
           relation_type = 
-            Gecode::Constraints::Util::NEGATED_RELATION_TYPES[relation]
+            Gecode::Util::NEGATED_RELATION_TYPES[relation]
         end
         
         params.update(:enum => @enum, :element => @element, 
@@ -44,7 +44,7 @@ module Gecode::Constraints::IntEnum
       end
     end
     
-    class CountConstraint < Gecode::Constraints::ReifiableConstraint #:nodoc:
+    class CountConstraint < Gecode::ReifiableConstraint #:nodoc:
       def post
         enum, element, relation_type, rhs = 
           @params.values_at(:enum, :element, :relation_type, :rhs)

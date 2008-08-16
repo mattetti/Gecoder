@@ -1,4 +1,4 @@
-module Gecode::Constraints::SelectedSet
+module Gecode::SelectedSet
   class SelectedSetOperand
     # Produces a set operand representing the selected sets' union.
     #
@@ -58,13 +58,13 @@ module Gecode::Constraints::SelectedSet
           'reification option.'
       end
 
-      @params.update Gecode::Constraints::Set::Util.decode_options(options)
+      @params.update Gecode::Set::Util.decode_options(options)
       @model.add_constraint Select::DisjointConstraint.new(@model, @params)
     end
   end
 
   module Select #:nodoc:
-    class SelectedSetUnionOperand < Gecode::Constraints::Set::ShortCircuitEqualityOperand #:nodoc:
+    class SelectedSetUnionOperand < Gecode::Set::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, selected_set)
         super model
         @selected_set = selected_set
@@ -82,7 +82,7 @@ module Gecode::Constraints::SelectedSet
       end
     end
     
-    class SelectedSetIntersectionOperand < Gecode::Constraints::Set::ShortCircuitEqualityOperand #:nodoc:
+    class SelectedSetIntersectionOperand < Gecode::Set::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, selected_set, universe)
         super model
         @selected_set = selected_set
@@ -104,12 +104,12 @@ module Gecode::Constraints::SelectedSet
           Gecode::Raw::selectInterIn(@model.active_space,  
             enum.to_set_enum.bind_array, indices.to_set_var.bind, 
             set_operand.to_set_var.bind,
-            Gecode::Constraints::Util.constant_set_to_int_set(universe))
+            Gecode::Util.constant_set_to_int_set(universe))
         end
       end
     end
     
-    class DisjointConstraint < Gecode::Constraints::Constraint #:nodoc:
+    class DisjointConstraint < Gecode::Constraint #:nodoc:
       def post
         enum, indices = @params[:lhs].to_selected_set
         Gecode::Raw.selectDisjoint(@model.active_space, 

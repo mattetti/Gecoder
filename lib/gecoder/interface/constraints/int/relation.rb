@@ -1,4 +1,4 @@
-module Gecode::Constraints::Int
+module Gecode::Int
   class IntConstraintReceiver
     # Constrains the integer operand to equal +int_operand_or_fixnum+.
     # Negation and reification are supported.
@@ -104,11 +104,11 @@ module Gecode::Constraints::Int
       end
 
       unless @params[:negate]
-        relation_type = Gecode::Constraints::Util::RELATION_TYPES[name]
+        relation_type = Gecode::Util::RELATION_TYPES[name]
       else
-        relation_type = Gecode::Constraints::Util::NEGATED_RELATION_TYPES[name]
+        relation_type = Gecode::Util::NEGATED_RELATION_TYPES[name]
       end
-      @params.update Gecode::Constraints::Util.decode_options(options)
+      @params.update Gecode::Util.decode_options(options)
       @model.add_constraint Relation::RelationConstraint.new(@model, 
         @params.update(:relation_type => relation_type, 
                        :rhs => int_operand_or_fixnum))
@@ -117,7 +117,7 @@ module Gecode::Constraints::Int
 
   # A module that gathers the classes and modules used in relation constraints.
   module Relation #:nodoc:
-    class RelationConstraint < Gecode::Constraints::ReifiableConstraint #:nodoc:
+    class RelationConstraint < Gecode::ReifiableConstraint #:nodoc:
       def post
         # Fetch the parameters to Gecode.
         lhs, relation, rhs, reif_var = 

@@ -1,4 +1,4 @@
-module Gecode::Constraints::BoolEnum
+module Gecode::BoolEnum
   module BoolEnumOperand
     # Produces a boolean operand that represents the conjunction (AND) of all
     # boolean variables in this enumeration.
@@ -26,7 +26,7 @@ module Gecode::Constraints::BoolEnum
   # A module that gathers the classes and modules used by boolean enumeration 
   # relation constraints.
   module Relation #:nodoc:
-    class BoolEnumConjunctionOperand < Gecode::Constraints::Bool::ShortCircuitEqualityOperand #:nodoc:
+    class BoolEnumConjunctionOperand < Gecode::Bool::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, bool_enum)
         super model
         @enum = bool_enum
@@ -39,7 +39,7 @@ module Gecode::Constraints::BoolEnum
       end
     end
     
-    class BoolEnumDisjunctionOperand < Gecode::Constraints::Bool::ShortCircuitEqualityOperand #:nodoc:
+    class BoolEnumDisjunctionOperand < Gecode::Bool::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, bool_enum)
         super model
         @enum = bool_enum

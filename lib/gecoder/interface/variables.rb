@@ -75,12 +75,12 @@ module Gecode
   # retrieve the value.
   #
   # Integer variables are integer operands and hence respond to
-  # everything that Gecode::Constraints::Int::IntOperand responds to.
+  # everything that Gecode::Int::IntOperand responds to.
   # Any constraint found in
-  # Gecode::Constraints::Int::IntConstraintReceiver can thereby be 
+  # Gecode::Int::IntConstraintReceiver can thereby be 
   # placed on integer variables.
   class IntVar
-    include Gecode::Constraints::Int::IntOperand
+    include Gecode::Int::IntOperand
     attr :model
 
     # Gets the minimum value still in the domain of the variable.
@@ -145,12 +145,12 @@ module Gecode
   # A boolean variable can be either true or false.
   #
   # Boolean variables are boolean operands and hence respond to
-  # everything that Gecode::Constraints::Bool::BoolOperand responds to.
+  # everything that Gecode::Bool::BoolOperand responds to.
   # Any constraint found in
-  # Gecode::Constraints::Bool::BoolConstraintReceiver can thereby be 
+  # Gecode::Bool::BoolConstraintReceiver can thereby be 
   # placed on boolean variables.
   class BoolVar
-    include Gecode::Constraints::Bool::BoolOperand
+    include Gecode::Bool::BoolOperand
     attr :model
 
     # Checks whether the variable has been assigned.
@@ -197,11 +197,11 @@ module Gecode
   # set, i.e. the number of elements that the set may contains.
   #
   # Set variables are set operands and hence respond to everything that
-  # Gecode::Constraints::Set::SetOperand responds to.  Any constraint
-  # found in Gecode::Constraints::Set::SetConstraintReceiver can thereby
+  # Gecode::Set::SetOperand responds to.  Any constraint
+  # found in Gecode::Set::SetConstraintReceiver can thereby
   # be placed on set variables.
   class SetVar
-    include Gecode::Constraints::Set::SetOperand
+    include Gecode::Set::SetOperand
     attr :model
 
     # Checks whether the variable has been assigned.

@@ -25,7 +25,7 @@ class FalseClass
   end
 end
 
-describe Gecode::Constraints::Int::Linear, '(with booleans)' do
+describe Gecode::Int::Linear, '(with booleans)' do
   before do
     @model = BoolLinearSampleProblem.new
     @x = @model.x

@@ -16,7 +16,7 @@ class LinearSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::Int::Linear do
+describe Gecode::Int::Linear do
   before do
     @x_dom = 0..2
     @y_dom = -3..3

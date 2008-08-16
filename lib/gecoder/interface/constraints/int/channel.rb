@@ -1,4 +1,4 @@
-module Gecode::Constraints::Int
+module Gecode::Int
   class IntConstraintReceiver
     alias_method :pre_channel_equals, :==
     
@@ -26,7 +26,7 @@ module Gecode::Constraints::Int
           'constraint.'
       end
       
-      @params.update(Gecode::Constraints::Util.decode_options(options))
+      @params.update(Gecode::Util.decode_options(options))
       @params[:rhs] = bool
       @model.add_constraint Channel::ChannelConstraint.new(@model, @params)
     end
@@ -40,7 +40,7 @@ module Gecode::Constraints::Int
   # A module that gathers the classes and modules used in channel constraints
   # involving a single integer variable.
   module Channel #:nodoc:
-    class ChannelConstraint < Gecode::Constraints::Constraint #:nodoc:
+    class ChannelConstraint < Gecode::Constraint #:nodoc:
       def post
         lhs, rhs = @params.values_at(:lhs, :rhs)
         Gecode::Raw::channel(@model.active_space, lhs.to_int_var.bind, 

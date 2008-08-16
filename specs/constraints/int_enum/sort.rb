@@ -17,7 +17,7 @@ class SortSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::IntEnum::Sort, ' (without :as and :order)' do
+describe Gecode::IntEnum::Sort, ' (without :as and :order)' do
   before do
     @model = SortSampleProblem.new
     @vars = @model.vars
@@ -64,7 +64,7 @@ describe Gecode::Constraints::IntEnum::Sort, ' (without :as and :order)' do
   it_should_behave_like 'reifiable constraint'
 end
 
-describe Gecode::Constraints::IntEnum::Sort, ' (with :as)' do
+describe Gecode::IntEnum::Sort, ' (with :as)' do
   before do
     @model = SortSampleProblem.new
     @vars = @model.vars
@@ -96,7 +96,7 @@ describe Gecode::Constraints::IntEnum::Sort, ' (with :as)' do
   it_should_behave_like 'non-negatable constraint'
 end
 
-describe Gecode::Constraints::IntEnum::Sort, ' (with :order)' do
+describe Gecode::IntEnum::Sort, ' (with :order)' do
   before do
     @model = SortSampleProblem.new
     @vars = @model.vars
@@ -131,7 +131,7 @@ describe Gecode::Constraints::IntEnum::Sort, ' (with :order)' do
   it_should_behave_like 'non-negatable constraint'
 end
 
-describe Gecode::Constraints::IntEnum::Sort, ' (with :order and :as)' do
+describe Gecode::IntEnum::Sort, ' (with :order and :as)' do
   before do
     @model = SortSampleProblem.new
     @vars = @model.vars

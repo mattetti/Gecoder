@@ -1,4 +1,4 @@
-module Gecode::Constraints::SetEnum
+module Gecode::SetEnum
   class SetEnumConstraintReceiver
     # Constrains this set enum to channel +int_enum_operand+. The i:th set 
     # in the enumeration of set variables is constrained to includes the value 
@@ -26,7 +26,7 @@ module Gecode::Constraints::SetEnum
           'reification option.'
       end
       
-      @params.update(Gecode::Constraints::Set::Util.decode_options(options))
+      @params.update(Gecode::Set::Util.decode_options(options))
       @params.update(:rhs => enum)
       @model.add_constraint Channel::IntEnumChannelConstraint.new(@model, @params)
     end
@@ -34,7 +34,7 @@ module Gecode::Constraints::SetEnum
   
   # A module that gathers the classes and modules used in channel constraints.
   module Channel #:nodoc:
-    class IntEnumChannelConstraint < Gecode::Constraints::Constraint #:nodoc:
+    class IntEnumChannelConstraint < Gecode::Constraint #:nodoc:
       def post
         lhs, rhs = @params.values_at(:lhs, :rhs)
         Gecode::Raw::channel(@model.active_space, rhs.to_int_enum.bind_array, 

@@ -1,6 +1,6 @@
 # A module containing constraints that have enumerations of integer 
 # operands as left hand side.
-module Gecode::Constraints::IntEnum #:nodoc:
+module Gecode::IntEnum #:nodoc:
   # A IntEnumOperand is a enumeration of IntOperand on which the
   # constraints defined in IntEnumConstraintReceiver can be placed.
   #
@@ -27,10 +27,10 @@ module Gecode::Constraints::IntEnum #:nodoc:
   # Classes that mix in IntEnumOperand must define #model and
   # #to_int_enum .
   module IntEnumOperand
-    include Gecode::Constraints::Operand 
+    include Gecode::Operand 
 
     def method_missing(method, *args) #:nodoc:
-      if Gecode::IntEnum.instance_methods.include? method.to_s
+      if Gecode::IntEnum::Dummy.instance_methods.include? method.to_s
         # Delegate to the int enum.
         to_int_enum.method(method).call(*args)
       else
@@ -72,7 +72,7 @@ module Gecode::Constraints::IntEnum #:nodoc:
   #
   #   int_enum.must_be.sorted(:as => int_enum2, :strength => :domain, :reify => bool_operand)
   #
-  class IntEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class IntEnumConstraintReceiver < Gecode::ConstraintReceiver
     # Raises TypeError unless the left hand side is an int enum
     # operand.
     def initialize(model, params) #:nodoc:

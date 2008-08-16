@@ -15,7 +15,7 @@ class ChannelSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::SetEnum::Channel::IntEnumChannelConstraint, ' (channel with set as right hand side)' do
+describe Gecode::SetEnum::Channel::IntEnumChannelConstraint, ' (channel with set as right hand side)' do
   before do
     @model = ChannelSampleProblem.new
     @positions = @model.positions
@@ -47,7 +47,7 @@ describe Gecode::Constraints::SetEnum::Channel::IntEnumChannelConstraint, ' (cha
   it_should_behave_like 'non-negatable constraint'
 end
 
-describe Gecode::Constraints::SetEnum::Channel::IntEnumChannelConstraint, ' (channel with set as left hand side)' do
+describe Gecode::SetEnum::Channel::IntEnumChannelConstraint, ' (channel with set as left hand side)' do
   before do
     @model = ChannelSampleProblem.new
     @positions = @model.positions

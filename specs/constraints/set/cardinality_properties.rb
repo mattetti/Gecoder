@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../property_helper'
 
-describe Gecode::Constraints::Set::Cardinality, ' (property)' do
+describe Gecode::Set::Cardinality, ' (property)' do
   before do
     @model = Gecode::Model.new
     @set = @model.set_var([], 0..10)
@@ -13,7 +13,7 @@ describe Gecode::Constraints::Set::Cardinality, ' (property)' do
       set.size
     end
     @selected_property = @set.size
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the cardinality of a set' do

@@ -14,7 +14,7 @@ class CountSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::IntEnum::Count, ' (with int var)' do
+describe Gecode::IntEnum::Count, ' (with int var)' do
   before do
     @model = CountSampleProblem.new
     @list = @model.list
@@ -28,7 +28,7 @@ describe Gecode::Constraints::IntEnum::Count, ' (with int var)' do
     end
     @selected_property = @list.count(@element)
     @constraint_class = 
-      Gecode::Constraints::IntEnum::Count::CountConstraint
+      Gecode::IntEnum::Count::CountConstraint
   end
 
   it 'should constrain the count' do
@@ -43,7 +43,7 @@ describe Gecode::Constraints::IntEnum::Count, ' (with int var)' do
     'property that produces int operand by short circuiting relations')
 end
 
-describe Gecode::Constraints::IntEnum::Count, ' (with fixnum)' do
+describe Gecode::IntEnum::Count, ' (with fixnum)' do
   before do
     @model = CountSampleProblem.new
     @list = @model.list
@@ -56,7 +56,7 @@ describe Gecode::Constraints::IntEnum::Count, ' (with fixnum)' do
     end
     @selected_property = @list.count(1)
     @constraint_class = 
-      Gecode::Constraints::IntEnum::Count::CountConstraint
+      Gecode::IntEnum::Count::CountConstraint
   end
 
   it 'should constrain the count' do

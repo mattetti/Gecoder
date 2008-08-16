@@ -1,4 +1,4 @@
-module Gecode::Constraints::Bool
+module Gecode::Bool
   module BoolOperand  
     # Produces a new boolean operand representing this operand OR +bool_op+.
     # 
@@ -74,7 +74,7 @@ module Gecode::Constraints::Bool
       unless bool_op.respond_to? :to_minimodel_bool_expr
         bool_op = ExpressionNode.new(bool_op, @model)
       end
-      @params.update Gecode::Constraints::Util.decode_options(options)
+      @params.update Gecode::Util.decode_options(options)
       @params.update(:lhs => @params[:lhs], :rhs => bool_op)
       @model.add_constraint BooleanConstraint.new(@model, @params)
     end
@@ -92,7 +92,7 @@ module Gecode::Constraints::Bool
     #   # +domain+ as strength.
     #   (b1 & b2).must_not.imply(b3, :reify => bool, :strength => :domain)
     def imply(bool_op, options = {})
-      @params.update Gecode::Constraints::Util.decode_options(options)
+      @params.update Gecode::Util.decode_options(options)
       @params.update(:lhs => @params[:lhs].implies(bool_op), :rhs => true)
       @model.add_constraint BooleanConstraint.new(@model, @params)
     end
@@ -112,7 +112,7 @@ module Gecode::Constraints::Bool
     #   # strength +domain+.
     #   (b1 & b2).must_be.true(:reify => bool, :strength => :domain)
     def true(options = {})
-      @params.update Gecode::Constraints::Util.decode_options(options)
+      @params.update Gecode::Util.decode_options(options)
       @model.add_constraint BooleanConstraint.new(@model, 
         @params.update(:rhs => true))
     end
@@ -137,7 +137,7 @@ module Gecode::Constraints::Bool
     end
   end
   
-  class BooleanConstraint < Gecode::Constraints::ReifiableConstraint #:nodoc:
+  class BooleanConstraint < Gecode::ReifiableConstraint #:nodoc:
     def post
       lhs, rhs, negate, reif_var = 
         @params.values_at(:lhs, :rhs, :negate, :reif)

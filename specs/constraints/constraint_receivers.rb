@@ -5,98 +5,98 @@ describe 'constraint receiver', :shared => true do
     lambda do
       op = Object.new
       class <<op
-        include Gecode::Constraints::Operand
+        include Gecode::Operand
       end
       @receiver.new(@model, {:lhs => op, :negate => false})
     end.should raise_error(TypeError)
   end
 end
 
-describe Gecode::Constraints::ConstraintReceiver do
+describe Gecode::ConstraintReceiver do
   before do
     @model = Gecode::Model.new
   end
 
   it 'should raise error if the negate params is not given' do
     lambda do
-      Gecode::Constraints::ConstraintReceiver.new(@model, {:lhs => nil})
+      Gecode::ConstraintReceiver.new(@model, {:lhs => nil})
     end.should raise_error(ArgumentError)
   end
     
   it 'should raise error if the lhs params is not given' do
     lambda do
-      Gecode::Constraints::ConstraintReceiver.new(@model, {:lhs => nil})
+      Gecode::ConstraintReceiver.new(@model, {:lhs => nil})
     end.should raise_error(ArgumentError)
   end
 end
 
-describe Gecode::Constraints::Int::IntConstraintReceiver, ' (not subclassed)' do
+describe Gecode::Int::IntConstraintReceiver, ' (not subclassed)' do
   before do
     @model = Gecode::Model.new
-    @receiver = Gecode::Constraints::Int::IntConstraintReceiver
+    @receiver = Gecode::Int::IntConstraintReceiver
   end
 
   it_should_behave_like 'constraint receiver'
 end
 
-describe Gecode::Constraints::IntEnum::IntEnumConstraintReceiver do
+describe Gecode::IntEnum::IntEnumConstraintReceiver do
   before do
     @model = Gecode::Model.new
-    @receiver = Gecode::Constraints::IntEnum::IntEnumConstraintReceiver
+    @receiver = Gecode::IntEnum::IntEnumConstraintReceiver
   end
 
   it_should_behave_like 'constraint receiver'
 end
 
-describe Gecode::Constraints::Bool::BoolConstraintReceiver do
+describe Gecode::Bool::BoolConstraintReceiver do
   before do
     @model = Gecode::Model.new
-    @receiver = Gecode::Constraints::Bool::BoolConstraintReceiver
+    @receiver = Gecode::Bool::BoolConstraintReceiver
   end
 
   it_should_behave_like 'constraint receiver'
 end
 
-describe Gecode::Constraints::BoolEnum::BoolEnumConstraintReceiver do
+describe Gecode::BoolEnum::BoolEnumConstraintReceiver do
   before do
     @model = Gecode::Model.new
-    @receiver = Gecode::Constraints::BoolEnum::BoolEnumConstraintReceiver
+    @receiver = Gecode::BoolEnum::BoolEnumConstraintReceiver
   end
 
   it_should_behave_like 'constraint receiver'
 end
 
-describe Gecode::Constraints::Set::SetConstraintReceiver do
+describe Gecode::Set::SetConstraintReceiver do
   before do
     @model = Gecode::Model.new
-    @receiver = Gecode::Constraints::Set::SetConstraintReceiver
+    @receiver = Gecode::Set::SetConstraintReceiver
   end
 
   it_should_behave_like 'constraint receiver'
 end
 
-describe Gecode::Constraints::SelectedSet::SelectedSetConstraintReceiver do
+describe Gecode::SelectedSet::SelectedSetConstraintReceiver do
   before do
     @model = Gecode::Model.new
-    @receiver = Gecode::Constraints::SelectedSet::SelectedSetConstraintReceiver
+    @receiver = Gecode::SelectedSet::SelectedSetConstraintReceiver
   end
 
   it_should_behave_like 'constraint receiver'
 end
 
-describe Gecode::Constraints::SetElements::SetElementsConstraintReceiver do
+describe Gecode::SetElements::SetElementsConstraintReceiver do
   before do
     @model = Gecode::Model.new
-    @receiver = Gecode::Constraints::SetElements::SetElementsConstraintReceiver
+    @receiver = Gecode::SetElements::SetElementsConstraintReceiver
   end
 
   it_should_behave_like 'constraint receiver'
 end
 
-describe Gecode::Constraints::SetEnum::SetEnumConstraintReceiver do
+describe Gecode::SetEnum::SetEnumConstraintReceiver do
   before do
     @model = Gecode::Model.new
-    @receiver = Gecode::Constraints::SetEnum::SetEnumConstraintReceiver
+    @receiver = Gecode::SetEnum::SetEnumConstraintReceiver
   end
 
   it_should_behave_like 'constraint receiver'

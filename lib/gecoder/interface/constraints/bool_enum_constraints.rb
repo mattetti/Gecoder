@@ -1,6 +1,6 @@
 # A module containing constraints that have enumerations of boolean 
 # operands as left hand side.
-module Gecode::Constraints::BoolEnum #:nodoc:
+module Gecode::BoolEnum #:nodoc:
   # A BoolEnumOperand is a enumeration of BoolOperand on which the
   # constraints defined in BoolEnumConstraintReceiver can be placed.
   #
@@ -27,10 +27,10 @@ module Gecode::Constraints::BoolEnum #:nodoc:
   # Classes that mix in BoolEnumOperand must define #model and
   # #to_bool_enum .
   module BoolEnumOperand
-    include Gecode::Constraints::Operand 
+    include Gecode::Operand 
 
     def method_missing(method, *args) #:nodoc:
-      if Gecode::BoolEnum.instance_methods.include? method.to_s
+      if Gecode::BoolEnum::Dummy.instance_methods.include? method.to_s
         # Delegate to the bool enum.
         to_bool_enum.method(method).call(*args)
       else
@@ -66,7 +66,7 @@ module Gecode::Constraints::BoolEnum #:nodoc:
   #
   #   bool_enum.must.channel int_operand
   #
-  class BoolEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class BoolEnumConstraintReceiver < Gecode::ConstraintReceiver
     # Raises TypeError unless the left hand side is an bool enum
     # operand.
     def initialize(model, params) #:nodoc:

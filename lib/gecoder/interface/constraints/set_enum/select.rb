@@ -1,4 +1,4 @@
-module Gecode::Constraints::SetEnum
+module Gecode::SetEnum
   module SetEnumOperand
     # This adds the adder for the methods in the modules including it. The 
     # reason for doing it so indirect is that the first #[] won't be defined 
@@ -41,7 +41,7 @@ module Gecode::Constraints::SetEnum
                   Select::SelectSetOperand.new(
                     model, self, vars.first)
                 elsif vars.first.respond_to? :to_set_var
-                  Gecode::Constraints::SelectedSet::SelectedSetOperand.new(
+                  Gecode::SelectedSet::SelectedSetOperand.new(
                     self, vars.first)
                 else
                   if respond_to? :pre_selection_access
@@ -58,7 +58,7 @@ module Gecode::Constraints::SetEnum
   end
 
   module Select #:nodoc:
-    class SelectSetOperand < Gecode::Constraints::Set::ShortCircuitEqualityOperand #:nodoc:
+    class SelectSetOperand < Gecode::Set::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, enum_op, position_int_op)
         super model
         @enum = enum_op

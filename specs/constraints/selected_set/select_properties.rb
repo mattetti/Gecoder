@@ -16,7 +16,7 @@ class SelectionSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::SelectedSet::Select, ' (union)' do
+describe Gecode::SelectedSet::Select, ' (union)' do
   include GecodeR::Specs::SetHelper
 
   before do
@@ -30,7 +30,7 @@ describe Gecode::Constraints::SelectedSet::Select, ' (union)' do
       selected_set.union
     end
     @selected_property = @sets[@set].union
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the selected union of an enum of sets' do
@@ -54,7 +54,7 @@ describe Gecode::Constraints::SelectedSet::Select, ' (union)' do
     'property that produces set operand by short circuiting equality')
 end
 
-describe Gecode::Constraints::SetEnum::Select, ' (intersection)' do
+describe Gecode::SetEnum::Select, ' (intersection)' do
   include GecodeR::Specs::SetHelper
 
   before do
@@ -68,7 +68,7 @@ describe Gecode::Constraints::SetEnum::Select, ' (intersection)' do
       selected_set.intersection
     end
     @selected_property = @sets[@set].intersection
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the selected intersection of an enum of sets' do
@@ -94,7 +94,7 @@ describe Gecode::Constraints::SetEnum::Select, ' (intersection)' do
     'property that produces set operand by short circuiting equality')
 end
 
-describe Gecode::Constraints::SelectedSet::Select, ' (intersection with universe)' do
+describe Gecode::SelectedSet::Select, ' (intersection with universe)' do
   include GecodeR::Specs::SetHelper
 
   before do
@@ -109,7 +109,7 @@ describe Gecode::Constraints::SelectedSet::Select, ' (intersection with universe
       selected_set.intersection(:with => @universe)
     end
     @selected_property = @sets[@set].intersection(:with => @universe)
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the selected intersection of an enum of sets in a universe' do

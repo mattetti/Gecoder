@@ -1,8 +1,8 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe Gecode::Constraints::Constraint, ' (not subclassed)' do
+describe Gecode::Constraint, ' (not subclassed)' do
   before do
-    @con = Gecode::Constraints::Constraint.new(Gecode::Model.new, {})
+    @con = Gecode::Constraint.new(Gecode::Model.new, {})
   end
 
   it 'should raise error when calling #post because it\'s not overridden' do
@@ -10,16 +10,16 @@ describe Gecode::Constraints::Constraint, ' (not subclassed)' do
   end
 end
 
-describe Gecode::Constraints::Util do
+describe Gecode::Util do
   it 'should raise error when giving incorrect set to #constant_set_to_params' do
     lambda do 
-      Gecode::Constraints::Util.constant_set_to_params('hello')
+      Gecode::Util.constant_set_to_params('hello')
     end.should raise_error(TypeError)
   end
   
   it 'should raise error when giving incorrect set to #constant_set_to_int_set' do
     lambda do 
-      Gecode::Constraints::Util.constant_set_to_int_set('hello')
+      Gecode::Util.constant_set_to_int_set('hello')
     end.should raise_error(TypeError)
   end
 end

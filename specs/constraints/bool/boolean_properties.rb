@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../property_helper'
 
 [:&, :|, :^].each do |property|
-  describe Gecode::Constraints::Bool, " (#{property} property)" do
+  describe Gecode::Bool, " (#{property} property)" do
     before do
       @model = Gecode::Model.new
       @b1 = @model.bool_var
@@ -26,7 +26,7 @@ require File.dirname(__FILE__) + '/../property_helper'
   end
 end
 
-describe Gecode::Constraints::Bool, ' (#implies property)' do
+describe Gecode::Bool, ' (#implies property)' do
   before do
     @model = Gecode::Model.new
     @b1 = @model.bool_var

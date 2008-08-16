@@ -1,4 +1,4 @@
-module Gecode::Constraints::IntEnum
+module Gecode::IntEnum
   class IntEnumConstraintReceiver
     # Constrains all integer variables in the enumeration to be distinct
     # (different). The constraint can also be used with constant
@@ -42,13 +42,13 @@ module Gecode::Constraints::IntEnum
         @params[:offsets] = offsets
       end
       @model.add_constraint Distinct::DistinctConstraint.new(@model, 
-        @params.update(Gecode::Constraints::Util.decode_options(options)))
+        @params.update(Gecode::Util.decode_options(options)))
     end
   end
   
   # A module that gathers the classes and modules used in distinct constraints.
   module Distinct #:nodoc:
-    class DistinctConstraint < Gecode::Constraints::Constraint #:nodoc:
+    class DistinctConstraint < Gecode::Constraint #:nodoc:
       def post
         # Bind lhs.
         @params[:lhs] = @params[:lhs].to_int_enum.bind_array

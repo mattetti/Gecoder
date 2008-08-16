@@ -28,7 +28,7 @@ describe 'int tuple constraint', :shared => true do
   end
 end
 
-describe Gecode::Constraints::IntEnum::Extensional, ' (tuple constraint)' do
+describe Gecode::IntEnum::Extensional, ' (tuple constraint)' do
   before do
     @model = Gecode::Model.new
     @tuples = [[1,7], [5,1]]
@@ -181,7 +181,7 @@ describe 'int regular expression constraint', :shared => true do
   end
 end
 
-describe Gecode::Constraints::IntEnum::Extensional, ' (regexp constraint)' do
+describe Gecode::IntEnum::Extensional, ' (regexp constraint)' do
   before do
     @model = Gecode::Model.new
     @variables = @digits = @model.int_var_array(3, 0..9)

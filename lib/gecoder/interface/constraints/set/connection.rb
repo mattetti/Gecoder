@@ -1,4 +1,4 @@
-module Gecode::Constraints::Set
+module Gecode::Set
   module SetOperand
     # Produces an integer operand representing the minimum of the set.
     #
@@ -67,7 +67,7 @@ module Gecode::Constraints::Set
   # A module that gathers the classes and modules used in connection 
   # constraints.
   module Connection #:nodoc:
-    class SetMinOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
+    class SetMinOperand < Gecode::Int::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, set_op)
         super model
         @set = set_op
@@ -84,7 +84,7 @@ module Gecode::Constraints::Set
       end
     end
     
-    class SetMaxOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
+    class SetMaxOperand < Gecode::Int::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, set_op)
         super model
         @set = set_op
@@ -101,7 +101,7 @@ module Gecode::Constraints::Set
       end
     end
     
-    class SetSumOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
+    class SetSumOperand < Gecode::Int::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, set_op, subs)
         super model
         @set = set_op

@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../constraint_helper'
 
-describe Gecode::Constraints::Int::Domain, ' (non-range)' do
+describe Gecode::Int::Domain, ' (non-range)' do
   before do
     @model = Gecode::Model.new
     @domain = 0..3
@@ -44,7 +44,7 @@ describe Gecode::Constraints::Int::Domain, ' (non-range)' do
   it_should_behave_like 'reifiable constraint'
 end
 
-describe Gecode::Constraints::Int::Domain, ' (range)' do
+describe Gecode::Int::Domain, ' (range)' do
   before do
     @model = Gecode::Model.new
     @domain = 0..3

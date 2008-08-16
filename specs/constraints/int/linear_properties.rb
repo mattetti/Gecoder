@@ -13,7 +13,7 @@ class LinearPropertySampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::Int::Linear, ' (+ property)' do
+describe Gecode::Int::Linear, ' (+ property)' do
   before do
     @model = LinearPropertySampleProblem.new
     @x = @model.x
@@ -27,7 +27,7 @@ describe Gecode::Constraints::Int::Linear, ' (+ property)' do
     end
     @selected_property = @x + @y
     @constraint_class = 
-      Gecode::Constraints::Int::Linear::LinearRelationConstraint
+      Gecode::Int::Linear::LinearRelationConstraint
   end
 
   it 'should constrain the sum' do
@@ -40,7 +40,7 @@ describe Gecode::Constraints::Int::Linear, ' (+ property)' do
     'property that produces int operand by short circuiting relations')
 end
 
-describe Gecode::Constraints::Int::Linear, ' (- property)' do
+describe Gecode::Int::Linear, ' (- property)' do
   before do
     @model = LinearPropertySampleProblem.new
     @x = @model.x
@@ -54,7 +54,7 @@ describe Gecode::Constraints::Int::Linear, ' (- property)' do
     end
     @selected_property = @x - @y
     @constraint_class = 
-      Gecode::Constraints::Int::Linear::LinearRelationConstraint
+      Gecode::Int::Linear::LinearRelationConstraint
   end
 
   it 'should constrain the difference' do
@@ -67,7 +67,7 @@ describe Gecode::Constraints::Int::Linear, ' (- property)' do
     'property that produces int operand by short circuiting relations')
 end
 
-describe Gecode::Constraints::Int::Linear, ' (* property)' do
+describe Gecode::Int::Linear, ' (* property)' do
   before do
     @model = LinearPropertySampleProblem.new
     @x = @model.x
@@ -81,7 +81,7 @@ describe Gecode::Constraints::Int::Linear, ' (* property)' do
     end
     @selected_property = @x * 2
     @constraint_class = 
-      Gecode::Constraints::Int::Linear::LinearRelationConstraint
+      Gecode::Int::Linear::LinearRelationConstraint
   end
 
   it 'should constrain the value times a constant' do

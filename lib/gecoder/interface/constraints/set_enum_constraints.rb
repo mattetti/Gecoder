@@ -1,6 +1,6 @@
 # A module containing constraints that have enumerations of set variables as 
 # left hand side.
-module Gecode::Constraints::SetEnum #:nodoc:
+module Gecode::SetEnum #:nodoc:
   # A SetEnumOperand is a enumeration of SetOperand on which the
   # constraints defined in SetEnumConstraintReceiver can be placed.
   #
@@ -28,10 +28,10 @@ module Gecode::Constraints::SetEnum #:nodoc:
   # Classes that mix in SetEnumOperand must define #model and
   # #to_set_enum .
   module SetEnumOperand
-    include Gecode::Constraints::Operand 
+    include Gecode::Operand 
 
     def method_missing(method, *args) #:nodoc:
-      if Gecode::SetEnum.instance_methods.include? method.to_s
+      if Gecode::SetEnum::Dummy.instance_methods.include? method.to_s
         # Delegate to the set enum.
         to_set_enum.method(method).call(*args)
       else
@@ -42,7 +42,7 @@ module Gecode::Constraints::SetEnum #:nodoc:
     private
 
     def construct_receiver(params)
-      Gecode::Constraints::SetEnum::SetEnumConstraintReceiver.new(@model, params)
+      Gecode::SetEnum::SetEnumConstraintReceiver.new(@model, params)
     end
   end
 
@@ -66,7 +66,7 @@ module Gecode::Constraints::SetEnum #:nodoc:
   #
   #   set_enum.must.at_most_share_one_element(:size => 17)
   #
-  class SetEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class SetEnumConstraintReceiver < Gecode::ConstraintReceiver
     # Raises TypeError unless the left hand side is a set enum operand.
     def initialize(model, params) #:nodoc:
       super

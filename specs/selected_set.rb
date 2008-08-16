@@ -1,11 +1,11 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-describe Gecode::Constraints::SelectedSet::SelectedSetOperand do
+describe Gecode::SelectedSet::SelectedSetOperand do
   before do
     @model = Gecode::Model.new
     set_enum = @model.set_var_array(5, [], 0..9)
     set = @model.set_var([], 0..4)
-    @operand = Gecode::Constraints::SelectedSet::SelectedSetOperand.new(
+    @operand = Gecode::SelectedSet::SelectedSetOperand.new(
       set_enum, set)
   end
 
@@ -33,7 +33,7 @@ describe Gecode::Constraints::SelectedSet::SelectedSetOperand do
   it 'should implement #must' do
     receiver = @operand.must
     receiver.should be_kind_of(
-      Gecode::Constraints::SelectedSet::SelectedSetConstraintReceiver)
+      Gecode::SelectedSet::SelectedSetConstraintReceiver)
   end
 end
 

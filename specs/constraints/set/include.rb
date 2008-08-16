@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../constraint_helper'
 
-describe Gecode::Constraints::Set::Connection, ' (include)' do
+describe Gecode::Set::Connection, ' (include)' do
   before do
     @model = Gecode::Model.new
     @set = @model.set_var([], 2..5)

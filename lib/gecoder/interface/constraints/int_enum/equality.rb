@@ -1,4 +1,4 @@
-module Gecode::Constraints::IntEnum
+module Gecode::IntEnum
   class IntEnumConstraintReceiver
     # Constrains all variables in the enumeration to be equal. 
     # Neither negation nor reification is supported.
@@ -20,13 +20,13 @@ module Gecode::Constraints::IntEnum
       end
     
       @model.add_constraint Equality::EqualityConstraint.new(@model, 
-        @params.update(Gecode::Constraints::Util.decode_options(options)))
+        @params.update(Gecode::Util.decode_options(options)))
     end
   end
   
   # A module that gathers the classes and modules used in equality constraints.
   module Equality #:nodoc:
-    class EqualityConstraint < Gecode::Constraints::Constraint #:nodoc:
+    class EqualityConstraint < Gecode::Constraint #:nodoc:
       def post
         Gecode::Raw::rel(@model.active_space,
           @params[:lhs].to_int_enum.bind_array, 

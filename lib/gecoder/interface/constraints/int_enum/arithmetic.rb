@@ -1,4 +1,4 @@
-module Gecode::Constraints::IntEnum
+module Gecode::IntEnum
   module IntEnumOperand
     # Produces an integer operand representing the maximum value of the 
     # integer variables in this operand.
@@ -26,7 +26,7 @@ module Gecode::Constraints::IntEnum
   # A module that gathers the classes and modules used by arithmetic 
   # constraints.
   module Arithmetic #:nodoc:
-    class IntEnumMaxOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
+    class IntEnumMaxOperand < Gecode::Int::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, int_enum)
         super model
         @int_enum = int_enum
@@ -43,7 +43,7 @@ module Gecode::Constraints::IntEnum
       end
     end
     
-    class IntEnumMinOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
+    class IntEnumMinOperand < Gecode::Int::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, int_enum)
         super model
         @int_enum = int_enum

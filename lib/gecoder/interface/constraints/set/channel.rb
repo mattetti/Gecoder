@@ -1,4 +1,4 @@
-module Gecode::Constraints::Set
+module Gecode::Set
   class SetConstraintReceiver
     # Constrains this set to channel +bool_enum+. The set is constrained
     # to include value i exactly when the variable at index i in the
@@ -32,7 +32,7 @@ module Gecode::Constraints::Set
       end
       
       @params.update(:rhs => bool_enum)
-      @params.update Gecode::Constraints::Set::Util.decode_options(options)
+      @params.update Gecode::Set::Util.decode_options(options)
       @model.add_constraint Channel::ChannelConstraint.new(@model, @params)
     end
   end
@@ -40,7 +40,7 @@ module Gecode::Constraints::Set
   # A module that gathers the classes and modules used in channel constraints
   # involving one set variable and a boolean enum.
   module Channel #:nodoc:
-    class ChannelConstraint < Gecode::Constraints::Constraint #:nodoc:
+    class ChannelConstraint < Gecode::Constraint #:nodoc:
       def post
         lhs, rhs = @params.values_at(:lhs, :rhs)
         Gecode::Raw::channel(@model.active_space, rhs.to_bool_enum.bind_array, 

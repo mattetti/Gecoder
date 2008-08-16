@@ -1,4 +1,4 @@
-module Gecode::Constraints::FixnumEnum
+module Gecode::FixnumEnum
   module FixnumEnumOperand
     # This adds the adder for the methods in the modules including it. The 
     # reason for doing it so indirect is that the first #[] won't be defined 
@@ -42,7 +42,7 @@ module Gecode::Constraints::FixnumEnum
   end
 
   module Element #:nodoc:
-    class ElementIntOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
+    class ElementIntOperand < Gecode::Int::ShortCircuitEqualityOperand #:nodoc:
       def initialize(enum_op, position_int_var_op, model)
         super model
         @enum = enum_op

@@ -13,7 +13,7 @@ class BoolSampleProblem < Gecode::Model
 end
 
 [:true, :false].each do |type|
-  describe Gecode::Constraints::Bool, " (must be #{type})" do
+  describe Gecode::Bool, " (must be #{type})" do
     before do
       @model = Gecode::Model.new
       @bool = @model.bool_var
@@ -51,7 +51,7 @@ end
   end
 end
 
-describe Gecode::Constraints::Bool, " (implies)" do
+describe Gecode::Bool, " (implies)" do
   before do
     @model = Gecode::Model.new
     @b1 = @model.bool_var
@@ -83,7 +83,7 @@ describe Gecode::Constraints::Bool, " (implies)" do
   it_should_behave_like 'reifiable constraint'
 end
 
-describe Gecode::Constraints::Bool, " (equality)" do
+describe Gecode::Bool, " (equality)" do
   before do
     @model = Gecode::Model.new
     @b1 = @model.bool_var
@@ -114,7 +114,7 @@ describe Gecode::Constraints::Bool, " (equality)" do
   it_should_behave_like 'reifiable constraint'
 end
 
-describe Gecode::Constraints::Bool do
+describe Gecode::Bool do
   before do
     @model = BoolSampleProblem.new
     @b1 = @model.b1

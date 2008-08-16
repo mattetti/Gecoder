@@ -1,4 +1,4 @@
-module Gecode::Constraints::SetEnum
+module Gecode::SetEnum
   module SetEnumOperand
     # Produces a set operand representing the union of all sets in this
     # enumeration.
@@ -44,7 +44,7 @@ module Gecode::Constraints::SetEnum
 
   # A module that gathers the classes and modules used in operation constraints.
   module Operation #:nodoc:
-    class OperationSetOperand < Gecode::Constraints::Set::ShortCircuitEqualityOperand #:nodoc:
+    class OperationSetOperand < Gecode::Set::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, enum, operator)
         super model
         @enum = enum
@@ -52,7 +52,7 @@ module Gecode::Constraints::SetEnum
       end
 
       def constrain_equal(set_operand, constrain_domain, propagation_options)
-        operation = Gecode::Constraints::Util::SET_OPERATION_TYPES[@operator]
+        operation = Gecode::Util::SET_OPERATION_TYPES[@operator]
         if constrain_domain
           if operation == Gecode::Raw::SOT_INTER
             set_operand.must_be.subset_of @enum.first.upper_bound

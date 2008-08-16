@@ -43,7 +43,7 @@ describe 'int var operand', :shared => true do
   it 'should implement #must' do
     receiver = @operand.must
     receiver.should be_kind_of(
-      Gecode::Constraints::Int::IntConstraintReceiver)
+      Gecode::Int::IntConstraintReceiver)
   end
 end
 
@@ -61,7 +61,7 @@ describe 'bool var operand', :shared => true do
   it 'should implement #must' do
     receiver = @operand.must
     receiver.should be_kind_of(
-      Gecode::Constraints::Bool::BoolConstraintReceiver)
+      Gecode::Bool::BoolConstraintReceiver)
   end
 end
 
@@ -83,7 +83,7 @@ describe 'set var operand', :shared => true do
   it 'should implement #must' do
     receiver = @operand.must
     receiver.should be_kind_of(
-      Gecode::Constraints::Set::SetConstraintReceiver)
+      Gecode::Set::SetConstraintReceiver)
   end
 end
 
@@ -115,7 +115,7 @@ describe 'property that produces int operand', :shared => true do
 
     receiver = operand.must
     receiver.should be_kind_of(
-      Gecode::Constraints::Int::IntConstraintReceiver)
+      Gecode::Int::IntConstraintReceiver)
   end
 
   it_should_behave_like 'property that produces operand'
@@ -135,7 +135,7 @@ describe 'property that produces bool operand', :shared => true do
 
     receiver = operand.must
     receiver.should be_kind_of(
-      Gecode::Constraints::Bool::BoolConstraintReceiver)
+      Gecode::Bool::BoolConstraintReceiver)
   end
 
   it_should_behave_like 'property that produces operand'
@@ -155,7 +155,7 @@ describe 'property that produces set operand', :shared => true do
 
     receiver = operand.must
     receiver.should be_kind_of(
-      Gecode::Constraints::Set::SetConstraintReceiver)
+      Gecode::Set::SetConstraintReceiver)
   end
 
   it_should_behave_like 'property that produces operand'
@@ -168,7 +168,7 @@ end
 # negation nor reification and the right hand side is an int operand.
 describe 'property that produces int operand by short circuiting equality', :shared => true do
   it 'should produce constraints when short circuited' do
-    @constraint_class.superclass.should == Gecode::Constraints::Constraint
+    @constraint_class.superclass.should == Gecode::Constraint
   end
 
   it 'should give the same solution regardless of whether short circuit was used' do
@@ -222,7 +222,7 @@ end
 # negation nor reification and the right hand side is a bool operand.
 describe 'property that produces bool operand by short circuiting equality', :shared => true do
   it 'should produce constraints when short circuited' do
-    @constraint_class.superclass.should == Gecode::Constraints::Constraint
+    @constraint_class.superclass.should == Gecode::Constraint
   end
 
   it 'should give the same solution regardless of whether short circuit was used' do
@@ -271,10 +271,10 @@ end
 describe 'property that produces int operand by short circuiting relations', :shared => true do
   it 'should produce reifiable constraints when short circuited' do
     @constraint_class.superclass.should == 
-      Gecode::Constraints::ReifiableConstraint
+      Gecode::ReifiableConstraint
   end
 
-  Gecode::Constraints::Util::RELATION_TYPES.keys.each do |relation|
+  Gecode::Util::RELATION_TYPES.keys.each do |relation|
     it "should give the same solution regardless of whether short circuit #{relation} was used" do
       direct_int_var = @model.int_var
       @selected_property.to_int_var.must.method(relation).call direct_int_var
@@ -323,7 +323,7 @@ end
 # negation nor reification and the right hand side is a set operand.
 describe 'property that produces set operand by short circuiting equality', :shared => true do
   it 'should produce constraints when short circuited' do
-    @constraint_class.superclass.should == Gecode::Constraints::Constraint
+    @constraint_class.superclass.should == Gecode::Constraint
   end
 
   it 'should give the same solution regardless of whether short circuit was used' do
@@ -377,9 +377,9 @@ end
 # negation nor reification is used (both for constant sets and set
 # variables). 
 describe 'property that produces set operand by short circuiting set relations', :shared => true do
-  Gecode::Constraints::Util::SET_RELATION_TYPES.keys.each do |relation|
+  Gecode::Util::SET_RELATION_TYPES.keys.each do |relation|
     it 'should produce constraints when short circuited' do
-      @constraint_class.superclass.should == Gecode::Constraints::Constraint
+      @constraint_class.superclass.should == Gecode::Constraint
     end
 
     it "should give the same solution regardless of whether short circuit #{relation} was used" do

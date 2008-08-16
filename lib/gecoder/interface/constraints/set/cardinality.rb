@@ -1,4 +1,4 @@
-module Gecode::Constraints::Set
+module Gecode::Set
   module SetOperand
     # Produces an integer operand representing the size of the set.
     #
@@ -17,7 +17,7 @@ module Gecode::Constraints::Set
     # Describes a cardinality constraint specifically for ranges. This is just
     # a special case which is used instead of the more general composite 
     # constraint when the target cardinality is a range. 
-    class CardinalityConstraint < Gecode::Constraints::Constraint #:nodoc:
+    class CardinalityConstraint < Gecode::Constraint #:nodoc:
       def post
         var, range = @params.values_at(:lhs, :range)
         Gecode::Raw::cardinality(@model.active_space, var.to_set_var.bind, 
@@ -25,7 +25,7 @@ module Gecode::Constraints::Set
       end
     end
     
-    class SetSizeOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
+    class SetSizeOperand < Gecode::Int::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, set_op)
         super model
         @set = set_op

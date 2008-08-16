@@ -1,4 +1,4 @@
-module Gecode::Constraints::Int
+module Gecode::Int
   class IntConstraintReceiver
     # Creates a domain constraint using the specified domain, specified
     # as an enumeration of integers. The integer variable is constrained
@@ -28,7 +28,7 @@ module Gecode::Constraints::Int
     #   x.must_not_be.in(-[5,6,7,17], :reify => bool, :strength => :value)
     #
     def in(domain, options = {})
-      @params.update(Gecode::Constraints::Util.decode_options(options))
+      @params.update(Gecode::Util.decode_options(options))
       @params[:domain] = domain
       if domain.kind_of? Range
         @model.add_constraint Domain::RangeDomainConstraint.new(@model, @params)
@@ -45,7 +45,7 @@ module Gecode::Constraints::Int
   module Domain #:nodoc:
     # Range domain constraints specify that an integer variable must be 
     # contained within a specified range of integers.
-    class RangeDomainConstraint < Gecode::Constraints::ReifiableConstraint #:nodoc:
+    class RangeDomainConstraint < Gecode::ReifiableConstraint #:nodoc:
       def post
         var, domain, reif_var = @params.values_at(:lhs, :domain, :reif)
           
@@ -63,12 +63,12 @@ module Gecode::Constraints::Int
     
     # Enum domain constraints specify that an integer variable must be contained
     # in an enumeration of integers.
-    class EnumDomainConstraint < Gecode::Constraints::ReifiableConstraint #:nodoc:
+    class EnumDomainConstraint < Gecode::ReifiableConstraint #:nodoc:
       def post
         var, domain, reif_var = @params.values_at(:lhs, :domain, :reif)
         
         (params = []) << var.to_int_var.bind
-        params << Gecode::Constraints::Util.constant_set_to_int_set(domain)
+        params << Gecode::Util.constant_set_to_int_set(domain)
         params << reif_var.to_bool_var.bind if reif_var.respond_to? :to_bool_var
         params.concat propagation_options
         

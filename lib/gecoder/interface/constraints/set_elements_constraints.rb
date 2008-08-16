@@ -1,6 +1,6 @@
 # A module containing constraints that have set.elements as left hand
 # side.
-module Gecode::Constraints::SetElements #:nodoc:
+module Gecode::SetElements #:nodoc:
   # A SetElementsOperand is an uncommon operand that results from calling 
   # SetOperand#elements. It facilitates placing the constraints defined
   # in SetElementsConstraintReceiver
@@ -12,7 +12,7 @@ module Gecode::Constraints::SetElements #:nodoc:
   #   set_operand.elements
   #
   class SetElementsOperand 
-    include Gecode::Constraints::Operand 
+    include Gecode::Operand 
 
     # Constructs a new set elements operand +set+.
     def initialize(set) #:nodoc:
@@ -67,7 +67,7 @@ module Gecode::Constraints::SetElements #:nodoc:
   #
   #   set.elements.must_be.greater_than(int_operand, :strength => :domain, :reify => bool_operand)
   #
-  class SetElementsConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class SetElementsConstraintReceiver < Gecode::ConstraintReceiver
     # Raises TypeError unless the left hand side is set elements operand.
     def initialize(model, params) #:nodoc:
       super
@@ -79,7 +79,7 @@ module Gecode::Constraints::SetElements #:nodoc:
   end
 end
 
-module Gecode::Constraints::Set #:nodoc:
+module Gecode::Set #:nodoc:
   module SetOperand
     # Produces a SetElementsOperand on which relation constraints can be placed that
     # constrain all elements in the set.
@@ -89,7 +89,7 @@ module Gecode::Constraints::Set #:nodoc:
     #   # The elements of +set+.
     #   set.elements
     def elements
-      Gecode::Constraints::SetElements::SetElementsOperand.new(self)
+      Gecode::SetElements::SetElementsOperand.new(self)
     end
   end
 end

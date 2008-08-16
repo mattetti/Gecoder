@@ -1,4 +1,4 @@
-module Gecode::Constraints::Int
+module Gecode::Int
   module IntOperand
     # Produces an integer operand representing the absolute value of this 
     # operand.
@@ -55,7 +55,7 @@ module Gecode::Constraints::Int
   # A module that gathers the classes and modules used by arithmetic 
   # constraints.
   module Arithmetic #:nodoc:
-    class IntAbsOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
+    class IntAbsOperand < Gecode::Int::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, int_op)
         super model
         @int = int_op
@@ -74,7 +74,7 @@ module Gecode::Constraints::Int
       end
     end
     
-    class IntMultOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
+    class IntMultOperand < Gecode::Int::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, op1, op2)
         super model
         @op1 = op1
@@ -96,7 +96,7 @@ module Gecode::Constraints::Int
       end
     end
     
-    class IntSquaredOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
+    class IntSquaredOperand < Gecode::Int::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, int_op)
         super model
         @int = int_op
@@ -115,7 +115,7 @@ module Gecode::Constraints::Int
       end
     end
     
-    class IntSquareRootOperand < Gecode::Constraints::Int::ShortCircuitEqualityOperand #:nodoc:
+    class IntSquareRootOperand < Gecode::Int::ShortCircuitEqualityOperand #:nodoc:
       def initialize(model, int_op)
         super model
         @int = int_op

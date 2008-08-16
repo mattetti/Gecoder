@@ -1,6 +1,6 @@
 # A module that deals with the operands, properties and constraints of
 # integer variables.
-module Gecode::Constraints::Int #:nodoc:
+module Gecode::Int #:nodoc:
   # A IntOperand is a combination of variables on which the
   # constraints defined in IntConstraintReceiver can be placed.
   #
@@ -43,7 +43,7 @@ module Gecode::Constraints::Int #:nodoc:
   #--
   # Classes that mix in IntOperand must define #model and #to_int_var .
   module IntOperand  
-    include Gecode::Constraints::Operand 
+    include Gecode::Operand 
 
     def method_missing(method, *args) #:nodoc:
       if Gecode::IntVar.instance_methods.include? method.to_s
@@ -63,7 +63,7 @@ module Gecode::Constraints::Int #:nodoc:
 
   # An operand that short circuits integer equality.
   class ShortCircuitEqualityOperand #:nodoc:
-    include Gecode::Constraints::Int::IntOperand
+    include Gecode::Int::IntOperand
     attr :model
 
     def initialize(model)
@@ -81,8 +81,8 @@ module Gecode::Constraints::Int #:nodoc:
           if !@params[:negate] and options[:reify].nil? and 
               operand.respond_to? :to_int_var
             # Short circuit the constraint.
-            @params.update Gecode::Constraints::Util.decode_options(options)
-            @model.add_constraint(Gecode::Constraints::BlockConstraint.new(
+            @params.update Gecode::Util.decode_options(options)
+            @model.add_constraint(Gecode::BlockConstraint.new(
                 @model, @params) do
               @short_circuit.constrain_equal(operand, false,
                 @params.values_at(:strength, :kind))
@@ -100,7 +100,7 @@ module Gecode::Constraints::Int #:nodoc:
     def to_int_var
       variable = model.int_var
       options = 
-        Gecode::Constraints::Util.decode_options({}).values_at(:strength, :kind)
+        Gecode::Util.decode_options({}).values_at(:strength, :kind)
       model.add_interaction do
         constrain_equal(variable, true, options)
       end
@@ -120,7 +120,7 @@ module Gecode::Constraints::Int #:nodoc:
 
   # An operand that short circuits integer relation constraints.
   class ShortCircuitRelationsOperand #:nodoc:
-    include Gecode::Constraints::Int::IntOperand
+    include Gecode::Int::IntOperand
     attr :model
 
     def initialize(model)
@@ -132,13 +132,13 @@ module Gecode::Constraints::Int #:nodoc:
       op = self
       receiver.instance_eval{ @short_circuit = op }
       class <<receiver
-        Gecode::Constraints::Util::COMPARISON_ALIASES.keys.each do |comp|
+        Gecode::Util::COMPARISON_ALIASES.keys.each do |comp|
           eval <<-end_code
             alias_method :alias_#{comp.to_i}_without_short_circuit, :#{comp}
             def #{comp}(operand, options = {})
               if operand.respond_to?(:to_int_var) or operand.kind_of? Fixnum
                 # Short circuit the constraint.
-                @params.update Gecode::Constraints::Util.decode_options(options)
+                @params.update Gecode::Util.decode_options(options)
                 @model.add_constraint(
                   @short_circuit.relation_constraint(
                     :#{comp}, operand, @params))
@@ -157,7 +157,7 @@ module Gecode::Constraints::Int #:nodoc:
     def to_int_var
       variable = model.int_var
       params = {}
-      params.update Gecode::Constraints::Util.decode_options({})
+      params.update Gecode::Util.decode_options({})
       model.add_constraint relation_constraint(:==, variable, params)
       return variable
     end
@@ -211,7 +211,7 @@ module Gecode::Constraints::Int #:nodoc:
   #
   #   int_enum[int_operand].must_be.greater_or_equal(int_operand2, :strength => :domain, :reify => bool_operand)
   #
-  class IntConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class IntConstraintReceiver < Gecode::ConstraintReceiver
     # Raises TypeError unless the left hand side is an int operand.
     def initialize(model, params) #:nodoc:
       super

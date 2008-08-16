@@ -45,10 +45,10 @@ module Gecode
   #             The various variables all have the functionality of Operand 
   #             and have many properties depending on their type. For 
   #             instance integer variables have the properties defined
-  #             in Gecode::Constraints::Int::IntOperand and
+  #             in Gecode::Int::IntOperand and
   #             enumerations of integer variables (such as the array
   #             +variables+ we used) have the properties defined in  
-  #             Gecode::Constraints::IntEnum::IntEnumOperand .
+  #             Gecode::IntEnum::IntEnumOperand .
   #             
   # [Constraints] Constraints are placed on the variables to ensure that a 
   #               valid assignment of the variables must also be a solution.
@@ -60,10 +60,10 @@ module Gecode
   #               kinds of operands are found in the respective
   #               constraint receivers. For instance, the constraints
   #               that can be placed on integer operands are found in 
-  #               Gecode::Constraints::Int::IntConstraintReceiver and
+  #               Gecode::Int::IntConstraintReceiver and
   #               the constraints that can be placed on enumerations of
   #               integer operands are found in 
-  #               Gecode::Constraints::IntEnum::IntEnumConstraintReceiver .
+  #               Gecode::IntEnum::IntEnumConstraintReceiver .
   #
   # [Branching] "branch_on variables" in the example tells Gecode that
   #             it should explore the search space until it has assigned
@@ -343,8 +343,8 @@ module Gecode
     def set_bounds_to_parameters(glb_domain, lub_domain, cardinality_range)
       check_set_bounds(glb_domain, lub_domain)
       args = []
-      args << Gecode::Constraints::Util.constant_set_to_int_set(glb_domain)
-      args << Gecode::Constraints::Util.constant_set_to_int_set(lub_domain)
+      args << Gecode::Util.constant_set_to_int_set(glb_domain)
+      args << Gecode::Util.constant_set_to_int_set(lub_domain)
       card_range = to_set_cardinality_range(cardinality_range)
       if card_range.nil?
         card_range = 0..Gecode::Raw::SetLimits::CARD

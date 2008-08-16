@@ -1,6 +1,6 @@
 # A module that deals with the operands, properties and constraints of
 # boolean variables.
-module Gecode::Constraints::Bool #:nodoc:
+module Gecode::Bool #:nodoc:
   # A BoolOperand is a combination of variables on which the
   # constraints defined in BoolConstraintReceiver can be placed.
   #
@@ -30,7 +30,7 @@ module Gecode::Constraints::Bool #:nodoc:
   #--
   # Classes that mix in BoolOperand must define #model and #to_bool_var .
   module BoolOperand  
-    include Gecode::Constraints::Operand 
+    include Gecode::Operand 
 
     def method_missing(method, *args) #:nodoc:
       if Gecode::BoolVar.instance_methods.include? method.to_s
@@ -81,7 +81,7 @@ module Gecode::Constraints::Bool #:nodoc:
   #
   #   bool_enum.conjunction.must_not.imply(bool_operand, :strength => :domain, :reify => bool_operand2)
   #
-  class BoolConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class BoolConstraintReceiver < Gecode::ConstraintReceiver
     # Raises TypeError unless the left hand side is an bool operand.
     def initialize(model, params) #:nodoc:
       super
@@ -94,7 +94,7 @@ module Gecode::Constraints::Bool #:nodoc:
 
   # An operand that short circuits boolean equality.
   class ShortCircuitEqualityOperand #:nodoc:
-    include Gecode::Constraints::Bool::BoolOperand
+    include Gecode::Bool::BoolOperand
     attr :model
 
     def initialize(model)
@@ -112,8 +112,8 @@ module Gecode::Constraints::Bool #:nodoc:
           if !@params[:negate] and options[:reify].nil? and 
               operand.respond_to? :to_bool_var
             # Short circuit the constraint.
-            @params.update Gecode::Constraints::Util.decode_options(options)
-            @model.add_constraint(Gecode::Constraints::BlockConstraint.new(
+            @params.update Gecode::Util.decode_options(options)
+            @model.add_constraint(Gecode::BlockConstraint.new(
                 @model, @params) do
               @short_circuit.constrain_equal(operand, false,
                 @params.values_at(:strength, :kind))
@@ -131,7 +131,7 @@ module Gecode::Constraints::Bool #:nodoc:
     def to_bool_var
       variable = model.bool_var
       options = 
-        Gecode::Constraints::Util.decode_options({}).values_at(:strength, :kind)
+        Gecode::Util.decode_options({}).values_at(:strength, :kind)
       model.add_interaction do
         constrain_equal(variable, true, options)
       end

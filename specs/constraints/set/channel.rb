@@ -12,7 +12,7 @@ class SetChannelSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::Set::Channel, ' (set variable as lhs with bool enum)' do
+describe Gecode::Set::Channel, ' (set variable as lhs with bool enum)' do
   before do
     @model = SetChannelSampleProblem.new
     @bools = @model.bool_enum
@@ -44,7 +44,7 @@ describe Gecode::Constraints::Set::Channel, ' (set variable as lhs with bool enu
   it_should_behave_like 'non-negatable constraint'
 end
 
-describe Gecode::Constraints::Set::Channel, ' (bool enum as lhs with set variable)' do
+describe Gecode::Set::Channel, ' (bool enum as lhs with set variable)' do
   before do
     @model = SetChannelSampleProblem.new
     @bools = @model.bool_enum

@@ -15,7 +15,7 @@ class ChannelSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::IntEnum::Channel, ' (two int enums)' do
+describe Gecode::IntEnum::Channel, ' (two int enums)' do
   before do
     @model = ChannelSampleProblem.new
     @positions = @model.positions

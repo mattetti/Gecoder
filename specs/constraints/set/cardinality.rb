@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../constraint_helper'
 
-describe Gecode::Constraints::Set::Cardinality, ' (constraint)' do
+describe Gecode::Set::Cardinality, ' (constraint)' do
   before do
     @model = Gecode::Model.new
     @set = @model.set_var([], 0..10)

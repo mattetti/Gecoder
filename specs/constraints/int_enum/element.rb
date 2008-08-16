@@ -16,7 +16,7 @@ class ElementSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::IntEnum::Element do
+describe Gecode::IntEnum::Element do
   before do
     @model = ElementSampleProblem.new
     @prices = @model.prices
@@ -29,7 +29,7 @@ describe Gecode::Constraints::IntEnum::Element do
       int_enum[int]
     end
     @selected_property = @prices[@store]
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
 
   it 'should not disturb normal array access' do

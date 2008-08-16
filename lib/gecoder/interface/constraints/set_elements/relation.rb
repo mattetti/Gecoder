@@ -1,4 +1,4 @@
-module Gecode::Constraints::SetElements
+module Gecode::SetElements
   class SetElementsConstraintReceiver
     # Constrains the set elements to equal +operand+ (either a
     # constant integer or an integer operand).
@@ -88,18 +88,18 @@ module Gecode::Constraints::SetElements
       end
 
       unless @params[:negate]
-        relation_type = Gecode::Constraints::Util::RELATION_TYPES[name]
+        relation_type = Gecode::Util::RELATION_TYPES[name]
       else
-        relation_type = Gecode::Constraints::Util::NEGATED_RELATION_TYPES[name]
+        relation_type = Gecode::Util::NEGATED_RELATION_TYPES[name]
       end
-      @params.update Gecode::Constraints::Set::Util.decode_options(options)
+      @params.update Gecode::Set::Util.decode_options(options)
       @model.add_constraint Relation::RelationConstraint.new(@model, 
         @params.update(:relation_type => relation_type, :rhs => operand))
     end
   end
 
   module Relation #:nodoc:
-    class RelationConstraint < Gecode::Constraints::Constraint #:nodoc:
+    class RelationConstraint < Gecode::Constraint #:nodoc:
       def post
         set_elements, rhs, type = @params.values_at(:lhs, :rhs, :relation_type)
         set = set_elements.to_set_elements

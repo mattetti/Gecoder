@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + '/../constraint_helper'
 
-Gecode::Constraints::Util::SET_RELATION_TYPES.each_pair do |relation, type|
+Gecode::Util::SET_RELATION_TYPES.each_pair do |relation, type|
   next if relation == :==
   
-  describe Gecode::Constraints::Set::Relation, " (#{relation})" do
+  describe Gecode::Set::Relation, " (#{relation})" do
     before do
       @model = Gecode::Model.new
       @set = @model.set_var([0], 0..3)
@@ -76,7 +76,7 @@ Gecode::Constraints::Util::SET_RELATION_TYPES.each_pair do |relation, type|
   end
 end
 
-describe Gecode::Constraints::Set::Relation, ' (equality)' do
+describe Gecode::Set::Relation, ' (equality)' do
   before do
     @model = Gecode::Model.new
     @set = @model.set_var([0], 0..1)

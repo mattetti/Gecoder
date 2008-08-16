@@ -1,4 +1,4 @@
-module Gecode::Constraints::IntEnum
+module Gecode::IntEnum
   class IntEnumConstraintReceiver
     # Constrains the elements in this enumeration to be sorted in ascending 
     # order. The following options can be given in addition to the
@@ -54,7 +54,7 @@ module Gecode::Constraints::IntEnum
       
       # Extract standard options and convert to constraint.
       reified = !options[:reify].nil?
-      @params.update(Gecode::Constraints::Util.decode_options(options))
+      @params.update(Gecode::Util.decode_options(options))
       if target.nil? and order.nil?
         @model.add_constraint Sort::SortConstraint.new(@model, @params)
       else
@@ -77,7 +77,7 @@ module Gecode::Constraints::IntEnum
 
   # A module that gathers the classes and modules used in sort constraints.
   module Sort #:nodoc:
-    class SortConstraintWithOptions < Gecode::Constraints::Constraint #:nodoc:
+    class SortConstraintWithOptions < Gecode::Constraint #:nodoc:
       def post
         if @params[:target].nil?
           # We must have a target.
@@ -100,7 +100,7 @@ module Gecode::Constraints::IntEnum
       end
     end
     
-    class SortConstraint < Gecode::Constraints::ReifiableConstraint #:nodoc:
+    class SortConstraint < Gecode::ReifiableConstraint #:nodoc:
       def post
         lhs, strength, kind, reif_var = 
           @params.values_at(:lhs, :strength, :kind, :reif)
@@ -109,9 +109,9 @@ module Gecode::Constraints::IntEnum
         # We translate the constraint into n-1 relation constraints.
         options = {
           :strength => 
-            Gecode::Constraints::Util::PROPAGATION_STRENGTHS.invert[strength],
+            Gecode::Util::PROPAGATION_STRENGTHS.invert[strength],
           :kind => 
-            Gecode::Constraints::Util::PROPAGATION_KINDS.invert[kind]
+            Gecode::Util::PROPAGATION_KINDS.invert[kind]
         }
         if using_reification
           reification_variables = @model.bool_var_array(lhs.size - 1)

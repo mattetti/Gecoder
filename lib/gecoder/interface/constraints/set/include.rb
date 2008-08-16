@@ -1,4 +1,4 @@
-module Gecode::Constraints::Set
+module Gecode::Set
   class SetConstraintReceiver
     # Constrains this set to include the values of +int_enum+.
     # 
@@ -25,7 +25,7 @@ module Gecode::Constraints::Set
   end
 
   module Connection #:nodoc:
-    class IncludeConstraint < Gecode::Constraints::Constraint #:nodoc:
+    class IncludeConstraint < Gecode::Constraint #:nodoc:
       def post
         set, variables = @params.values_at(:lhs, :variables)
         Gecode::Raw::match(@model.active_space, set.to_set_var.bind, 

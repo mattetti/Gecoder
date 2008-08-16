@@ -1,4 +1,4 @@
-module Gecode::Constraints
+module Gecode
   # Base class for all reifiable constraints.
   class ReifiableConstraint < Constraint #:nodoc:
     # Gets the reification variable of the constraint, nil if none exists.

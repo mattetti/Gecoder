@@ -1,6 +1,6 @@
-module Gecode::Constraints::BoolEnum
+module Gecode::BoolEnum
   class BoolEnumConstraintReceiver
-    # Constraints this enumeration to "channel" +integer_operand+. This 
+    # Constrains this enumeration to "channel" +integer_operand+. This 
     # constrains the integer operand to take value i exactly when the 
     # variable at index i in the boolean enumeration is true and the others 
     # are false.
@@ -10,8 +10,8 @@ module Gecode::Constraints::BoolEnum
     #
     # [:offset]  Specifies an offset for the integer variable. If the offset is
     #            set to k then the integer variable takes value i+k exactly 
-    #            when the variable at index i in the boolean enumeration is true 
-    #            and the rest are false.
+    #            when the variable at index i in the boolean enumeration is 
+    #            true and the rest are false.
     # 
     # Neither reification nor negation is supported. The int variable
     # and the enumeration can be interchanged.
@@ -45,7 +45,7 @@ module Gecode::Constraints::BoolEnum
       
       @params.update(:rhs => integer_operand, 
         :offset => options.delete(:offset) || 0)
-      @params.update(Gecode::Constraints::Util.decode_options(options))
+      @params.update(Gecode::Util.decode_options(options))
       @model.add_constraint Channel::ChannelConstraint.new(@model, @params)
     end
 
@@ -56,7 +56,7 @@ module Gecode::Constraints::BoolEnum
   # A module that gathers the classes and modules used in channel constraints
   # involving one boolean enum and one integer variable.
   module Channel #:nodoc:
-    class ChannelConstraint < Gecode::Constraints::Constraint #:nodoc:
+    class ChannelConstraint < Gecode::Constraint #:nodoc:
       def post
         lhs, rhs, offset = @params.values_at(:lhs, :rhs, :offset)
         Gecode::Raw::channel(@model.active_space, 

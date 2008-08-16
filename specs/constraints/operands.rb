@@ -28,12 +28,12 @@ describe 'enum operand', :shared => true do
   it_should_behave_like 'operand'
 end
 
-describe Gecode::Constraints::Operand do
+describe Gecode::Operand do
   before do
     model = Gecode::Model.new
     @operand = Object.new
     class <<@operand
-      include Gecode::Constraints::Operand
+      include Gecode::Operand
     end
   end
 
@@ -50,7 +50,7 @@ describe Gecode::Constraints::Operand do
   end
 end
 
-describe Gecode::Constraints::Int::IntOperand do
+describe Gecode::Int::IntOperand do
   before do
     model = Gecode::Model.new
     @operand, _ = general_int_operand(model)
@@ -59,10 +59,10 @@ describe Gecode::Constraints::Int::IntOperand do
   it_should_behave_like 'variable operand'
 end
 
-describe Gecode::Constraints::Int::ShortCircuitEqualityOperand, ' (not subclassed)' do
+describe Gecode::Int::ShortCircuitEqualityOperand, ' (not subclassed)' do
   before do
     @model = Gecode::Model.new
-    @operand = Gecode::Constraints::Int::ShortCircuitEqualityOperand.new(@model)
+    @operand = Gecode::Int::ShortCircuitEqualityOperand.new(@model)
   end
 
   it 'should raise error if #constrain_equal is called' do
@@ -73,10 +73,10 @@ describe Gecode::Constraints::Int::ShortCircuitEqualityOperand, ' (not subclasse
   end
 end
 
-describe Gecode::Constraints::Int::ShortCircuitRelationsOperand, ' (not subclassed)' do
+describe Gecode::Int::ShortCircuitRelationsOperand, ' (not subclassed)' do
   before do
     @model = Gecode::Model.new
-    @operand = Gecode::Constraints::Int::ShortCircuitRelationsOperand.new(@model)
+    @operand = Gecode::Int::ShortCircuitRelationsOperand.new(@model)
   end
 
   it 'should raise error if #constrain_equal is called' do
@@ -87,7 +87,7 @@ describe Gecode::Constraints::Int::ShortCircuitRelationsOperand, ' (not subclass
   end
 end
 
-describe Gecode::Constraints::IntEnum::IntEnumOperand do
+describe Gecode::IntEnum::IntEnumOperand do
   before do
     model = Gecode::Model.new
     @operand, _ = general_int_enum_operand(model)
@@ -96,7 +96,7 @@ describe Gecode::Constraints::IntEnum::IntEnumOperand do
   it_should_behave_like 'enum operand'
 end
 
-describe Gecode::Constraints::Bool::BoolOperand do
+describe Gecode::Bool::BoolOperand do
   before do
     model = Gecode::Model.new
     @operand, _ = general_bool_operand(model)
@@ -105,10 +105,10 @@ describe Gecode::Constraints::Bool::BoolOperand do
   it_should_behave_like 'variable operand'
 end
 
-describe Gecode::Constraints::Bool::ShortCircuitEqualityOperand, ' (not subclassed)' do
+describe Gecode::Bool::ShortCircuitEqualityOperand, ' (not subclassed)' do
   before do
     @model = Gecode::Model.new
-    @operand = Gecode::Constraints::Bool::ShortCircuitEqualityOperand.new(@model)
+    @operand = Gecode::Bool::ShortCircuitEqualityOperand.new(@model)
   end
 
   it 'should raise error if #constrain_equal is called' do
@@ -119,7 +119,7 @@ describe Gecode::Constraints::Bool::ShortCircuitEqualityOperand, ' (not subclass
   end
 end
 
-describe Gecode::Constraints::BoolEnum::BoolEnumOperand do
+describe Gecode::BoolEnum::BoolEnumOperand do
   before do
     model = Gecode::Model.new
     @operand, _ = general_bool_enum_operand(model)
@@ -128,7 +128,7 @@ describe Gecode::Constraints::BoolEnum::BoolEnumOperand do
   it_should_behave_like 'enum operand'
 end
 
-describe Gecode::Constraints::Set::SetOperand do
+describe Gecode::Set::SetOperand do
   before do
     model = Gecode::Model.new
     @operand, _ = general_set_operand(model)
@@ -137,10 +137,10 @@ describe Gecode::Constraints::Set::SetOperand do
   it_should_behave_like 'variable operand'
 end
 
-describe Gecode::Constraints::Set::ShortCircuitEqualityOperand, ' (not subclassed)' do
+describe Gecode::Set::ShortCircuitEqualityOperand, ' (not subclassed)' do
   before do
     @model = Gecode::Model.new
-    @operand = Gecode::Constraints::Set::ShortCircuitEqualityOperand.new(@model)
+    @operand = Gecode::Set::ShortCircuitEqualityOperand.new(@model)
   end
 
   it 'should raise error if #constrain_equal is called' do
@@ -151,10 +151,10 @@ describe Gecode::Constraints::Set::ShortCircuitEqualityOperand, ' (not subclasse
   end
 end
 
-describe Gecode::Constraints::Set::ShortCircuitRelationsOperand, ' (not subclassed)' do
+describe Gecode::Set::ShortCircuitRelationsOperand, ' (not subclassed)' do
   before do
     @model = Gecode::Model.new
-    @operand = Gecode::Constraints::Set::ShortCircuitRelationsOperand.new(@model)
+    @operand = Gecode::Set::ShortCircuitRelationsOperand.new(@model)
   end
 
   it 'should raise error if #constrain_equal is called' do
@@ -165,7 +165,7 @@ describe Gecode::Constraints::Set::ShortCircuitRelationsOperand, ' (not subclass
   end
 end
 
-describe Gecode::Constraints::SelectedSet::SelectedSetOperand do
+describe Gecode::SelectedSet::SelectedSetOperand do
   before do
     model = Gecode::Model.new
     @operand, ops = general_selected_set_operand(model)
@@ -174,20 +174,20 @@ describe Gecode::Constraints::SelectedSet::SelectedSetOperand do
 
   it 'should raise error if set enum operand is not given' do
     lambda do
-      Gecode::Constraints::SelectedSet::SelectedSetOperand.new(:foo, @set)
+      Gecode::SelectedSet::SelectedSetOperand.new(:foo, @set)
     end.should raise_error(TypeError)
   end
 
   it 'should raise error if set operand is not given' do
     lambda do
-      Gecode::Constraints::SelectedSet::SelectedSetOperand.new(@enum, :foo)
+      Gecode::SelectedSet::SelectedSetOperand.new(@enum, :foo)
     end.should raise_error(TypeError)
   end
 
   it_should_behave_like 'operand'
 end
 
-describe Gecode::Constraints::SetElements::SetElementsOperand do
+describe Gecode::SetElements::SetElementsOperand do
   before do
     model = Gecode::Model.new
     @operand, @set = general_set_elements_operand(model)
@@ -195,14 +195,14 @@ describe Gecode::Constraints::SetElements::SetElementsOperand do
 
   it 'should raise error if set operand is not given' do
     lambda do
-      Gecode::Constraints::SetElements::SetElementsOperand.new(:foo)
+      Gecode::SetElements::SetElementsOperand.new(:foo)
     end.should raise_error(TypeError)
   end
 
   it_should_behave_like 'operand'
 end
 
-describe Gecode::Constraints::SetEnum::SetEnumOperand do
+describe Gecode::SetEnum::SetEnumOperand do
   before do
     model = Gecode::Model.new
     @operand, _ = general_set_enum_operand(model)
@@ -211,7 +211,7 @@ describe Gecode::Constraints::SetEnum::SetEnumOperand do
   it_should_behave_like 'enum operand'
 end
 
-describe Gecode::Constraints::FixnumEnum::FixnumEnumOperand do
+describe Gecode::FixnumEnum::FixnumEnumOperand do
   before do
     model = Gecode::Model.new
     @operand, _ = general_fixnum_enum_operand(model)

@@ -1,4 +1,4 @@
-module Gecode::Constraints::Set
+module Gecode::Set
   module SetOperand
     # Produces a new set operand representing the union between this operand 
     # and +set_operand_or_constant_set+.
@@ -63,7 +63,7 @@ module Gecode::Constraints::Set
     # operand and +operand2+.
     def set_operation(operator, operand2)
       unless operand2.respond_to? :to_set_var or 
-        Gecode::Constraints::Util::constant_set?(operand2)
+        Gecode::Util::constant_set?(operand2)
         raise TypeError, 'Expected set operand or constant set as ' + 
               "operand, got \#{operand2.class}."
       end
@@ -75,7 +75,7 @@ module Gecode::Constraints::Set
 
   # A module that gathers the classes and modules used in operation constraints.
   module Operation #:nodoc:
-    class OperationSetOperand < Gecode::Constraints::Set::ShortCircuitRelationsOperand #:nodoc:
+    class OperationSetOperand < Gecode::Set::ShortCircuitRelationsOperand #:nodoc:
       def initialize(model, op1, operator, op2)
         super model
         @op1 = op1
@@ -85,9 +85,9 @@ module Gecode::Constraints::Set
 
       def relation_constraint(relation, set_operand_or_constant_set, params)
         relation_type = 
-          Gecode::Constraints::Util::SET_RELATION_TYPES[relation]
+          Gecode::Util::SET_RELATION_TYPES[relation]
 
-        operation = Gecode::Constraints::Util::SET_OPERATION_TYPES[@operator]
+        operation = Gecode::Util::SET_OPERATION_TYPES[@operator]
         params.update(:rhs => set_operand_or_constant_set, 
           :relation_type => relation_type, :op1 => @op1, :op2 => @op2,
           :operation => operation)
@@ -95,7 +95,7 @@ module Gecode::Constraints::Set
       end
     end
     
-    class OperationConstraint < Gecode::Constraints::Constraint #:nodoc:
+    class OperationConstraint < Gecode::Constraint #:nodoc:
       def post
         op1, op2, operation, relation, rhs, negate = @params.values_at(:op1, 
           :op2, :operation, :relation_type, :rhs, :negate)
@@ -106,7 +106,7 @@ module Gecode::Constraints::Set
           if expression.respond_to? :to_set_var
             expression.to_set_var.bind
           else
-            Gecode::Constraints::Util::constant_set_to_int_set(expression)
+            Gecode::Util::constant_set_to_int_set(expression)
           end
         end
 

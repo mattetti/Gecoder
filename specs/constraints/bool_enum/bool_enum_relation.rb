@@ -66,7 +66,7 @@ describe 'bool enum relation constraint', :shared => true do
   end
 end
 
-describe Gecode::Constraints::BoolEnum::Relation, ' (conjunction)' do
+describe Gecode::BoolEnum::Relation, ' (conjunction)' do
   before do
     @model = BoolEnumSampleProblem.new
     @bools = @model.bools
@@ -79,7 +79,7 @@ describe Gecode::Constraints::BoolEnum::Relation, ' (conjunction)' do
       bool_enum.conjunction
     end
     @selected_property = @bools.conjunction
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
     
     # For bool enum spec.
     @stub = @selected_property
@@ -91,7 +91,7 @@ describe Gecode::Constraints::BoolEnum::Relation, ' (conjunction)' do
     'property that produces bool operand by short circuiting equality')
 end
 
-describe Gecode::Constraints::BoolEnum::Relation, ' (disjunction)' do
+describe Gecode::BoolEnum::Relation, ' (disjunction)' do
   before do
     @model = BoolEnumSampleProblem.new
     @bools = @model.bools
@@ -104,7 +104,7 @@ describe Gecode::Constraints::BoolEnum::Relation, ' (disjunction)' do
       bool_enum.disjunction
     end
     @selected_property = @bools.disjunction
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
     
     # For bool enum spec.
     @stub = @selected_property

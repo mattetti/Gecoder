@@ -14,7 +14,7 @@ class FixnumElementSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::FixnumEnum::Element do
+describe Gecode::FixnumEnum::Element do
   before do
     @model = FixnumElementSampleProblem.new
     @price = @model.price
@@ -27,7 +27,7 @@ describe Gecode::Constraints::FixnumEnum::Element do
       fixnum_enum[int]
     end
     @selected_property = @enum[@store]
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
 
   it 'should not disturb normal array access' do

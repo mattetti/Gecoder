@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../constraint_helper'
 
-describe Gecode::Constraints::IntEnum::Equality do
+describe Gecode::IntEnum::Equality do
   before do
     @model = Gecode::Model.new
     @vars = @model.int_var_array(4, -2..2)

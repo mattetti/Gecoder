@@ -11,7 +11,7 @@ class ArithmeticSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::Int::Arithmetic, ' (abs)' do
+describe Gecode::Int::Arithmetic, ' (abs)' do
   before do
     @model = ArithmeticSampleProblem.new
     @var = @model.var
@@ -21,7 +21,7 @@ describe Gecode::Constraints::Int::Arithmetic, ' (abs)' do
       int.abs
     end
     @selected_property = @var.abs
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the absolute value' do
@@ -40,7 +40,7 @@ describe Gecode::Constraints::Int::Arithmetic, ' (abs)' do
     'property that produces int operand by short circuiting equality')
 end
 
-describe Gecode::Constraints::Int::Arithmetic, ' (multiplication)' do
+describe Gecode::Int::Arithmetic, ' (multiplication)' do
   before do
     @model = ArithmeticSampleProblem.new
     @var = @model.var
@@ -51,7 +51,7 @@ describe Gecode::Constraints::Int::Arithmetic, ' (multiplication)' do
       int1 * int2
     end
     @selected_property = @var * @var2
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the value of the multiplication' do
@@ -70,7 +70,7 @@ describe Gecode::Constraints::Int::Arithmetic, ' (multiplication)' do
     'property that produces int operand by short circuiting equality')
 end
 
-describe Gecode::Constraints::Int::Arithmetic, ' (squared)' do
+describe Gecode::Int::Arithmetic, ' (squared)' do
   before do
     @model = ArithmeticSampleProblem.new
     @var = @model.var
@@ -80,7 +80,7 @@ describe Gecode::Constraints::Int::Arithmetic, ' (squared)' do
       int.squared
     end
     @selected_property = @var.squared
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the value of the variable squared' do
@@ -99,7 +99,7 @@ describe Gecode::Constraints::Int::Arithmetic, ' (squared)' do
     'property that produces int operand by short circuiting equality')
 end
 
-describe Gecode::Constraints::Int::Arithmetic, ' (square root)' do
+describe Gecode::Int::Arithmetic, ' (square root)' do
   before do
     @model = ArithmeticSampleProblem.new
     @var = @model.var
@@ -109,7 +109,7 @@ describe Gecode::Constraints::Int::Arithmetic, ' (square root)' do
       int.sqrt
     end
     @selected_property = @var.sqrt
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the square root of the variable' do

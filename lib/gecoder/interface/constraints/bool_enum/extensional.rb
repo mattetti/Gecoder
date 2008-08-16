@@ -1,4 +1,4 @@
-module Gecode::Constraints::BoolEnum
+module Gecode::BoolEnum
   class BoolEnumConstraintReceiver
     # Constrains all the variables in this enumeration to be equal to
     # one of the specified tuples. Neither negation nor reification is
@@ -23,7 +23,7 @@ module Gecode::Constraints::BoolEnum
           'constraint.'
       end
       
-      util = Gecode::Constraints::Util
+      util = Gecode::Util
       
       # Check that the tuples are correct.
       expected_size = @params[:lhs].size
@@ -35,7 +35,7 @@ module Gecode::Constraints::BoolEnum
       
       @params[:tuples] = tuples
       @model.add_constraint Extensional::TupleConstraint.new(@model, 
-        @params.update(Gecode::Constraints::Util.decode_options(options)))
+        @params.update(Gecode::Util.decode_options(options)))
     end
 
     # Constrains the sequence of variables in this enumeration to match
@@ -68,8 +68,8 @@ module Gecode::Constraints::BoolEnum
       end
 
       @params[:regexp] = 
-        Gecode::Constraints::Util::Extensional.parse_regexp regexp
-      @params.update Gecode::Constraints::Util.decode_options(options)
+        Gecode::Util::Extensional.parse_regexp regexp
+      @params.update Gecode::Util.decode_options(options)
       @model.add_constraint Extensional::RegexpConstraint.new(@model, @params)
     end
   end
@@ -77,7 +77,7 @@ module Gecode::Constraints::BoolEnum
   # A module that gathers the classes and modules used in extensional 
   # constraints.
   module Extensional #:nodoc:
-    class TupleConstraint < Gecode::Constraints::Constraint #:nodoc:
+    class TupleConstraint < Gecode::Constraint #:nodoc:
       def post
         # Bind lhs.
         lhs = @params[:lhs].to_bool_enum.bind_array
@@ -95,7 +95,7 @@ module Gecode::Constraints::BoolEnum
       end
     end
 
-    class RegexpConstraint < Gecode::Constraints::Constraint #:nodoc:
+    class RegexpConstraint < Gecode::Constraint #:nodoc:
       def post
         lhs, regexp = @params.values_at(:lhs, :regexp)
         Gecode::Raw::extensional(@model.active_space, 

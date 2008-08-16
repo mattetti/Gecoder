@@ -16,7 +16,7 @@ class SelectionSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::SetEnum::Select, ' (disjoint)' do
+describe Gecode::SetEnum::Select, ' (disjoint)' do
   include GecodeR::Specs::SetHelper
 
   before do

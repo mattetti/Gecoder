@@ -7,7 +7,7 @@ class DistinctSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::IntEnum::Distinct do
+describe Gecode::IntEnum::Distinct do
   before do
     @model = DistinctSampleProblem.new
 
@@ -33,7 +33,7 @@ describe Gecode::Constraints::IntEnum::Distinct do
   it_should_behave_like 'non-negatable constraint'
 end
 
-describe Gecode::Constraints::IntEnum::Distinct, ' (with offsets)' do
+describe Gecode::IntEnum::Distinct, ' (with offsets)' do
   before do
     @model = DistinctSampleProblem.new
 

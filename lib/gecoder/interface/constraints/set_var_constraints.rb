@@ -1,6 +1,6 @@
 # A module containing constraints that have set variables as left hand side
 # (but not enumerations).
-module Gecode::Constraints::Set #:nodoc:
+module Gecode::Set #:nodoc:
   # A SetOperand is a combination of variables on which the
   # constraints defined in SetConstraintReceiver can be placed.
   #
@@ -38,7 +38,7 @@ module Gecode::Constraints::Set #:nodoc:
   #--
   # Classes that mix in SetOperand must define #model and #to_set_var .
   module SetOperand  
-    include Gecode::Constraints::Operand 
+    include Gecode::Operand 
 
     def method_missing(method, *args) #:nodoc:
       if Gecode::SetVar.instance_methods.include? method.to_s
@@ -58,7 +58,7 @@ module Gecode::Constraints::Set #:nodoc:
 
   # An operand that short circuits set equality.
   class ShortCircuitEqualityOperand #:nodoc:
-    include Gecode::Constraints::Set::SetOperand
+    include Gecode::Set::SetOperand
     attr :model
 
     def initialize(model)
@@ -76,8 +76,8 @@ module Gecode::Constraints::Set #:nodoc:
           if !@params[:negate] and !options.has_key?(:reify) and 
               operand.respond_to? :to_set_var
             # Short circuit the constraint.
-            @params.update Gecode::Constraints::Util.decode_options(options)
-            @model.add_constraint(Gecode::Constraints::BlockConstraint.new(
+            @params.update Gecode::Util.decode_options(options)
+            @model.add_constraint(Gecode::BlockConstraint.new(
                 @model, @params) do
               @short_circuit.constrain_equal(operand, false,
                 @params.values_at(:strength, :kind))
@@ -95,7 +95,7 @@ module Gecode::Constraints::Set #:nodoc:
     def to_set_var
       variable = model.set_var
       options = 
-        Gecode::Constraints::Set::Util.decode_options(
+        Gecode::Set::Util.decode_options(
           {}).values_at(:strength, :kind)
       model.add_interaction do
         constrain_equal(variable, true, options)
@@ -117,7 +117,7 @@ module Gecode::Constraints::Set #:nodoc:
   # An operand that short circuits set non-negated and non-reified versions 
   # of the relation constraints.
   class ShortCircuitRelationsOperand #:nodoc:
-    include Gecode::Constraints::Set::SetOperand
+    include Gecode::Set::SetOperand
     attr :model
 
     def initialize(model)
@@ -130,15 +130,15 @@ module Gecode::Constraints::Set #:nodoc:
       op = self
       receiver.instance_eval{ @short_circuit = op }
       class <<receiver
-        Gecode::Constraints::Util::SET_RELATION_TYPES.keys.each do |comp|
+        Gecode::Util::SET_RELATION_TYPES.keys.each do |comp|
           eval <<-end_code
             alias_method :alias_#{comp.to_i}_without_short_circuit, :#{comp}
             def #{comp}(operand, options = {})
               if !@params[:negate] && !options.has_key?(:reify) && 
                   (operand.respond_to?(:to_set_var) or 
-                  Gecode::Constraints::Util::constant_set?(operand))
+                  Gecode::Util::constant_set?(operand))
                 # Short circuit the constraint.
-                @params.update Gecode::Constraints::Set::Util.decode_options(options)
+                @params.update Gecode::Set::Util.decode_options(options)
                 @model.add_constraint(
                   @short_circuit.relation_constraint(
                     :#{comp}, operand, @params))
@@ -157,7 +157,7 @@ module Gecode::Constraints::Set #:nodoc:
     def to_set_var
       variable = model.set_var
       params = {:lhs => self}
-      params.update Gecode::Constraints::Set::Util.decode_options({})
+      params.update Gecode::Set::Util.decode_options({})
       model.add_constraint relation_constraint(:==, variable, params)
       return variable
     end
@@ -205,7 +205,7 @@ module Gecode::Constraints::Set #:nodoc:
   #
   #   set_enum.union.must_not.equal(0..2, :reify => bool_operand)
   #
-  class SetConstraintReceiver < Gecode::Constraints::ConstraintReceiver
+  class SetConstraintReceiver < Gecode::ConstraintReceiver
     # Raises TypeError unless the left hand side is a set operand.
     def initialize(model, params) #:nodoc:
       super
@@ -229,7 +229,7 @@ module Gecode::Constraints::Set #:nodoc:
           'option.'
       end
       
-      Gecode::Constraints::Util.decode_options(options)
+      Gecode::Util.decode_options(options)
     end
   end
 end

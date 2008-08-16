@@ -14,7 +14,7 @@ class BoolChannelSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::BoolEnum::Channel, ' (bool enum as lhs with int variable)' do
+describe Gecode::BoolEnum::Channel, ' (bool enum as lhs with int variable)' do
   before do
     @model = BoolChannelSampleProblem.new
     @bools = @model.bool_enum
@@ -58,7 +58,7 @@ describe Gecode::Constraints::BoolEnum::Channel, ' (bool enum as lhs with int va
 end
 
 
-describe Gecode::Constraints::BoolEnum::Channel, ' (int variable as lhs with bool enum)' do
+describe Gecode::BoolEnum::Channel, ' (int variable as lhs with bool enum)' do
   before do
     @model = BoolChannelSampleProblem.new
     @bools = @model.bool_enum

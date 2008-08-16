@@ -63,7 +63,7 @@ module Gecode
   # A module containing the methods needed by enumerations containing int 
   # variables. Requires that it's included in an enumerable.
   module IntEnumMethods #:nodoc:
-    include Constraints::IntEnum::IntEnumOperand
+    include IntEnum::IntEnumOperand
     include VariableEnumMethods
   
     # Returns an int variable array with all the bound variables.
@@ -99,15 +99,15 @@ module Gecode
   end
 
   # A dummy class that just shows what methods an int enum responds to.
-  class IntEnum < Array #:nodoc:
-    include Constraints::IntEnum::IntEnumOperand
+  class IntEnum::Dummy < Array #:nodoc:
+    include IntEnum::IntEnumOperand
     include VariableEnumMethods
   end
   
   # A module containing the methods needed by enumerations containing boolean
   # variables. Requires that it's included in an enumerable.
   module BoolEnumMethods #:nodoc:
-    include Constraints::BoolEnum::BoolEnumOperand
+    include BoolEnum::BoolEnumOperand
     include VariableEnumMethods
   
     # Returns a bool variable array with all the bound variables.
@@ -129,15 +129,15 @@ module Gecode
   end
 
   # A dummy class that just shows what methods a bool enum responds to.
-  class BoolEnum < Array #:nodoc:
-    include Constraints::BoolEnum::BoolEnumOperand
+  class BoolEnum::Dummy < Array #:nodoc:
+    include BoolEnum::BoolEnumOperand
     include VariableEnumMethods
   end
   
   # A module containing the methods needed by enumerations containing set
   # variables. Requires that it's included in an enumerable.
   module SetEnumMethods #:nodoc:
-    include Constraints::SetEnum::SetEnumOperand
+    include SetEnum::SetEnumOperand
     include VariableEnumMethods
   
     # Returns a set variable array with all the bound variables.
@@ -173,15 +173,15 @@ module Gecode
   end
 
   # A dummy class that just shows what methods a set enum responds to.
-  class SetEnum < Array #:nodoc:
-    include Constraints::SetEnum::SetEnumOperand
+  class SetEnum::Dummy < Array #:nodoc:
+    include SetEnum::SetEnumOperand
     include VariableEnumMethods
   end
   
   # A module containing the methods needed by enumerations containing fixnums. 
   # Requires that it's included in an enumerable.
   module FixnumEnumMethods #:nodoc:
-    include Constraints::FixnumEnum::FixnumEnumOperand
+    include FixnumEnum::FixnumEnumOperand
     include EnumMethods
     
     # Returns the receiver.
@@ -197,8 +197,8 @@ module Gecode
   end
   
   # A dummy class that just shows what methods a fixnum enum responds to.
-  class FixnumEnum < Array #:nodoc:
-    include Constraints::FixnumEnum::FixnumEnumOperand
+  class FixnumEnum::Dummy < Array #:nodoc:
+    include FixnumEnum::FixnumEnumOperand
     include VariableEnumMethods
   end
 end

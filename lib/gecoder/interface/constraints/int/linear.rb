@@ -1,4 +1,4 @@
-module Gecode::Constraints::Int
+module Gecode::Int
   module IntOperand
     # Produces a new integer operand representing this operand plus 
     # +int_operand_or_fixnum+.
@@ -61,7 +61,7 @@ module Gecode::Constraints::Int
 
   # A module that gathers the classes and modules used in linear constraints.
   module Linear #:nodoc:
-    class LinearRelationConstraint < Gecode::Constraints::ReifiableConstraint #:nodoc:
+    class LinearRelationConstraint < Gecode::ReifiableConstraint #:nodoc:
       def post
         lhs, rhs, relation_type, reif_var = 
           @params.values_at(:lhs, :rhs, :relation_type, :reif)
@@ -79,7 +79,7 @@ module Gecode::Constraints::Int
 
     # Describes a binary tree of expression nodes which together form a linear 
     # expression.
-    class ExpressionTree < Gecode::Constraints::Int::ShortCircuitRelationsOperand #:nodoc:
+    class ExpressionTree < Gecode::Int::ShortCircuitRelationsOperand #:nodoc:
       attr :model
 
       # Constructs a new expression with the specified variable
@@ -100,10 +100,10 @@ module Gecode::Constraints::Int
       def relation_constraint(relation, int_operand_or_fix, params)
         unless params[:negate]
           relation_type = 
-            Gecode::Constraints::Util::RELATION_TYPES[relation]
+            Gecode::Util::RELATION_TYPES[relation]
         else
           relation_type = 
-            Gecode::Constraints::Util::NEGATED_RELATION_TYPES[relation]
+            Gecode::Util::NEGATED_RELATION_TYPES[relation]
         end
 
         unless int_operand_or_fix.respond_to? :to_minimodel_lin_exp

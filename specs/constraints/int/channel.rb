@@ -14,7 +14,7 @@ class BoolChannelSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::Int::Channel, ' (one int and one bool variable)' do
+describe Gecode::Int::Channel, ' (one int and one bool variable)' do
   before do
     @model = BoolChannelSampleProblem.new
     @bool = @model.bool_var
@@ -57,7 +57,7 @@ describe Gecode::Constraints::Int::Channel, ' (one int and one bool variable)' d
   it_should_behave_like 'non-negatable constraint'
 end
 
-describe Gecode::Constraints::Int::Channel, ' (one bool and one int variable)' do
+describe Gecode::Int::Channel, ' (one bool and one int variable)' do
   before do
     @model = BoolChannelSampleProblem.new
     @bool = @model.bool_var

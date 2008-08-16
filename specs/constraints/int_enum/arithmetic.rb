@@ -12,7 +12,7 @@ class IntEnumArithmeticSampleProblem < Gecode::Model
   end
 end
 
-describe Gecode::Constraints::IntEnum::Arithmetic, ' (max)' do
+describe Gecode::IntEnum::Arithmetic, ' (max)' do
   before do
     @model = IntEnumArithmeticSampleProblem.new
     @numbers = @model.numbers
@@ -23,7 +23,7 @@ describe Gecode::Constraints::IntEnum::Arithmetic, ' (max)' do
       int_enum.max
     end
     @selected_property = @numbers.max
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the maximum value' do
@@ -41,7 +41,7 @@ describe Gecode::Constraints::IntEnum::Arithmetic, ' (max)' do
     'property that produces int operand by short circuiting equality')
 end
 
-describe Gecode::Constraints::IntEnum::Arithmetic, ' (min)' do
+describe Gecode::IntEnum::Arithmetic, ' (min)' do
   before do
     @model = IntEnumArithmeticSampleProblem.new
     @numbers = @model.numbers
@@ -52,7 +52,7 @@ describe Gecode::Constraints::IntEnum::Arithmetic, ' (min)' do
       int_enum.min
     end
     @selected_property = @numbers.min
-    @constraint_class = Gecode::Constraints::BlockConstraint
+    @constraint_class = Gecode::BlockConstraint
   end
   
   it 'should constrain the minimum value' do

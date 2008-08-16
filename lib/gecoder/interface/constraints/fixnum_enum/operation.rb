@@ -1,4 +1,4 @@
-module Gecode::Constraints::FixnumEnum
+module Gecode::FixnumEnum
   module FixnumEnumOperand
     # Produces a new set operand representing the union between this operand, 
     # interpreted as a constant set, and +set_operand+.
@@ -61,5 +61,5 @@ module Gecode::Constraints::FixnumEnum
     end
   end
 
-  Operation = Gecode::Constraints::Set::Operation
+  Operation = Gecode::Set::Operation
 end
