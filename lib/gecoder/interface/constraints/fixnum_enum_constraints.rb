@@ -1,8 +1,23 @@
 # A module containing constraints that have enumerations of instances of
 # Fixnum as left hand side.
 module Gecode::Constraints::FixnumEnum #:nodoc:
-  # Describes a fixnum enumeration operand. Classes that mix in
-  # FixnumEnumOperand must define #to_fixnum_enum .
+  # A FixnumEnumOperand is a enumeration of Fixnum on which the
+  # constraints defined in FixnumEnumConstraintReceiver can be placed.
+  # They typically service as constant arrays or constant sets.
+  #
+  # The fixnum enumeration operands are created by wrapping an enumeration 
+  # of fixnum Gecode::Model#wrap_enum. The enumerations created that way
+  # all respond to the properties defined by FixnumEnumOperand.
+  #
+  # == Examples
+  #
+  # Uses Gecode::Model#wrap_enum inside a problem formulation to create
+  # a FixnumEnumOperand from an existing enumeration of Fixnum:
+  #
+  #   fixnum_enum = wrap_enum([3, 5, 7])
+  #   
+  #--
+  # Classes that mix in FixnumEnumOperand must define #model.
   module FixnumEnumOperand
     include Gecode::Constraints::Operand 
 

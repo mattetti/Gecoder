@@ -1,8 +1,31 @@
 # A module containing constraints that have enumerations of boolean 
 # operands as left hand side.
 module Gecode::Constraints::BoolEnum #:nodoc:
-  # Describes an boolean variable enumeration operand. Classes that mix in
-  # BoolEnumOperand must define #model and #to_bool_enum .
+  # A BoolEnumOperand is a enumeration of BoolOperand on which the
+  # constraints defined in BoolEnumConstraintReceiver can be placed.
+  #
+  # Enumerations of boolean operands can be created either by using
+  # Gecode::Model#bool_var_array and Gecode::Model#bool_var_matrix, or
+  # by wrapping an existing enumeration containing BoolOperand using
+  # Gecode::Model#wrap_enum. The enumerations, no matter how they were
+  # created, all respond to the properties defined by BoolEnumOperand.
+  #
+  # == Examples
+  #
+  # Produces an array of five boolean operands inside a problem formulation
+  # using Gecode::Model#bool_var_array:
+  #
+  #   bool_enum = bool_var_array(5)
+  #
+  # Uses Gecode::Model#wrap_enum inside a problem formulation to create
+  # a BoolEnumOperand from an existing enumeration containing the
+  # boolean operands +bool_operand1+ and +bool_operand2+:
+  #
+  #   bool_enum = wrap_enum([bool_operand1, bool_operand2])
+  #   
+  #--
+  # Classes that mix in BoolEnumOperand must define #model and
+  # #to_bool_enum .
   module BoolEnumOperand
     include Gecode::Constraints::Operand 
 
@@ -22,7 +45,27 @@ module Gecode::Constraints::BoolEnum #:nodoc:
     end
   end
 
-  # Describes a constraint receiver for enumerations of boolean operands.
+  # BoolEnumConstraintReceiver contains all constraints that can be
+  # placed on a BoolEnumOperand.
+  #
+  # Constraints are placed by calling BoolEnumOperand#must (or any other
+  # of the variations defined in Operand), which produces a
+  # BoolEnumConstraintReceiver from which the desired constraint can be
+  # used.
+  #
+  # == Examples
+  #
+  # Constrains +bool_enum+, with three boolean variables, to take the 
+  # value of the tuples [false, true, false] or [true, false, true] 
+  # using BoolEnumConstraintReceiver#in:
+  #
+  #   bool_enum.must_be.in [[false, true, false], [true, false, true]]
+  #
+  # Constrains +bool_enum+ to channel +int_operand+ using 
+  # BoolEnumConstraintReceiver#channel:
+  #
+  #   bool_enum.must.channel int_operand
+  #
   class BoolEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is an bool enum
     # operand.

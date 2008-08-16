@@ -1,8 +1,47 @@
 # A module that deals with the operands, properties and constraints of
 # integer variables.
 module Gecode::Constraints::Int #:nodoc:
-  # Describes an integer variable operand. Classes that mixes in
-  # IntOperand must define the method #model and #to_int_var.
+  # A IntOperand is a combination of variables on which the
+  # constraints defined in IntConstraintReceiver can be placed.
+  #
+  # Integer operands can be created either by using
+  # Gecode::Model#int_var et al, or by using properties that produce
+  # integer operands. The operands, no matter how they were created, 
+  # all respond to the properties defined by IntOperand.
+  #
+  # == Examples
+  #
+  # Produces a single integer operand (more specifically an IntVar) with
+  # domain 0..9 inside a problem formulation, using
+  # Gecode::Model#int_var:
+  #
+  #   int_operand = int_var(0..9)
+  #
+  # Uses the IntOperand#+ property to produce a new integer
+  # operand representing +int_operand1+ plus +int_operand2+:
+  #
+  #   new_int_operand = int_operand1 + int_operand2
+  #
+  # Uses the IntEnumOperand#max property to produce a new
+  # integer operand representing the maximum value of the integer operands
+  # in the enumeration +int_enum+:
+  # 
+  #   new_int_operand = int_enum.max
+  #
+  # Uses the IntEnumOperand#[] property to produce a new integer operand
+  # representing the integer operand at the index decided by
+  # +int_operand+ (which can change during search) in the enumeration
+  # +int_enum+:
+  # 
+  #   new_int_operand = int_enum[int_operand]
+  #
+  # Uses the SetOperand#size property to produce a new integer operand
+  # representing the size of +set_operand+:
+  #
+  #   new_int_operand = set_operand.size
+  #
+  #--
+  # Classes that mix in IntOperand must define #model and #to_int_var .
   module IntOperand  
     include Gecode::Constraints::Operand 
 
@@ -131,7 +170,47 @@ module Gecode::Constraints::Int #:nodoc:
     end
   end
 
-  # Describes a constraint receiver for integer variables.
+  # IntConstraintReceiver contains all constraints that can be
+  # placed on an IntOperand.
+  #
+  # Constraints are placed by calling IntOperand#must (or any other
+  # of the variations defined in Operand), which produces a 
+  # IntConstraintReceiver from which the desired constraint can be used.
+  #
+  # Each constraint accepts a number of options. See ConstraintReceiver
+  # for more information.
+  #
+  # == Examples
+  #
+  # Constrains +int_operand+ to be strictly greater than 5 using
+  # IntConstraintReceiver#>:
+  #
+  #   int_operand.must > 5
+  #
+  # Constrains +int_operand1+ plus +int_operand2+ to be strictly 
+  # greater than 5 using the IntOperand#+ property and 
+  # IntConstraintReceiver#>:
+  #
+  #   (int_operand1 + int_operand2).must > 5
+  #
+  # Constrains the maximum value of the integer operands in +int_enum+ to
+  # _not_ be in the range 3..7 using the IntEnumOperand#max property and 
+  # IntConstraintReceiver#in:
+  #
+  #   int_enum.max.must_not_be.in 3..7
+  #
+  # Constrains the integer operand at position +int_operand+ in
+  # +int_enum+, an enumeration of integer operands, to be greater than
+  # or equal to +int_operand2+. This uses the IntEnumOperand#[] property 
+  # and IntConstraintReceiver#>=:
+  #
+  #   int_enum[int_operand].must >= int_operand2
+  #
+  # The same as above, but specifying that strength :domain should be 
+  # used and that the constraint should be reified with +bool_operand+:
+  #
+  #   int_enum[int_operand].must_be.greater_or_equal(int_operand2, :strength => :domain, :reify => bool_operand)
+  #
   class IntConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is an int operand.
     def initialize(model, params) #:nodoc:

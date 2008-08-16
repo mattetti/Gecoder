@@ -11,21 +11,24 @@ module Gecode::Constraints::Bool #:nodoc:
   #
   # == Examples
   #
-  # Produces a single boolean operand inside a problem formulation,
-  # using Gecode::Model#bool_var .
+  # Produces a single boolean operand (more specifically a BoolVar)
+  # inside a problem formulation, using Gecode::Model#bool_var:
   #
   #   bool_operand = bool_var
   #
   # Uses the BoolOperand#& property to produce a new boolean
-  # operand representing +bool_operand1+ AND +bool_operand2+.
+  # operand representing +bool_operand1+ AND +bool_operand2+:
   #
   #   new_bool_operand = bool_operand1 & bool_operand2
   #
   # Uses the BoolEnumOperand#conjunction property to produce a new
   # boolean operand representing the conjunction of all boolean operands
-  # in the enumeration +bool_enum+.
-  # 
+  # in the enumeration +bool_enum+:
+  #
   #   new_bool_operand = bool_enum.conjunction
+  #
+  #--
+  # Classes that mix in BoolOperand must define #model and #to_bool_var .
   module BoolOperand  
     include Gecode::Constraints::Operand 
 
@@ -52,23 +55,32 @@ module Gecode::Constraints::Bool #:nodoc:
   # of the variations defined in Operand), which produces a 
   # BoolConstraintReceiver from which the desired constraint can be used.
   #
+  # Each constraint accepts a number of options. See ConstraintReceiver
+  # for more information.
+  #
   # == Examples
   #
   # Constrains +bool_operand+ to be true using
-  # BoolConstraintReceiver#true .
+  # BoolConstraintReceiver#true:
   #
   #   bool_operand.must_be.true
   #
   # Constrains +bool_operand1+ AND +bool_operand2+ to be true using 
-  # the BoolOperand#& property and BoolConstraintReceiver#true .
+  # the BoolOperand#& property and BoolConstraintReceiver#true:
   #
   #   (bool_operand1 & bool_operand2).must_be.true
   #
   # Constrains the conjunction of all boolean operands in +bool_enum+ to
   # _not_ imply +bool_operand+ using the 
-  # BoolEnumOperand#conjunction property and BoolConstraintReceiver#imply .
+  # BoolEnumOperand#conjunction property and BoolConstraintReceiver#imply:
   #
   #   bool_enum.conjunction.must_not.imply bool_operand
+  #
+  # The same as above, but specifying that strength :domain should be 
+  # used and that the constraint should be reified with +bool_operand2+:
+  #
+  #   bool_enum.conjunction.must_not.imply(bool_operand, :strength => :domain, :reify => bool_operand2)
+  #
   class BoolConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is an bool operand.
     def initialize(model, params) #:nodoc:

@@ -55,11 +55,73 @@ module Gecode
       end
     end
     
-    # Describes a constraint receiver. An constraint receiver is produced by 
-    # calling some form of must on an operand (the operand before #must is 
-    # called the left hand side, lhs). The constraint receiver waits for 
-    # the constraint that should be posted on the left hand side operand.
-    class ConstraintReceiver #:nodoc:
+    # Describes a constraint receiver, something that receives and 
+    # places constraints on various Operand. Constraint receivers 
+    # are created by calling #must or #must_not (the latter negates 
+    # the constraint) on something that mixes in Operand.
+    #
+    # A constraint is placed on an Operand +operand+ as follows:
+    #
+    #   operand.must.constraint_method(params)
+    #
+    # The constraint receiver is created by the call to #must and the
+    # constraint is then placed by the call to #constraint_method. 
+    # See e.g. Gecode::Constraints::Int::IntConstraintReceiver for 
+    # concrete examples.
+    #
+    # The following options can be specified in a hash with symbols as
+    # keys when placing a constraint:
+    #
+    # [:strength] The propagation strength suggests how much effort the 
+    #             solver should put into trying to prune the domains of 
+    #             variables using the constraint. 
+    #
+    #             The allowed values are:
+    #             [:value] Value consistency (naive).
+    #             [:bounds] Bounds consistency. The bounds of the operand 
+    #                       will always be constrained as much as possible 
+    #                       (but pruning may not be done inside the
+    #                       bounds, even though it may be possible).
+    #             [:domain] Domain consistency. All values that can be pruned 
+    #                       away, given the current amount of information,
+    #                       are pruned away.
+    #             [:default] Uses the default consistency of the constraint.
+    #             
+    #             The strength generally progresses as 
+    #             :value < :bounds < :domain (:value being the weakest, 
+    #             :domain being the strongest). A higher strength can 
+    #             reduce the search space quicker, but at the cost of 
+    #             making each propagation more costly.
+    #
+    # [:kind]     The propagation kind option suggests the implementation
+    #             that should be preferred if there are multiple 
+    #             implementations of a constraint. 
+    #
+    #             The different kinds are:
+    #             [:speed] Prefer speed over memory consumption.
+    #             [:memory] Prefer low memory consumption over speed.
+    #             [:default] Uses the constraint's default propagation kind.
+    #
+    # [:reify]    Reification is used to link a constraint to a boolean 
+    #             operand in such a way that the variable is true if and
+    #             only if the constraint is satisfied. The propagation
+    #             goes both ways, so if the variable is constrained to be
+    #             false then the constraint is not allowed to be
+    #             satisfied.
+    #
+    #             Reification can be thought of as a last resort glue which 
+    #             can be used to combine constraints so that e.g. exactly
+    #             3 out of 17 constraints must be satisfied.
+    #
+    # Not all constraints accept all options. Constraints that have sets
+    # as operands (e.g. SetConstraintReceiver and
+    # SetEnumConstraintReceiver) do not accept the :strength and :kind
+    # options, all other do. Some constraints do not accept the :reify
+    # option.
+    #
+    # See e.g. Gecode::Constraints::Int::IntConstraintReceiver for 
+    # concrete examples of options being specified.
+    class ConstraintReceiver
       # Constructs a new expression with the specified parameters. The 
       # parameters should at least contain the keys :lhs, and :negate.
       #

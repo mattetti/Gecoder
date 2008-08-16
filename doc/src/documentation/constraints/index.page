@@ -71,10 +71,10 @@ x.must < 0 | (y.must > 5 & x.must == 0)
 
 h3. Propagation strength
 
-The propagation strength basically _suggests_ how much effort the solver puts 
-into trying to prune the domains of variables using the constraint. A higher 
-strength can reduce the search space quicker, but at the cost of making each 
-propagation more costly.
+The propagation strength basically _suggests_ how much effort the solver
+should put into trying to prune the domains of variables using the
+constraint. A higher strength can reduce the search space quicker, but
+at the cost of making each propagation more costly.
 
 Note that no set constraint accepts the propagation strength option.
 

@@ -1,8 +1,31 @@
 # A module containing constraints that have enumerations of integer 
 # operands as left hand side.
 module Gecode::Constraints::IntEnum #:nodoc:
-  # Describes an integer variable enumeration operand. Classes that mix in
-  # IntEnumOperand must define #model and #to_int_enum .
+  # A IntEnumOperand is a enumeration of IntOperand on which the
+  # constraints defined in IntEnumConstraintReceiver can be placed.
+  #
+  # Enumerations of integer operands can be created either by using
+  # Gecode::Model#int_var_array and Gecode::Model#int_var_matrix, or
+  # by wrapping an existing enumeration containing IntOperand using
+  # Gecode::Model#wrap_enum. The enumerations, no matter how they were
+  # created, all respond to the properties defined by IntEnumOperand.
+  #
+  # == Examples
+  #
+  # Produces an array of five int operands with domain 0..9 inside a 
+  # problem formulation using Gecode::Model#int_var_array:
+  #
+  #   int_enum = int_var_array(5, 0..9)
+  #
+  # Uses Gecode::Model#wrap_enum inside a problem formulation to create
+  # a IntEnumOperand from an existing enumeration containing the
+  # integer operands +int_operand1+ and +int_operand2+:
+  #
+  #   int_enum = wrap_enum([int_operand1, int_operand2])
+  #   
+  #--
+  # Classes that mix in IntEnumOperand must define #model and
+  # #to_int_enum .
   module IntEnumOperand
     include Gecode::Constraints::Operand 
 
@@ -22,7 +45,33 @@ module Gecode::Constraints::IntEnum #:nodoc:
     end
   end
 
-  # Describes a constraint receiver for enumerations of integer operands.
+  # IntEnumConstraintReceiver contains all constraints that can be
+  # placed on a IntEnumOperand.
+  #
+  # Constraints are placed by calling IntEnumOperand#must (or any other
+  # of the variations defined in Operand), which produces a 
+  # IntEnumConstraintReceiver from which the desired constraint can be used.
+  #
+  # Some constraint accepts a number of options. See ConstraintReceiver
+  # for more information.
+  #
+  # == Examples
+  #
+  # Constrains the integer operands in +int_enum+ to take on different
+  # values by using IntEnumConstraintReceiver#distinct:
+  #
+  #   int_enum.must_be.distinct
+  #
+  # Constrains +int_enum2+ to have the same elements as +int_enum+, but
+  # sorted in ascending order. Uses IntEnumConstraintReceiver#sorted:
+  #
+  #   int_enum.must_be.sorted(:as => int_enum2)
+  #
+  # The same as above, but specifying that strength :domain should be 
+  # used and that the constraint should be reified with +bool_operand+:
+  #
+  #   int_enum.must_be.sorted(:as => int_enum2, :strength => :domain, :reify => bool_operand)
+  #
   class IntEnumConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is an int enum
     # operand.

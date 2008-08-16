@@ -17,16 +17,23 @@ module Gecode::Constraints::SetEnum
                 alias_method :pre_selection_access, :[]
               end
             
-              # Produces a set  operand representing the
-              # i:th set variable in the enumeration, where i is the
-              # value of the set variable used as index. 
+              # Produces a set operand representing the i:th set
+              # operand in the enumeration, where i is the value of the
+              # int operand used as index. 
               #
-              # == Example
+              # A set can also be used as index, in which case a
+              # SelectedSetOperand is produced.
+              #
+              # == Examples
               # 
-              #   # The variable at the +x+:th position in +set_enum+,
-              #   # where +x+ is a set variable.  
+              #   # The set operand at the +x+:th position in +set_enum+,
+              #   # where +x+ is a int operand.  
               #   set_enum[x]
-              # 
+              #
+              #   # The SelectedSetOperand representing sets at positions
+              #   # included in the value of +set+ in +set_enum+,
+              #   set_enum[set]
+              #
               def [](*vars)
                 # Hook in an element constraint if a variable is used for array 
                 # access.

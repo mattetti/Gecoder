@@ -67,11 +67,18 @@ module Gecode
   IntVar = FreeVar(Gecode::Raw::IntVar, :int_var)
   # Describes an integer variable. 
   #
-  # Each integer variable has a domain of several integers which
-  # represent the possible values that the variable may take. An
-  # integer variable is said to be assigned once the domain only
+  # An integer variable can take the value of any integer in its 
+  # domain, which is specified upon constructing the variable and
+  # further constrained by placing constraints on the variable.
+  # An integer variable is said to be assigned once the domain only
   # contains a single element, at which point #value can be used to
   # retrieve the value.
+  #
+  # Integer variables are integer operands and hence respond to
+  # everything that Gecode::Constraints::Int::IntOperand responds to.
+  # Any constraint found in
+  # Gecode::Constraints::Int::IntConstraintReceiver can thereby be 
+  # placed on integer variables.
   class IntVar
     include Gecode::Constraints::Int::IntOperand
     attr :model
@@ -133,8 +140,15 @@ module Gecode
   end
   
   BoolVar = FreeVar(Gecode::Raw::BoolVar, :bool_var)
-  # Describes a boolean variable. A boolean variable can be either true or 
-  # false.
+  # Describes a boolean variable. 
+  #
+  # A boolean variable can be either true or false.
+  #
+  # Boolean variables are boolean operands and hence respond to
+  # everything that Gecode::Constraints::Bool::BoolOperand responds to.
+  # Any constraint found in
+  # Gecode::Constraints::Bool::BoolConstraintReceiver can thereby be 
+  # placed on boolean variables.
   class BoolVar
     include Gecode::Constraints::Bool::BoolOperand
     attr :model
@@ -169,17 +183,23 @@ module Gecode
   SetVar = FreeVar(Gecode::Raw::SetVar, :set_var)
   # Describes a set variable. 
   # 
-  # A set variable's domain, i.e. possible values that it can take, are 
-  # represented with a greatest lower bound (GLB) and a least upper bound (LUB).
-  # The set variable may then take any set value S such that S is a subset of
-  # the least upper bound and the greatest lower bound is a subset of S.
+  # A set variable's domain, i.e. possible values that it can take, are
+  # represented with a greatest lower bound (GLB) and a least upper
+  # bound (LUB).  The set variable may then take any set value S such
+  # that S is a subset of the least upper bound and the greatest lower
+  # bound is a subset of S.
   #   
-  # If for instance the set has a greatest lower bound {1} and least upper bound
-  # {1,3,5} then the assigned set may be any of the following four sets: {1}, 
-  # {1,3}, {1,5}, {1,3,5}. 
+  # If for instance the set has a greatest lower bound {1} and least
+  # upper bound {1,3,5} then the assigned set may be any of the
+  # following four sets: {1}, {1,3}, {1,5}, {1,3,5}. 
   # 
-  # The domain of a set variable may also specify the cardinality of the set, 
-  # i.e. the number of elements that the set may contains.
+  # The domain of a set variable may also specify the cardinality of the
+  # set, i.e. the number of elements that the set may contains.
+  #
+  # Set variables are set operands and hence respond to everything that
+  # Gecode::Constraints::Set::SetOperand responds to.  Any constraint
+  # found in Gecode::Constraints::Set::SetConstraintReceiver can thereby
+  # be placed on set variables.
   class SetVar
     include Gecode::Constraints::Set::SetOperand
     attr :model

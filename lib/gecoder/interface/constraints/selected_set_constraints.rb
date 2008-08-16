@@ -1,11 +1,16 @@
 # A module containing constraints that have set_enum[set] as left hand
 # side.
 module Gecode::Constraints::SelectedSet #:nodoc:
-  # Describes a selected set operand. The operand is produced when the
-  # indexing operation of a set enum operand is given a set operand.
-  # I.e. the following produces a selected set operand:
+  # A SelectedSetOperand is an uncommon operand that results from calling 
+  # SetEnumOperand#[] with a SetOperand. It facilitates placing the 
+  # constraints defined in SelectedSetConstraintReceiver
   #
-  #   set_enum[set]
+  # == Examples
+  #
+  # Producing a SelectedSetOperand from +set_enum+ and +set_operand+:
+  #
+  #   set_enum[set_operand]
+  #
   class SelectedSetOperand
     include Gecode::Constraints::Operand 
 
@@ -24,11 +29,11 @@ module Gecode::Constraints::SelectedSet #:nodoc:
 
     # Returns the set enum and set that make up the selected set
     # operand.
-    def to_selected_set
+    def to_selected_set #:nodoc:
       return @set_enum, @set
     end
 
-    def model
+    def model #:nodoc:
       @set_enum.model
     end
 
@@ -39,7 +44,22 @@ module Gecode::Constraints::SelectedSet #:nodoc:
     end
   end
 
-  # Describes a constraint receiver for selected set operands.
+  # SelectedSetConstraintReceiver contains all constraints that can be
+  # placed on a SelectedSetOperand.
+  #
+  # Constraints are placed by calling SelectedSetOperand#must (or any other
+  # of the variations defined in Operand), which produces a 
+  # SelectedSetConstraintReceiver from which the desired constraint can 
+  # be used.
+  #
+  # == Examples
+  #
+  # Constrains the sets in +set_enum+ that are selected by +set_operand+ to be
+  # disjoint. This uses SetEnumOperand#[] and
+  # SelectedSetConstraintReceiver#disjoint. 
+  #
+  #   set_enum[set_operand].must_be.disjoint
+  #
   class SelectedSetConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is a selected set operand.
     def initialize(model, params) #:nodoc:

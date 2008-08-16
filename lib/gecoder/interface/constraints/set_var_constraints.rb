@@ -1,8 +1,42 @@
 # A module containing constraints that have set variables as left hand side
 # (but not enumerations).
 module Gecode::Constraints::Set #:nodoc:
-  # Describes a set variable operand. Classes that mix in
-  # SetOperand must define the method #model and #to_set_var.
+  # A SetOperand is a combination of variables on which the
+  # constraints defined in SetConstraintReceiver can be placed.
+  #
+  # Set operands can be created either by using Gecode::Model#set_var et
+  # al, or by using properties that produce set operands. The operands,
+  # no matter how they were created, all respond to the properties
+  # defined by SetOperand.
+  #
+  # == Examples
+  #
+  # Produces a single set operand (more specifically a SetVar), with
+  # greatest lower bound {0} and least upper bound {0, 1, 2}, inside a
+  # problem formulation, using Gecode::Model#set_var:
+  #
+  #   set_operand = set_var(0, 0..2)
+  #
+  # Uses the SetOperand#union property to produce a new set operand
+  # representing the union between +set_operand1+ and +set_operand2+: 
+  #
+  #   new_set_operand = set_operand1.union(set_operand2)
+  #
+  # Uses the SetEnumOperand#union property to produce a new set operand
+  # representing the union of the set operands in the enumeration
+  # +set_enum+:
+  # 
+  #   new_set_operand = set_enum.union
+  #
+  # Uses the SetEnumOperand#[] property to produce a new set operand
+  # representing the set operand at the index decided by
+  # +int_operand+ (which can change during search) in the enumeration
+  # +set_enum+:
+  # 
+  #   new_set_operand = set_enum[int_operand]
+  #
+  #--
+  # Classes that mix in SetOperand must define #model and #to_set_var .
   module SetOperand  
     include Gecode::Constraints::Operand 
 
@@ -137,7 +171,40 @@ module Gecode::Constraints::Set #:nodoc:
     end
   end
 
-  # Describes a constraint receiver for set variables.
+  # SetConstraintReceiver contains all constraints that can be
+  # placed on a SetOperand.
+  #
+  # Constraints are placed by calling SetOperand#must (or any other
+  # of the variations defined in Operand), which produces a 
+  # SetConstraintReceiver from which the desired constraint can be used.
+  #
+  # Most constraint accept :reify option. See ConstraintReceiver for
+  # more information.
+  #
+  # == Examples
+  #
+  # Constrains +set_operand+ to be a subset of {0, 1, 2} using
+  # an alias of SetConstraintReceiver#subset:
+  #
+  #   set_operand.must_be.subset_of 0..2
+  #
+  # Constrains the union of +set_operand1+ and +set_operand2+ to a
+  # subset of {0, 1, 2} using the SetOperand#union property and
+  # SetConstraintReceiver#subset:
+  #
+  #   set_operand1.union(set_operand2).must_be.subset_of 0..2
+  #
+  # Constrains the union of the set operands in +set_enum+ to _not_ 
+  # equal {0, 1, 2} by using the SetEnumOperand#union property and 
+  # an alias of SetConstraintReceiver#==:
+  #
+  #   set_enum.union.must_not == 0..2
+  #
+  # The same as above, but alsa specifying that the constraint should be 
+  # reified with +bool_operand+:
+  #
+  #   set_enum.union.must_not.equal(0..2, :reify => bool_operand)
+  #
   class SetConstraintReceiver < Gecode::Constraints::ConstraintReceiver
     # Raises TypeError unless the left hand side is a set operand.
     def initialize(model, params) #:nodoc:
