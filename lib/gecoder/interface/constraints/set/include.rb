@@ -2,12 +2,12 @@ module Gecode::Set
   class SetConstraintReceiver
     # Constrains this set to include the values of +int_enum+.
     # 
-    # The constraint has the side effect of sorting the integer variables in a 
+    # The constraint has the side effect of sorting the integer operands in a 
     # non-descending order. It does not support reification nor negation.
     # 
     # ==== Examples 
     # 
-    #   # Constrain +set+ to include the values of all variables in 
+    #   # Constrain +set+ to include the values of all operands in 
     #   # +int_enum+.
     #   set.must.include int_enum 
     def include(int_enum)

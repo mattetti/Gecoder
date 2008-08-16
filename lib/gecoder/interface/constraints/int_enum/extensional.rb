@@ -1,12 +1,12 @@
 module Gecode::IntEnum
   class IntEnumConstraintReceiver
-    # Constrains all the variables in this enumeration to be equal to
+    # Constrains all the operands in this enumeration to be equal to
     # one of the specified tuples. Neither negation nor reification is
     # supported.
     # 
     # ==== Examples 
     # 
-    #   # Constrains the two integer variables in +numbers+ to either have 
+    #   # Constrains the two integer operands in +numbers+ to either have 
     #   # values 1 and 7, or values 47 and 11.
     #   numbers.must_be.in [[1,7], [47,11]]
     #
@@ -37,7 +37,7 @@ module Gecode::IntEnum
         @params.update(util.decode_options(options)))
     end
 
-    # Constrains the sequence of variables in this enumeration to match
+    # Constrains the sequence of operands in this enumeration to match
     # a specified regexp in the integer domain. Neither negation nor
     # reification is supported.
     #
@@ -123,17 +123,17 @@ module Gecode::IntEnum
     #
     # ==== Examples 
     #
-    #   # Constrains the two integer variables in +numbers+ to have
+    #   # Constrains the two integer operands in +numbers+ to have
     #   # values 1 and 7.
     #   numbers.must.match [1, 7]
     #
-    #   # Constrains the integer variables in +numbers+ to contain the
+    #   # Constrains the integer operands in +numbers+ to contain the
     #   # value 47 followed by 11, with all other values set to -1.
     #   numbers.must.match [repeat(-1), 47, 11, repeat(-1)]
     #
-    #   # Constrains exactly three of the integer variables in +numbers+ to 
+    #   # Constrains exactly three of the integer operands in +numbers+ to 
     #   # contain 47 or 11, each followed by at least two
-    #   # variables set to -1. All other variables are constrained to
+    #   # operands set to -1. All other operands are constrained to
     #   # equal -1.
     #   numbers.must.match repeat([repeat(-1), any(11, 47), 
     #                              repeat(-1, 2)], 3, 3)

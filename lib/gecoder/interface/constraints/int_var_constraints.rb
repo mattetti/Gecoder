@@ -109,10 +109,10 @@ module Gecode::Int #:nodoc:
 
     private
 
-    # Constrains this operand to equal +int_variable+ using the
+    # Constrains this operand to equal +int_operand+ using the
     # specified +propagation_options+. If +constrain_domain+ is true
     # then the method should also attempt to constrain the bounds of the
-    # domain of +int_variable+.
+    # domain of +int_operand+.
     def constrain_equal(int_operand, constrain_domain, propagation_options)
       raise NotImplementedError, 'Abstract method has not been implemented.'
     end

@@ -1,5 +1,5 @@
 # A module that deals with the operands, properties and constraints of
-# boolean variables.
+# boolean operands.
 module Gecode::Bool #:nodoc:
   # A BoolOperand is a combination of variables on which the
   # constraints defined in BoolConstraintReceiver can be placed.
@@ -140,10 +140,10 @@ module Gecode::Bool #:nodoc:
 
     private
 
-    # Constrains this operand to equal +bool_variable+ using the
+    # Constrains this operand to equal +bool_operand+ using the
     # specified +propagation_options+. If +constrain_domain+ is true
     # then the method should also attempt to constrain the bounds of the
-    # domain of +bool_variable+.
+    # domain of +bool_operand+.
     def constrain_equal(bool_operand, constrain_domain, propagation_options)
       raise NotImplementedError, 'Abstract method has not been implemented.'
     end

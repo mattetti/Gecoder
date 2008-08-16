@@ -1,7 +1,7 @@
 module Gecode::BoolEnum
   module BoolEnumOperand
     # Produces a boolean operand that represents the conjunction (AND) of all
-    # boolean variables in this enumeration.
+    # boolean operands in this enumeration.
     #
     # ==== Examples 
     #
@@ -12,7 +12,7 @@ module Gecode::BoolEnum
     end
     
     # Produces a boolean operand that represents the disjunction (OR) of all
-    # boolean variables in this enumeration.
+    # boolean operands in this enumeration.
     #
     # ==== Examples 
     #

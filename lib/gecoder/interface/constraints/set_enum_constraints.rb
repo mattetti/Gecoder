@@ -1,4 +1,4 @@
-# A module containing constraints that have enumerations of set variables as 
+# A module containing constraints that have enumerations of set operands as 
 # left hand side.
 module Gecode::SetEnum #:nodoc:
   # A SetEnumOperand is a enumeration of SetOperand on which the

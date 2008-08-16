@@ -1,11 +1,11 @@
 module Gecode::IntEnum
   class IntEnumConstraintReceiver
-    # Constrains all variables in the enumeration to be equal. 
+    # Constrains all operands in the enumeration to be equal. 
     # Neither negation nor reification is supported.
     # 
     # ==== Examples 
     # 
-    #   # Constrains all variables in +int_enum+ to be equal.
+    #   # Constrains all operands in +int_enum+ to be equal.
     #   int_enum.must_be.equal
     def equal(options = {})
       if @params[:negate]

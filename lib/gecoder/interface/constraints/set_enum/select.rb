@@ -35,7 +35,7 @@ module Gecode::SetEnum
               #   set_enum[set]
               #
               def [](*vars)
-                # Hook in an element constraint if a variable is used for array 
+                # Hook in an element constraint if a operand is used for array 
                 # access.
                 if vars.first.respond_to? :to_int_var
                   Select::SelectSetOperand.new(

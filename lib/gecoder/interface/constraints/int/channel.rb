@@ -2,14 +2,14 @@ module Gecode::Int
   class IntConstraintReceiver
     alias_method :pre_channel_equals, :==
     
-    # Constrains the integer variable to be equal to the specified boolean 
-    # variable. I.e. constrains the integer variable to be 1 when the boolean
-    # variable is true and 0 if the boolean variable is false.
+    # Constrains the integer operand to be equal to the specified boolean 
+    # operand. I.e. constrains the integer operand to be 1 when the boolean
+    # operand is true and 0 if the boolean operand is false.
     #
     # ==== Examples 
     #
-    #   # The integer variable +int+ must be one exactly when the boolean 
-    #   # variable +bool+ is true.
+    #   # The integer operand +int+ must be one exactly when the boolean 
+    #   # operand +bool+ is true.
     #   int.must == bool
     def ==(bool, options = {})
       unless @params[:lhs].respond_to? :to_int_var and 
@@ -38,7 +38,7 @@ module Gecode::Int
   end
   
   # A module that gathers the classes and modules used in channel constraints
-  # involving a single integer variable.
+  # involving a single integer operand.
   module Channel #:nodoc:
     class ChannelConstraint < Gecode::Constraint #:nodoc:
       def post

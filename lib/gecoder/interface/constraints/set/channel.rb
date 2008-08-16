@@ -1,7 +1,7 @@
 module Gecode::Set
   class SetConstraintReceiver
     # Constrains this set to channel +bool_enum+. The set is constrained
-    # to include value i exactly when the variable at index i in the
+    # to include value i exactly when the operand at index i in the
     # boolean enumeration is true.
     # 
     # Neither reification nor negation is supported. The boolean enum and set
@@ -9,8 +9,8 @@ module Gecode::Set
     #
     # ==== Examples 
     #
-    #   # Constrains the enumeration of boolean variables called +bools+ to at
-    #   # least have the first and third variables set to true 
+    #   # Constrains the enumeration of boolean operands called +bools+ to at
+    #   # least have the first and third operands set to true 
     #   set.must_be.superset_of [0, 2]
     #   set.must.channel bools
     #
@@ -27,7 +27,7 @@ module Gecode::Set
           'reification option.'
       end
       unless bool_enum.respond_to? :to_bool_enum
-        raise TypeError, 'Expected an enum of bool variables, ' + 
+        raise TypeError, 'Expected an enum of bool operands, ' + 
           "got #{bool_enum.class}."
       end
       
@@ -38,7 +38,7 @@ module Gecode::Set
   end
   
   # A module that gathers the classes and modules used in channel constraints
-  # involving one set variable and a boolean enum.
+  # involving one set operand and a boolean enum.
   module Channel #:nodoc:
     class ChannelConstraint < Gecode::Constraint #:nodoc:
       def post

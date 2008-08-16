@@ -101,7 +101,7 @@ module Gecode::Set
           :op2, :operation, :relation_type, :rhs, :negate)
 
         op1, op2, rhs = [op1, op2, rhs].map do |expression|
-          # The expressions can either be set variables or constant sets, 
+          # The expressions can either be set operands or constant sets, 
           # convert them appropriately.
           if expression.respond_to? :to_set_var
             expression.to_set_var.bind

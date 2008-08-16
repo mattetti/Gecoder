@@ -34,7 +34,7 @@ module Gecode
           include Gecode::FixnumEnumMethods
         end
       else
-        raise TypeError, "Enumerable doesn't contain variables #{enum.inspect}."
+        raise TypeError, "Enumerable doesn't contain operands #{enum.inspect}."
       end
       
       enum.model = self
@@ -42,7 +42,8 @@ module Gecode
     end
   end
   
-  # A module containing the methods needed by enumerations containing variables.
+  # A module containing the methods needed by enumerations containing
+  # operands.
   module EnumMethods #:nodoc:
     attr_accessor :model
     # Gets the current space of the model the array is connected to.
@@ -54,14 +55,14 @@ module Gecode
   module VariableEnumMethods #:nodoc:
     include EnumMethods
     
-    # Gets the values of all the variables in the enum.
+    # Gets the values of all the operands in the enum.
     def values
       map{ |var| var.value }
     end
   end
   
   # A module containing the methods needed by enumerations containing int 
-  # variables. Requires that it's included in an enumerable.
+  # operands. Requires that it's included in an enumerable.
   module IntEnumMethods #:nodoc:
     include IntEnum::IntEnumOperand
     include VariableEnumMethods
@@ -105,7 +106,7 @@ module Gecode
   end
   
   # A module containing the methods needed by enumerations containing boolean
-  # variables. Requires that it's included in an enumerable.
+  # operands. Requires that it's included in an enumerable.
   module BoolEnumMethods #:nodoc:
     include BoolEnum::BoolEnumOperand
     include VariableEnumMethods
@@ -135,7 +136,7 @@ module Gecode
   end
   
   # A module containing the methods needed by enumerations containing set
-  # variables. Requires that it's included in an enumerable.
+  # operands. Requires that it's included in an enumerable.
   module SetEnumMethods #:nodoc:
     include SetEnum::SetEnumOperand
     include VariableEnumMethods

@@ -9,7 +9,7 @@ module Gecode::Set
     #   set1.must == set2
     #   
     #   # +set1+ must equal +set2+. Reify the constraint with the
-    #   # boolean variable +bool+.
+    #   # boolean operand +bool+.
     #   set1.must.equal(set2, :reify => bool)
     def ==(set_operand, options = {})
       if set_operand.respond_to? :to_set_var
@@ -28,7 +28,7 @@ module Gecode::Set
     #   set1.must_be.superset_of set2
     #   
     #   # +set1+ must be a superset of +set2+. Reify the constraint 
-    #   # with the boolean variable +bool+.
+    #   # with the boolean operand +bool+.
     #   set1.must_be.superset(set2, :reify => bool)
     def superset(set_operand, options = {})
       if set_operand.respond_to? :to_set_var
@@ -47,7 +47,7 @@ module Gecode::Set
     #   set1.must_be.subset_of == set2
     #   
     #   # +set1+ must be a subset of +set2+. Reify the constraint 
-    #   # with the boolean variable +bool+.
+    #   # with the boolean operand +bool+.
     #   set1.must_be.subset(set2, :reify => bool)
     def subset(set_operand, options = {})
       if set_operand.respond_to? :to_set_var
@@ -66,7 +66,7 @@ module Gecode::Set
     #   set1.must_be.disjoint_with set2
     #   
     #   # +set1+ must be disjoint with +set2+. Reify the constraint 
-    #   # with the boolean variable +bool+.
+    #   # with the boolean operand +bool+.
     #   set1.must_be.disjoint(set2, :reify => bool)
     def disjoint(set_operand, options = {})
       if set_operand.respond_to? :to_set_var
@@ -85,7 +85,7 @@ module Gecode::Set
     #   set1.must_be.complement_of set2
     #   
     #   # +set1+ must be the complement of +set2+. Reify the constraint 
-    #   # with the boolean variable +bool+.
+    #   # with the boolean operand +bool+.
     #   set1.must_be.complement(set2, :reify => bool)
     def complement(set_operand, options = {})
       if set_operand.respond_to? :to_set_var
@@ -99,8 +99,8 @@ module Gecode::Set
     
     private
     
-    # Adds a relation constraint for the specified relation name, set variable
-    # and options.
+    # Adds a relation constraint for the specified relation name, set
+    # operand and options.
     def add_relation_constraint(relation_name, set, options)
       @params[:rhs] = set
       @params[:relation] = relation_name

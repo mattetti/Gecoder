@@ -1,6 +1,6 @@
 module Gecode::SetEnum
   class SetEnumConstraintReceiver
-    # Constrains all pairs of set variables in the enumeration to at
+    # Constrains all pairs of set operands in the enumeration to at
     # most have one element in common and be of a specified size.
     # Providing a size is not optional.
     # 
@@ -8,7 +8,7 @@ module Gecode::SetEnum
     # 
     # ==== Examples 
     # 
-    #   # All set variables in +sets+ must have cardinality 17 and no pair may
+    #   # All set operands in +sets+ must have cardinality 17 and no pair may
     #   # have more than one element in common.
     #   sets.must.at_most_share_one_element(:size => 17)
     def at_most_share_one_element(options = {})

@@ -1,12 +1,12 @@
 module Gecode::BoolEnum
   class BoolEnumConstraintReceiver
-    # Constrains all the variables in this enumeration to be equal to
+    # Constrains all the operands in this enumeration to be equal to
     # one of the specified tuples. Neither negation nor reification is
     # supported.
     #
     # ==== Examples 
     # 
-    #   # Constrains the three boolean variables in +bools+ to either
+    #   # Constrains the three boolean operands in +bools+ to either
     #   # be true, false, true, or false, false, true.
     #   bools.must_be.in [[true, false, true], [false, false, true]]
     #
@@ -38,7 +38,7 @@ module Gecode::BoolEnum
         @params.update(Gecode::Util.decode_options(options)))
     end
 
-    # Constrains the sequence of variables in this enumeration to match
+    # Constrains the sequence of operands in this enumeration to match
     # a specified regexp in the boolean domain. Neither negation nor
     # reification is supported.
     #
@@ -48,12 +48,12 @@ module Gecode::BoolEnum
     #
     # ==== Examples 
     #
-    #   # Constrains the two boolean variables in +bools+ to be false
+    #   # Constrains the two boolean operands in +bools+ to be false
     #   # and true respectively.
     #   bools.must.match [false, true]
     #
-    #   # Constrains the boolean variables in +bools+ to be false,
-    #   # except for three consecutive variables which should be true
+    #   # Constrains the boolean operands in +bools+ to be false,
+    #   # except for three consecutive operands which should be true
     #   # followed by false followed by true.
     #   bools.must.match [repeat(false), true, false, true, repeat(false)]]
     #

@@ -321,13 +321,13 @@ module Gecode
     # reification. Returns a hash with up to three values. :strength is the 
     # strength that should be used for the constraint, :kind is the 
     # propagation kind that should be used, and :reif is the (bound) boolean 
-    # variable that should be used for reification. The decoded options are 
+    # operand that should be used for reification. The decoded options are 
     # removed from the hash (so in general the hash will be consumed in the 
     # process).
     # 
     # Raises ArgumentError if an unrecognized option is found in the specified
     # hash. Or if an unrecognized strength is given. Raises TypeError if the
-    # reification variable is not a boolean variable.
+    # reification operand is not a boolean operand.
     def decode_options(options)
       # Propagation strength.
       strength = options.delete(:strength) || :default
@@ -449,7 +449,7 @@ module Gecode
         
         unless tuple.size == expected_size
           raise ArgumentError, 'All tuples must be of the same size as the ' + 
-            'number of variables in the array.'
+            'number of operands in the array.'
         end
         
         yield tuple

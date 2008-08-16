@@ -14,9 +14,9 @@ module Gecode::FixnumEnum
                 alias_method :pre_element_access, :[]
               end
           
-              # Produces an integer variable operand representing the
+              # Produces an integer operand representing the
               # i:th constant integer in the enumeration, where i is the
-              # value of the integer variable used as index. Think of it
+              # value of the integer operand used as index. Think of it
               # as array access in the world of constraint programming.
               # 
               # ==== Examples 

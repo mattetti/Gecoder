@@ -1,7 +1,7 @@
 module Gecode::IntEnum
   module IntEnumOperand
     # Produces an integer operand representing the maximum value of the 
-    # integer variables in this operand.
+    # integer operands in this enumeration.
     #
     # ==== Examples 
     #
@@ -12,7 +12,7 @@ module Gecode::IntEnum
     end
     
     # Produces an integer operand representing the minimum value of the 
-    # integer variables in this operand.
+    # integer operands in this enumeration.
     #
     # ==== Examples 
     #

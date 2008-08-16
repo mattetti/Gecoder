@@ -4,12 +4,12 @@ module Gecode::IntEnum
     # order. The following options can be given in addition to the
     # common constraint options:
     # 
-    # [:as]     Defines a target (must be an int variable enumerable) that will
+    # [:as]     Defines a target (must be an IntEnum) that will
     #           hold the sorted version of the original enumerable. The original
     #           enumerable will not be affected (i.e. will not necessarily be 
     #           sorted)
-    # [:order]  Sets an int variable enumerable that should be used to store the
-    #           order of the original enum's variables when sorted. The original
+    # [:order]  Sets an IntEnum that should be used to store the
+    #           order of the original enum's operands when sorted. The original
     #           enumerable will not be affected (i.e. will not necessarily be 
     #           sorted)
     # 
@@ -33,11 +33,11 @@ module Gecode::IntEnum
     #   numbers.must_be.sorted(:order => order)
     #   
     #   # Constrain +sorted_numbers+ to be +numbers+ sorted in the order 
-    #   # described by the integer variable enumeration +order+. 
+    #   # described by the IntEnum +order+. 
     #   numbers.must_be.sorted(:as => sorted_numbers, :order => order)
     #
     #   # Constrains +numbers+ to be sorted, reifying with the boolean 
-    #   # variable +is_sorted+, while selecting +domain+ as strength.
+    #   # operand +is_sorted+, while selecting +domain+ as strength.
     #   numbers.must_be.sorted(:reify => :is_sorted, :strength => :domain)
     def sorted(options = {})
       # Extract and check options.

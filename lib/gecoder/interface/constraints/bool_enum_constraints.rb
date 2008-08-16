@@ -55,7 +55,7 @@ module Gecode::BoolEnum #:nodoc:
   #
   # ==== Examples 
   #
-  # Constrains +bool_enum+, with three boolean variables, to take the 
+  # Constrains +bool_enum+, with three boolean operands, to take the 
   # value of the tuples [false, true, false] or [true, false, true] 
   # using BoolEnumConstraintReceiver#in:
   #

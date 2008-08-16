@@ -1,7 +1,7 @@
-# A module containing constraints that have set variables as left hand side
+# A module containing constraints that have set operands as left hand side
 # (but not enumerations).
 module Gecode::Set #:nodoc:
-  # A SetOperand is a combination of variables on which the
+  # A SetOperand is a combination of operands on which the
   # constraints defined in SetConstraintReceiver can be placed.
   #
   # Set operands can be created either by using Gecode::Model#set_var et
@@ -105,10 +105,10 @@ module Gecode::Set #:nodoc:
 
     private
 
-    # Constrains this operand to equal +set_variable+ using the
+    # Constrains this operand to equal +set_operand+ using the
     # specified +propagation_options+. If +constrain_domain+ is true
     # then the method should also attempt to constrain the bounds of the
-    # domain of +set_variable+.
+    # domain of +set_operand+.
     def constrain_equal(set_operand, constrain_domain, propagation_options)
       raise NotImplementedError, 'Abstract method has not been implemented.'
     end

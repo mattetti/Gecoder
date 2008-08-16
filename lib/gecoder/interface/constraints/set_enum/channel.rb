@@ -1,8 +1,8 @@
 module Gecode::SetEnum
   class SetEnumConstraintReceiver
     # Constrains this set enum to channel +int_enum_operand+. The i:th set 
-    # in the enumeration of set variables is constrained to includes the value 
-    # of the j:th integer variable. 
+    # in the enumeration of set operands is constrained to includes the value 
+    # of the j:th integer operand. 
     #
     # Neither reification nor negation is supported.
     #
@@ -15,7 +15,7 @@ module Gecode::SetEnum
     #   set_enum.must.channel int_enum
     def channel(enum, options = {})
       unless enum.respond_to? :to_int_enum
-        raise TypeError, "Expected integer variable enum, for #{enum.class}."
+        raise TypeError, "Expected integer enum, for #{enum.class}."
       end
       if @params[:negate]
         raise Gecode::MissingConstraintError, 'A negated channel constraint ' + 

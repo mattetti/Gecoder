@@ -1,7 +1,7 @@
 module Gecode
   class Model
     # Specifies which variables that should be branched on (given as an
-    # enum of variables or as a single variable). One can optionally
+    # enum of operands or as a single operand). One can optionally
     # also select which of the variables that should be used first with
     # the :variable option and which value in that variable's domain
     # that should be used with the :value option. If nothing is
@@ -133,7 +133,7 @@ module Gecode
       }
     end
     
-    # Adds a branching selection for the specified variable with the specified
+    # Adds a branching selection for the specified variables with the specified
     # options. The hashes are used to decode the options into Gecode's 
     # constants.
     def add_branch(variables, options, branch_var_hash, branch_value_hash)

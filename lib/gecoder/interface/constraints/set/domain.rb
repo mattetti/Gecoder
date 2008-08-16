@@ -11,7 +11,7 @@ module Gecode::Set
     #   set.must_not == 1..67
     #   
     #   # +set+ must equal the singleton set 0. The constraint is reified with
-    #   # the boolean variable +is_singleton_zero+.
+    #   # the boolean operand +is_singleton_zero+.
     #   set.must.equal(0, :reify => is_singleton_zero)
     def ==(constant_set, options = {})
       add_domain_constraint(:==, constant_set, options)
@@ -31,7 +31,7 @@ module Gecode::Set
     #   set.must_not_be.superset_of 0
     #   
     #   # +set+ must be a superset of [1,3,5,7]. The constraint is reified with
-    #   # the boolean variable +bool+.
+    #   # the boolean operand +bool+.
     #   set.must_be.superset_of([1.3.5.7], :reify => bool) 
     def superset(constant_set, options = {})
       add_domain_constraint(:superset, constant_set, options)
@@ -51,7 +51,7 @@ module Gecode::Set
     #   set.must_not_be.subset_of 0
     #   
     #   # +set+ must be a subset of [1,3,5,7]. The constraint is reified with
-    #   # the boolean variable +bool+.
+    #   # the boolean operand +bool+.
     #   set.must_be.subset_of([1.3.5.7], :reify => bool) 
     def subset(constant_set, options = {})
       add_domain_constraint(:subset, constant_set, options)
@@ -71,7 +71,7 @@ module Gecode::Set
     #   set.must_not_be.disjoint_with 0
     #   
     #   # +set+ must be disjoint with [1,3,5,7]. The constraint is reified with
-    #   # the boolean variable +bool+.
+    #   # the boolean operand +bool+.
     #   set.must_be.disjoint_with([1.3.5.7], :reify => bool) 
     def disjoint(constant_set, options = {})
       add_domain_constraint(:disjoint, constant_set, options)
@@ -91,7 +91,7 @@ module Gecode::Set
     #   set.must_not_be.complement_of 0
     #   
     #   # +set+ must be the complement of [1,3,5,7]. The constraint is 
-    #   # reified with the boolean variable +bool+.
+    #   # reified with the boolean operand +bool+.
     #   set.must_be.complement_of([1.3.5.7], :reify => bool) 
     def complement(constant_set, options = {})
       add_domain_constraint(:complement, constant_set, options)

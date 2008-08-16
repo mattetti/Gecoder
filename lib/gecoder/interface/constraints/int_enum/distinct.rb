@@ -1,15 +1,15 @@
 module Gecode::IntEnum
   class IntEnumConstraintReceiver
-    # Constrains all integer variables in the enumeration to be distinct
+    # Constrains all integer operands in the enumeration to be distinct
     # (different). The constraint can also be used with constant
-    # offsets, so that the variables, with specified offsets added, must
+    # offsets, so that the operands, with specified offsets added, must
     # be distinct.
     # 
     # The constraint does not support negation nor reification.
     # 
     # ==== Examples 
     # 
-    #   # Constrains all variables in +int_enum+ to be assigned different 
+    #   # Constrains all operands in +int_enum+ to be assigned different 
     #   # values.
     #   int_enum.must_be.distinct
     #   

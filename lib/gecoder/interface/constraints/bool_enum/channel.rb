@@ -2,30 +2,30 @@ module Gecode::BoolEnum
   class BoolEnumConstraintReceiver
     # Constrains this enumeration to "channel" +integer_operand+. This 
     # constrains the integer operand to take value i exactly when the 
-    # variable at index i in the boolean enumeration is true and the others 
+    # operand at index i in the boolean enumeration is true and the others 
     # are false.
     # 
     # Beyond the common options the channel constraint can
     # also take the following option:
     #
-    # [:offset]  Specifies an offset for the integer variable. If the offset is
-    #            set to k then the integer variable takes value i+k exactly 
-    #            when the variable at index i in the boolean enumeration is 
+    # [:offset]  Specifies an offset for the integer operand. If the offset is
+    #            set to k then the integer operand takes value i+k exactly 
+    #            when the operand at index i in the boolean enumeration is 
     #            true and the rest are false.
     # 
-    # Neither reification nor negation is supported. The int variable
+    # Neither reification nor negation is supported. The int operand
     # and the enumeration can be interchanged.
     #
     # ==== Examples 
     #
     #   # Constrains the enumeration called +option_is_selected+ to be false 
-    #   # in the first four positions and have exactly one true variable in 
+    #   # in the first four positions and have exactly one true operand in 
     #   # the other. 
     #   option_is_selected.must.channel selected_option_index 
     #   selected_option_index.must_be > 3
     #
     #   # Constrains the enumeration called +option_is_selected+ to be false 
-    #   # in the first five positions and have exactly one true variable in 
+    #   # in the first five positions and have exactly one true operand in 
     #   # the other. 
     #   selected_option_index.must.channel(option_is_selected, :offset => 1) 
     #   selected_option_index.must_be > 3
@@ -39,7 +39,7 @@ module Gecode::BoolEnum
           'reification option.'
       end
       unless integer_operand.respond_to? :to_int_var
-        raise TypeError, 'Expected an integer variable, got ' + 
+        raise TypeError, 'Expected an integer operand, got ' + 
           "#{integer_operand.class}."
       end
       
@@ -54,7 +54,7 @@ module Gecode::BoolEnum
   end
   
   # A module that gathers the classes and modules used in channel constraints
-  # involving one boolean enum and one integer variable.
+  # involving one boolean enum and one integer operand.
   module Channel #:nodoc:
     class ChannelConstraint < Gecode::Constraint #:nodoc:
       def post

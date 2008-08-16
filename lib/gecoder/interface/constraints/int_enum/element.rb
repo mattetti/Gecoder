@@ -14,15 +14,15 @@ module Gecode::IntEnum
                 alias_method :pre_element_access, :[]
               end
           
-              # Produces an integer variable operand representing the
-              # i:th integer variable in the enumeration, where i is the
-              # value of the integer variable used as index. Think of it
+              # Produces an integer operand representing the
+              # i:th integer operand in the enumeration, where i is the
+              # value of the integer operand used as index. Think of it
               # as array access in the world of constraint programming.
               # 
               # ==== Examples 
               # 
-              #   # The variable at the +x+:th position in +int_enum+,
-              #   # where +x+ is an integer variable.  
+              #   # The operand at the +x+:th position in +int_enum+,
+              #   # where +x+ is an integer operand.  
               #   int_enum[x]
               # 
               def [](*vars)

@@ -82,7 +82,7 @@ module Gecode::Int
     class ExpressionTree < Gecode::Int::ShortCircuitRelationsOperand #:nodoc:
       attr :model
 
-      # Constructs a new expression with the specified variable
+      # Constructs a new expression with the specified operands.
       def initialize(left_node, right_node, operation)
         super(left_node.model || right_node.model)
         @left = left_node
