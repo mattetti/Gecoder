@@ -13,7 +13,7 @@ module Gecode::IntEnum
     # 
     # ==== Examples 
     # 
-    # Lets say that we’re modelling a sequence of numbers that must be distinct
+    # Lets say that we're modelling a sequence of numbers that must be distinct
     # and that we want access to the following two view simultaneously.
     # 
     # === First view
