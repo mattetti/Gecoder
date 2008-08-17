@@ -28,10 +28,10 @@ module Gecode::Int
     #   
     #   # The square root of +int_op+, rounded down.
     #   int_op.square_root
-    def sqrt
+    def square_root
       Arithmetic::IntSquareRootOperand.new(@model, self)
     end
-    alias_method :square_root, :sqrt
+    alias_method :sqrt, :square_root
 
 
     alias_method :pre_arith_mult, :* 
