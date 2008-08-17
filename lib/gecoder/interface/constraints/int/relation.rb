@@ -1,7 +1,7 @@
 module Gecode::Int
   class IntConstraintReceiver
     # Constrains the integer operand to equal +int_operand_or_fixnum+.
-    # Negation and reification are supported.
+    # #equal and #equal_to are aliases of this method.
     #
     # ==== Examples 
     #   
@@ -19,7 +19,8 @@ module Gecode::Int
     end
 
     # Constrains the integer operand to be strictly greater than
-    # +int_operand_or_fixnum+. Negation and reification are supported.
+    # +int_operand_or_fixnum+. #greater and #greater_than are 
+    # aliases of this method.
     #
     # ==== Examples 
     #   
@@ -37,7 +38,8 @@ module Gecode::Int
     end
     
     # Constrains the integer operand to be greater than or equal to
-    # +int_operand_or_fixnum+. Negation and reification are supported.
+    # +int_operand_or_fixnum+. #greater_or_equal and 
+    # #greater_than_or_equal_to are aliases of this method.
     #
     # ==== Examples 
     #   
@@ -55,7 +57,8 @@ module Gecode::Int
     end
     
     # Constrains the integer operand to be strictly less than
-    # +int_operand_or_fixnum+. Negation and reification are supported.
+    # +int_operand_or_fixnum+. #lesser and #lesser_than are 
+    # aliases of this method.
     #
     # ==== Examples 
     #   
@@ -73,7 +76,8 @@ module Gecode::Int
     end
     
     # Constrains the integer operand to be less than or equal to
-    # +int_operand_or_fixnum+. Negation and reification are supported.
+    # +int_operand_or_fixnum+. #less_or_equal and 
+    # #less_than_or_equal_to are aliases of this method.
     #
     # ==== Examples 
     #   

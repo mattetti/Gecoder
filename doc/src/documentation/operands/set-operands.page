@@ -1,263 +1,121 @@
 ---
-title: Set Constraints
-longTitle: Set constraints supported by Gecode/R
+title: Set Operands
+longTitle: Set Operands - Constraints Supported by Gecode/R
 inMenu: true
-description: The different set constraints available in Gecode/R for use when modelling in Ruby.
+description: The constraints and properties of the set operand available in Gecode/R for Constraint Programming in Ruby.
 ---
 
-h1. Set constraints
+h1. Set operands
 
-In the examples @constant_set@ represents a constant set, @set@ represents a 
-single set variable and @sets@ represents an enumeration of set variables.
+<div class="summary">
+<p>Set operands are created either by creating set variables (which
+are the simplest set operands) or by using operand properties that
+produce set operands.</p></div>
 
-A constant set can be represented with instances of the following classes:
-<dl>
-  <dt>Fixnum</dt><dd>Represents a singleton set.</dd>
-  <dt>Range</dt><dd>Represents a set containing all elements in the range. This represents the set more efficiently than when another enumeration with the same elements are used.</dd>
-  <dt>Enumeration of integers</dt><dd>Represents a set containing the enumeration's elements.</dd>
-</dl>
+h4. Examples of Set Operands
 
-h2. Domain
-
-Domain constraints are used to specify relations with constant sets.
+The simplest set operands, set variables, can be created using
+{RDoc: Model#set_var}.
 
 <ruby>
-set.must_not == constant_set
+# Creates a set var withgreatest lower bound {0} and least upper bound 
+# {0, 1, 2}.
+set_operand = set_var(0, 0..2)
 </ruby>
 
-The following relations are supported (the aliases of each relation are also 
-listed).
-
-* @==@, @equal@, @equal_to@
-* @subset@, @subset_of@
-* @superset@, @superset_of@
-* @disjoint@, @disjoint_with@
-* @complement@, @complement_of@
-
-h2. Relation
-
-Relation constraints are used to specify relations with other sets.
+A couple of examples of properties that produce set operands include
+the {RDoc: SetOperand#union} property, which produces a new set operand
+representing the union of two set operands:
 
 <ruby>
-set.must_be.superset_of another_set
+new_set_operand = set_operand1.union set_operand2
 </ruby>
 
-The constraint supports the same relations as the domain constraint. The 
-relation constraints also includes a constraint used to specify integer 
-relations for each element of a set. If we for instance want the elements of a 
-set to be bounded by an int var @upper_bound@ we could write the following.
+The {RDoc: SetEnumOperand#union} property produces a new set operand
+representing the union of all the set operands in an enumeration:
 
 <ruby>
-set.elements.must <= upper_bound
+new_set_operand = set_enum.union
 </ruby>
 
-Constant integers instead of the integer variable are also supported. Note that
-this constraint is not reifiable.
+h2. Constraints
 
-h2. Operation
+Generated from {RDoc: SetConstraintReceiver}.
 
-Using operations between sets is also possible.
+h3. @==@
 
-<ruby>
-set.union(another_set).must_be.superset_of a_third_set
-</ruby>
+{importRDoc: {file: constraints/set/domain.rb, method: def ==}}
 
-The following operations are available.
-* union
-* disjoint_union
-* intersection
-* minus
+{importRDoc: {file: constraints/set/relation.rb, method: def ==}}
 
-In the above example @set@, @another_set@ and @a_third_set@ can each be either
-a set variable or a constant set. The only exception is that all three can not
-be constant sets. Neither reification nor negation is supported.
+h3. @subset@
 
-Using the operations other than minus on enumeration of set variables is also 
-supported.
+{importRDoc: {file: constraints/set/domain.rb, method: def subset}}
 
-<ruby>
-sets.union.must_be.subset_of set
-</ruby>
+{importRDoc: {file: constraints/set/relation.rb, method: def subset}}
 
-h2. Cardinality
+h3. @superset@
 
-Cardinality constraints constrain the size of the set. Constraining the size of 
-@set@ to be within the range @1..2@ can be expressed as follows.
+{importRDoc: {file: constraints/set/domain.rb, method: def superset}}
 
-<ruby>
-set.size.must_be.in 1..2
-</ruby>
+{importRDoc: {file: constraints/set/relation.rb, method: def superset}}
 
-Similarly one can constrain the cardinality to be less than an integer variable
-as follows.
+h3. @disjoint@
 
-<ruby>
-set.size.must <= number
-</ruby>
+{importRDoc: {file: constraints/set/domain.rb, method: def disjoint}}
 
-Everything that's normally supported by single integer variables followed by 
-@must*@ is supported after @set.size.must*@ too.
+{importRDoc: {file: constraints/set/relation.rb, method: def disjoint}}
 
-h2. Channel
+h3. @channel@
 
-This is similar to the channel constraint for integer variable enumeration, but
-instead of having two integer enums we have one integer and one set enumeration.
-If we revisit the integer constraint's channel example we can replace the 
-position variables with several sets that are constructed so that set i contains
-a position if and only if element i is located at that position.
+{importRDoc: {file: constraints/set/channel.rb, method: def channel}}
 
-<ruby>
-position_sets.must.channel elements
-</ruby>
-or
-<ruby>
-elements.must.channel position_sets
-</ruby>
+h3. @complement@
 
-This allows us to post constraints on @position_sets@ and have them affect
-@elements@ (gaining another viewpoint). 
+{importRDoc: {file: constraints/set/domain.rb, method: def complement}}
 
-There also exists a channel constraint between a single set variable and an
-enumeration of boolean variables. It constrains the set variable to include
-value i exactly when the variable at index i in the boolean enumeration is
-true. It is written as
+{importRDoc: {file: constraints/set/relation.rb, method: def complement}}
 
-<ruby>
-set.must.channel bool_enum
-</ruby>
-or
-<ruby>
-bool_enum.must.channel set
-</ruby>
+h3. @include@
 
-Neither negation nor reification is supported by any of the channel constraints.
+{importRDoc: {file: constraints/set/include.rb, method: def include}}
 
-h2. Min and max
+h2. Properties
 
-The min and max constraints constrain the minimum and maximum of a set. The 
-following constraints connects the integer variables @min@ and @max@ to the 
-min and max of @set@.
+Generated from {RDoc: SetOperand}.
 
-<ruby>
-set.min.must == min
-set.max.must == max
-</ruby>
+h3. @union@
 
-Constants can also be used (instead of e.g. @min@ in the example). Everything
-that's normally supported by single integer variables followed by @must*@ is 
-supported after @set.min.must*@ too (e.g. comparison methods).
+{importRDoc: {file: constraints/set/operation.rb, method: def union}}
 
-h2. Sum
+h3. @intersection@
 
-The following constrains the sum of @set@ to be in the range @-10..-1@.
+{importRDoc: {file: constraints/set/operation.rb, method: def intersection}}
 
-<ruby>
-set.sum.must_be.in?(-10..-1)
-</ruby>
+h3. @minus@
 
-The weighted sum can also be constrained. The weights are given as a hash that
-maps elements in the set to their respective weight. If the hash maps a value 
-to nil then it's removed from the set's upper bound. The following constrains
-@odd_sum@ to be the sum of all odd numbers in @set@.
+{importRDoc: {file: constraints/set/operation.rb, method: def minus}}
 
-<ruby>
-weights = Hash.new{ |hash, key| hash[key] = key % 2 }
-set.sum(:weights => weights).must == odd_sum
-</ruby>
+h3. @size@
 
-Values can also be substituted instead of weighed by using @:substitutions@ 
-instead of @:weigths@. The following sums the contents of an fixnum array 
-@array@ which has it's indices in a set variable called @indices@.
+{importRDoc: {file: constraints/set/cardinality.rb, method: def size}}
 
-<ruby>
-substitutions = Hash[*(0...array.size).zip(array).flatten]
-indices.sum(:substitutions => substitutions).must == array_sum
-</ruby>
+h3. @sum@
 
-Everything that's normally supported by single integer variables followed by 
-@must*@ is supported after a set sum.
+{importRDoc: {file: constraints/set/connection.rb, method: def sum}}
 
-h2. Include
+h3. @max@
 
-The following can be used to constrain @set@ to include a number of integer 
-variables located in the integer variable enum @numbers@.
+{importRDoc: {file: constraints/set/connection.rb, method: def max}}
 
-<ruby>
-set.must.include numbers
-</ruby>
+h3. @min@
 
-It has the side effect of sorting the integer variables in a non-descending 
-order. The constraint does not support reification nor negation.
+{importRDoc: {file: constraints/set/connection.rb, method: def min}}
 
-h2. Distinct
+h3. @elements@
 
-The "at most one" constraint constrains multiple sets to at most share one 
-element.
+{importRDoc: {file: constraints/set_elements_constraints.rb, method: def elements}}
 
-<ruby>
-sets.must.at_most_share_one_element(:size => 17)
-</ruby>
+h3. @disjoint_union@
 
-The mandatory "option" @:size@ specifies the cardinality that all affected 
-sets should be constrained to. Neither of the constraints support reification 
-nor negation.
-
-h2. Selection
-
-The set selection constraint provides array access with variables as indices. 
-Lets say that we have many stores that provide different services, encoded as
-integers, and we want to select a store which provides services encoded as 4,7 
-and 17. We could do that by letting @store_services@ be an array of set 
-variables where the i:th variable contains the integers corresponding to 
-services provided by the i:th store. We can then write the constraint as 
-follows.
-
-<ruby>
-store_services[selected_store].must_be.superset_of [4,7,17]
-</ruby>
-
-Where @selected_store@ is an integer variable assigned the index of the selected
-store.
-
-h2. Select union
-
-The select uinion constraint provides array access using a set of indices, 
-giving the union of the selected sets. Lets take the selection example but say
-that we are prepared to visit several stores instead of just one. We would then
-want to make sure that the union of the services provided by each store must 
-contain the desired services 4,7 and 17.
-
-<ruby>
-store_services[visited_stores].union.must_be.superset_of [4,7,17]
-</ruby>
-
-Where @store_services@ is an array of set variables and @visited_stores@ is a 
-set variable containing the stores we will visit.
-
-h2. Select intersection
-
-This constraint is much like select union, but it takes the intersection of the
-selected sets instead. So we could express that _each_ visited stores must 
-provide the services 4,7 and 17 as follows.
-
-<ruby>
-store_services[visited_stores].intersection.must_be.superset_of [4,7,17]
-</ruby>
-
-Optionally a universe can also be specified as follows.
-
-<ruby>
-store_services[visited_stores].intersection(:with => 5..17).must_be.superset_of [4,7,17]
-</ruby>
-
-h2. Disjoint
-
-Selected sets can also be specified to be disjoint. Taking the above example we
-could express that no two visited stores may provide the same service as 
-follows.
-
-<ruby>
-store_services[visited_stores].must_be.disjoint
-</ruby>
-
-This constraint does not support negation nor reification.
+{importRDoc: {file: constraints/set/operation.rb, method: def disjoint_union}}

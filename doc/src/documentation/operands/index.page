@@ -1,44 +1,76 @@
 ---
-title: Constraints
-longTitle: Constraints supported by Gecode/R
+title: Operands
+longTitle: Operands and constraints supported by Gecode/R
 inMenu: true
-description: An overview of the constraints available in Gecode/R for use when modelling in Ruby.
+description: An overview of the operands available in Gecode/R, as well as their constraints and properties.
 ---
-h1. Constraints
+h1. Operands
 
 <div class="summary">
-<p>Constraints are used used to constrain variables when modelling. There exist 
-several types, but they can all be recognized by the use of @must@. The 
-following for instance constraints an integer variable @x@ to be strictly 
-larger than 5.</p>
-
-<ruby>
-x.must > 5
-</ruby>
+<p>Operands are the basic building blocks in Gecode/R. An operand is
+anything you can place a *constraint* on. The most basic operands
+are the various types of variables, but operand can also be
+built upon to produced new operands, using *properties* defined by
+operands.</p>
 </div>
 
-Use @must_not@ instead of @must@ to negate a constraint. Not all constraints
-support that however. The constraints that are currently supported are divided
-into the following categories.
+All types of operands, their properties and constraints are found in the
+menu.
 
-<dl>
-  <dt>"Integer constraints":integer-constraints.html</dt><dd>Constraints dealing with finite domain integer variables.</dd>
-  <dt>"Boolean constraints":boolean-constraints.html</dt><dd>Constraints dealing with boolean variables.</dd>
-  <dt>"Set constraints":set-constraints.html</dt><dd>Constraints dealing with finite integer set variables.</dd>
-</dl>
+h2. Properties
 
-The "RDoc documentation":../../rdoc/index.html contains additional examples of all 
-types of constraints. The "quick reference":quick-reference.html provides a 
-list containing all of them.
+Properties are methods, defined by operands, that produce new operands.
+An example is the @+@ method of "integer operands":integer-operands.html
+that takes another integer operand and produces a third integer operand
+that represents the sum of the two operands.
 
-h2. Options
+<ruby>
+new_integer_operand = int_operand1 + int_operand2
+</ruby>
+
+Another example is the @size@ method of "set operands":set-operands.html
+that produces an integer operand representing the size of the set.
+
+<ruby>
+new_integer_operand = set_operand.size
+</ruby>
+
+Use properties to produce the operands that you want to place
+constraints on.
+
+h2. Constraints
+
+Constraints are used used to constrain the value of operands. All
+constraints are placed using the @must@ or @must_not@ methods defined 
+by operands.
+
+<ruby>
+operand.must.constraint_method(params)
+</ruby>
+
+The following constraints @int_operand@ to be strictly greater than 5.
+
+<ruby>
+int_operand.must > 5
+</ruby>
+
+Use operand properties to constrain e.g. the sum of two integer operands.
+
+<ruby>
+(int_operand1 + int_operand2).must > 5
+</ruby>
+
+Using @must_not@ instead of @must@ negates a constraint. Not all constraints
+support being negated. 
+
+h3. Options
 
 Many constraints accept a *reification* option, which allows one to combine
 constraints. All integer and boolean constraints (but not set constraints) also 
 accept a *propagation strength* option which suggests how much effort the solver
 should put into pruning the search space based on a constraint.
 
-h3. Reification
+h4. Reification
  
 Reification is used to link a constraint to a boolean variable in such a way
 that the variable is true if and only if the constraint is satisfied. The 
@@ -69,7 +101,7 @@ expressions if wanted. The following constrains that either x must be less than
 x.must < 0 | (y.must > 5 & x.must == 0)
 </ruby>
 
-h3. Propagation strength
+h4. Propagation strength
 
 The propagation strength basically _suggests_ how much effort the solver
 should put into trying to prune the domains of variables using the
@@ -100,7 +132,7 @@ numbers.must_be.distinct(:strength => :domain)
 The strength generally progresses as @:value@ -> @:bounds@ -> @:domain@ 
 (@:value@ being the weakest, @:domain@ being the strongest). 
 
-h3. Propagation kind
+h4. Propagation kind
 
 The propagation kind option _suggests_ the implementation that should be 
 preferred if there are multiple implementations of a constraint. 

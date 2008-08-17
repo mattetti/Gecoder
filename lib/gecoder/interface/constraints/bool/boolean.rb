@@ -58,9 +58,8 @@ module Gecode::Bool
   end
   
   class BoolConstraintReceiver
-    # Constrains the boolean operand to be equal to +bool_op+. Negation and 
-    # reification are supported. Any of <tt>==</tt>, +equal+ and +equal_to+ may 
-    # be used for equality.
+    # Constrains the boolean operand to be equal to +bool_op+.  Any of
+    # <tt>==</tt>, +equal+ and +equal_to+ may be used for equality.
     # 
     # ==== Examples 
     # 
@@ -80,8 +79,7 @@ module Gecode::Bool
     end
     alias_comparison_methods
     
-    # Constrains the boolean operand to imply +bool_op+. Negation and
-    # reification are supported.
+    # Constrains the boolean operand to imply +bool_op+. 
     # 
     # ==== Examples 
     #   
@@ -97,8 +95,7 @@ module Gecode::Bool
       @model.add_constraint BooleanConstraint.new(@model, @params)
     end
     
-    # Constrains the boolean operand to be true. Negation and reification are 
-    # supported.
+    # Constrains the boolean operand to be true. 
     # 
     # ==== Examples 
     # 
@@ -117,8 +114,7 @@ module Gecode::Bool
         @params.update(:rhs => true))
     end
     
-    # Constrains the boolean operand to be false. Negation and reification are 
-    # supported.
+    # Constrains the boolean operand to be false. 
     #
     # ==== Examples 
     # 

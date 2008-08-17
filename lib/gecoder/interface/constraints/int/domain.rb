@@ -13,7 +13,7 @@ module Gecode::Int
     #   # +x+ must not be in the range -5...5
     #   x.must_not_be.in -5...5
     #   
-    #   # Specifies the above, but but reifies the constraint with the boolean 
+    #   # Specifies the above, but reifies the constraint with the boolean 
     #   # operand +bool+ and specified +value+ as strength.
     #   x.must_not_be.in(-5...5, :reify => bool, :strength => :value)
     #
@@ -23,9 +23,9 @@ module Gecode::Int
     #   # +x+ must not be in the enumeration [5,6,7,17].
     #   x.must_not_be.in [5,6,7,17]
     #   
-    #   # Specifies the above, but but reifies the constraint with the boolean 
+    #   # Specifies the above, but reifies the constraint with the boolean 
     #   # operand +bool+ and specified +value+ as strength.
-    #   x.must_not_be.in(-[5,6,7,17], :reify => bool, :strength => :value)
+    #   x.must_not_be.in([5,6,7,17], :reify => bool, :strength => :value)
     #
     def in(domain, options = {})
       @params.update(Gecode::Util.decode_options(options))

@@ -1,147 +1,90 @@
 ---
-title: Boolean Constraints
-longTitle: Boolean constraints supported by Gecode/R
+title: Boolean Operands
+longTitle: Boolean Operands - Constraints Supported by Gecode/R
 inMenu: true
-description: The different boolean constraints available in Gecode/R for use when modelling in Ruby.
+description: The constraints and properties of the boolean operand available in Gecode/R for Constraint Programming in Ruby.
 ---
 
-h1. Boolean constraints
+h1. Boolean Operands
 
-Boolean constraints are used to place constraints on boolean variables. The 
-following are some example, b1, b2 and b3 are all boolean variables.
+<div class="summary">
+<p>Boolean operands are created either by creating boolean variables (which
+are the simplest boolean operands) or by using operand properties that
+produce boolean operands.</p></div>
 
-h2. Domain
+h4. Examples of Boolean Operands
 
-<ruby>
-b1.must_be.true # Constrains b1 to be true.
-b2.must_be.false # Constraint b2 to be false.
-</ruby>
-
-h2. Conjunction, disjunction and exclusive disjunction
-
-Disjunction (or) can is expressed with @|@, conjunction (and) is expressed 
-with @&@ and exclusive disjunction (xor) is expression with @^@.
+The simplest boolean operands, boolean variables, can be created using
+{RDoc: Model#bool_var}.
 
 <ruby>
-(b1 | b2).must == b1 # Constraint the disjunction of b1 and b2 to equal b1.
-(b1 & b3).must_be.true # Constrains the conjunction of b1 and b3 to be true.
-b1.must == b2 ^ b3 # Constrains b1 to equal b2 exclusive or b3.
+bool_operand = bool_var
 </ruby>
 
-Variations of @must@ can be replaced with variations of @must_not@ to negate the
-constraints. Nested expressions can be used on both sides.
+A couple of examples of properties that produce boolean operands include
+the {RDoc: BoolOperand#&} property, which produces a new boolean operand
+representing the AND operation applied to two boolean operands:
 
 <ruby>
-((@b1 ^ @b1) & @b3).must == ((@b2 | @b3) ^ @b2)
+new_bool_operand = bool_operand1 + bool_operand2
 </ruby>
 
-h2. Implication
-
-Implication is expressed with @implies@ when used after boolean expressions and 
-@imply@ when used after a form of @must@.
+The {RDoc: BoolEnumOperand#conjunction} property produces a new boolean 
+operand representing the conjunction of all boolean operands in an
+enumeration:
 
 <ruby>
-(b1.implies b2).must.imply b3
+new_bool_operand = bool_enum.conjunction
 </ruby>
 
-h2. Linear
+h2. Constraints
 
-Much like integer variables one can place constraints on linear equations of 
-boolean variables. A boolean assigned false is treated as 0 in the equation, 
-and one that is assigned true is treated as 1.
+Generated from {RDoc: BoolConstraintReceiver}.
 
-This can be used to express things such as that at least two booleans must be 
-true:
+h3. @true@
 
-<ruby>
-(b1 + b2 + b3).must >= 2
-</ruby>
+{importRDoc: {file: constraints/bool/boolean.rb, method: def true}}
 
-*Never mix boolean and integer variables* (it's possible, but it's not 
-supported). Also note that the left hand side must consist of more than a 
-single boolean variable.
+h3. @false@
 
-h2. Channel
+{importRDoc: {file: constraints/bool/boolean.rb, method: def false}}
 
-The value of a boolean variable can be connected to the value of an integer 
-variable using
+h3. @==@
 
-<ruby>
-bool_var.must == int_var
-</ruby>
-or
-<ruby>
-int_var.must == bool_var
-</ruby>
+{importRDoc: {file: constraints/bool/boolean.rb, method: def ==}}
 
-where @bool_var@ is a boolean variable and @int_var@ is an integer variable. The 
-integer variable is constrained to be 1 when the boolean variable is true and 0 
-otherwise.
+h3. @imply@
 
-The value of an enumeration of boolean variables can be connected with the value
-of a single integer variable using the following.
+{importRDoc: {file: constraints/bool/boolean.rb, method: def imply}}
 
-<ruby>
-bool_enum.must.channel int_var
-</ruby>
-or
-<ruby>
-int_var.must.channel bool_enum
-</ruby>
+h2. Properties
 
-This constrains the integer variable @int_var@ to take value i exactly when the 
-variable at index i in the boolean enumeration @bool_enum@ is true and the 
-others are false. An offset option can also be given, which makes the integer
-variable take value i+offset in the above situation.
+Generated from {RDoc: BoolOperand}.
 
-<ruby>
-bool_enum.must.channel(int_var, :offset => 17)
-</ruby>
+h3. @&@
 
-Single set variables can also be connected to boolean enumerations using a
-channel constraint; see the "set constraints":set-constraints.html#channel for more
-information.
+{importRDoc: {file: constraints/bool/boolean.rb, method: def &}}
 
-Neither reification nor negation is supported.
+h3. @|@
 
-h2. Conjunction and disjunction of enumeration
+{importRDoc: {file: constraints/bool/boolean.rb, method: def |}}
 
-One can take the conjunction and disjunction of all variables in an enumeration 
-@bools@ of boolean variables as follows.
+h3. @^@
 
-<ruby>
-bools.conjunction.must == b1 | b2
-bools.disjunction.must == b1 | b2
-</ruby>
+{importRDoc: {file: constraints/bool/boolean.rb, method: def ^}}
 
-The part after @must@ supports everything that single boolean variables support.
+h3. @implies@
 
-h2. Tuple
+{importRDoc: {file: constraints/bool/boolean.rb, method: def implies}}
 
-The tuple constraints can be used to constrain arrays of boolean variable to 
-only take values in a specified set of tuples.
+h3. @+@
 
-<ruby>
-bools.must_be.in [[true, false, true], [false, false, true]]
-</ruby>
+{importRDoc: {file: constraints/bool/linear.rb, method: def +}}
 
-The above constrains @bools@, containing three boolean variables, to either 
-be true, false, true, or false, false, true. Neither reification nor negation 
-is supported.
+h3. @-@
 
-h2. Regular expression
+{importRDoc: {file: constraints/bool/linear.rb, method: def -}}
 
-The regular expression constraint can be used to constrain arrays of
-boolean variables to only take values that match a specified regular
-expression in the boolean domain.
+h3. @*@
 
-<ruby>
-bools.must.match[repeat(false), true, false, true, repeat(false)]
-</ruby>
-
-The above constrains @bools@, containing more than three boolean variables, to 
-have three consecutive variables with values false, true and false. All
-other variables are constrained to be false.
-
-See the "RDoc documentation for RegexpConstraint":/rdoc/classes/Gecode/Constraints/IntEnum/Extensional/RegexpConstraint.html 
-for details on how to specify the regular expression.
+{importRDoc: {file: constraints/bool/linear.rb, method: def *}}
