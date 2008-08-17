@@ -14,14 +14,15 @@ module Gecode
   #
   # Model:
   #   class EquationProblem < Gecode::Model
+  #     attr :vars
+  #
   #     def initialize
-  #       variables_is_an int_var_array(3, 0..9)
-  #       x, y, z = variables
+  #       x, y, z = @vars = int_var_array(3, 0..9)
   #
   #       (x + y).must == z
   #       x.must == y - 3
   #
-  #       branch_on variables
+  #       branch_on @vars
   #     end
   #   end
   # 
@@ -72,9 +73,6 @@ module Gecode
   #             explore, which can have a big effect on the search
   #             performance. See #branch_on for details.
   #
-  # Problems can also be formulated without defining a new class by
-  # using Gecode#solve et al.
-  #
   # == Finding solutions
   #
   # Solutions to a formulated problem are found are found by using
@@ -86,10 +84,30 @@ module Gecode
   # The first solution to the example above could for instance be found
   # using
   #
-  #   puts EquationProblem.solve!.variables.values.join(', ')
+  #   puts EquationProblem.new.solve!.vars.values.join(', ')
   #
   # which would find the first solution to the problem, access the
-  # assigned values of +variables+ and print them.
+  # assigned values of +variables+ and print them (in order x, y, z).
+  #
+  # == Shorter ways of formulating problems
+  #
+  # Problems can also be formulated without defining a new class by
+  # using Gecode#solve et al.
+  #
+  # Additionally one can use "foo_is_an ..." to create an accessor of 
+  # name foo, without having to use instance variables. The above
+  # problem becomes
+  #   class EquationProblem < Gecode::Model
+  #     def initialize
+  #       x, y, z = vars_is_an int_var_array(3, 0..9)
+  #
+  #       (x + y).must == z
+  #       x.must == y - 3
+  #
+  #       branch_on vars
+  #     end
+  #   end
+  #
   class Model
     # The largest integer allowed in the domain of an integer variable.
     MAX_INT = Gecode::Raw::IntLimits::MAX
@@ -248,7 +266,24 @@ module Gecode
       (@variables ||= []) << variable
     end
 
-    # Wraps method to handle #foo_is_a and #foo_is_an .
+    # Wraps method missing to handle #foo_is_a and #foo_is_an . 
+    #
+    # "<variable_name>_is_a <variable>" or "<variable_name>_is_an <variable>", 
+    # replacing "<variable_name>" with the variable's name and 
+    # "<variable>" with the variable, adds an instance variable and 
+    # accessor with the specified name.
+    #
+    # The method also returns the variable given.
+    #
+    # ==== Example
+    #
+    #   # Add an instance variable and accessor named "foo" that return
+    #   # the integer variable.
+    #   foo_is_an int_var(0..9)
+    #
+    #   # Add an instance variable and accessor named "bar" that return
+    #   # the boolean variable array.
+    #   bar_is_a bool_var_array(2)
     def method_missing(name_symbol, *args)
       name = name_symbol.to_s
       if name =~ /._is_an?$/
@@ -256,6 +291,13 @@ module Gecode
         unless args.size == 1
           raise ArgumentError, "Wrong number of argmuments (#{args.size} for 1)."
         end 
+        if respond_to? name
+          raise ArgumentError, "Method with name #{name} already exists."
+        end
+        if instance_variable_defined? "@#{name}"
+          raise ArgumentError, 
+            "Instance variable with name @#{name} already exists."
+        end
 
         # We use the meta class to avoid defining the variable in all
         # other instances of the class.
@@ -265,6 +307,7 @@ module Gecode
             attr :#{name}
           end
         end_eval
+        return args.first
       else
         super
       end
