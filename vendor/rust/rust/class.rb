@@ -275,18 +275,18 @@ module Rust
       # 1: pre 2: mid 3: post 4: mixed
       def position(nparam)
         case @name
-          when "+": (nparam.zero? ? 1 : 3)
-          when "-": 3
-          when "*": (nparam.zero? ? 1 : 3)
-          when "/": 3
-          when /\[\s*\]=/: 4
-          when /\[\s*\]/: 2
-          when "==": 3
-          when "!=": 3
-          when "<<": 3
-          when ">>": 3
-          when "!": 1
-          when "()": 2
+          when "+" then (nparam.zero? ? 1 : 3)
+          when "-" then 3
+          when "*" then (nparam.zero? ? 1 : 3)
+          when "/" then 3
+          when /\[\s*\]=/ then 4
+          when /\[\s*\]/ then 2
+          when "==" then 3
+          when "!=" then 3
+          when "<<" then 3
+          when ">>" then 3
+          when "!" then 1
+          when "()" then 2
           else
             3
         end
@@ -294,18 +294,18 @@ module Rust
       
       def valid_name
         case @name
-          when "+": "plusop"
-          when "-": "minusop"
-          when "*": "multop"
-          when "/": "divop"
-          when /\[\s*\]=/: "ateqop"
-          when /\[\s*\]/: "atop"
-          when "==": "equalop"
-          when "!=": "notequalop"
-          when "<<": "outstream"
-          when ">>": "intstream"
-          when "!": "notop"
-          when "()": "parenthesisop"
+          when "+" then "plusop"
+          when "-" then "minusop"
+          when "*" then "multop"
+          when "/" then "divop"
+          when /\[\s*\]=/ then "ateqop"
+          when /\[\s*\]/ then "atop"
+          when "==" then "equalop"
+          when "!=" then "notequalop"
+          when "<<" then "outstream"
+          when ">>" then "intstream"
+          when "!" then "notop"
+          when "()" then "parenthesisop"
           else
             "undefop_#{@name[0].chr.to_i}#{rand(1024)}"
         end
